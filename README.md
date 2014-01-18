@@ -20,6 +20,9 @@ git clone https://github.com/sthirugn/testimony.git
 
 2)Pre-requisites
   Expected Docstring format:
+
+```	
+	"""
 	@Feature: Login
 	@Test: Log in as a valid user
 	@Setup: Navigate to abc.com
@@ -29,6 +32,8 @@ git clone https://github.com/sthirugn/testimony.git
 	@Assert: Log in successful
 	@BZ: #1234567
 	@Status: Manual (REMOVE this field once automated)
+	"""
+```
 
 3) Update constants.py -> TEST_PATH to add any number of test folder paths as array items.
 
