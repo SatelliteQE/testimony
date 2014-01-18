@@ -4,7 +4,17 @@
 # or operating system, you probably want to add a global ignore instead:
 # git config --global core.excludesfile ~/.gitignore_global
 
-# Ignore all tempfiles.
+# Ignore all logfiles and tempfiles.
+.DS_Store
+/log/*.log
+/tmp
+*.idea
+*.log
+*.pyc
+*.xml
+*.png
+*.swp
+*.*~
 .project
 .pydevproject
 .settings/

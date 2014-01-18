@@ -37,6 +37,9 @@ def main():
         print_user_message()
     userinput = sys.argv[1]
     for path in TEST_PATH:
+        if not os.path.isdir(path):
+            print ("Please enter a valid path in TEST_PATH in constants.py")
+            exit()
         reset_counts()
         print "\nTEST PATH: %s" % path
         print "--------------------------------------------------------------"

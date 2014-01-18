@@ -14,9 +14,9 @@ Requirements
 ------------
 1)If you haven't cloned the source code yet, then make sure to do it now:
 
-::
-
-    git clone https://github.com/sthirugn/testimony.git
+```
+git clone https://github.com/sthirugn/testimony.git
+```
 
 2)Pre-requisites
   Expected Docstring format:
@@ -30,9 +30,13 @@ Requirements
 	@BZ: #1234567
 	@Status: Manual (REMOVE this field once automated)
 
+3) Update constants.py -> TEST_PATH to add any number of test folder paths as array items.
+
 Usage:
 -----
-# python testimony.py print
+
+```
+#python testimony.py print
 
 TEST PATH: /home/apple/tests/login/
 ----------------------------------------------------------------
@@ -47,7 +51,9 @@ Steps:
 Assert: Log in successful
 BZ: #1234567
 Status: Manual
+```
 
+```
 #python testimony.py summary
 
 TEST PATH: /home/apple/tests/login/
@@ -56,7 +62,9 @@ Total Number of test cases:      5
 Total Number of automated cases: 4
 Total Number of manual cases:    1
 Test cases with no docstrings:   0
+```
 
+```
 #python testimony.py validate_docstring
 
 TEST PATH: /home/apple/tests/login/
@@ -66,7 +74,9 @@ Analyzing test_sample.py...
 -->Invalid DocString: Create new user and update name<--
 -->Invalid DocString: Remove an user<--
 Total Number of invalid docstrings:  4
+```
 
+```
 #python testimony.py bugs
 
 TEST PATH: /home/apple/tests/login/
@@ -74,7 +84,9 @@ TEST PATH: /home/apple/tests/login/
 Analyzing test_sample.py...
 Total Number of test cases affected by bugs: 1
 List of bugs:                                ['#1234567']
+```
 
+```
 #python testimony.py manual
 
 TEST PATH: /home/apple/tests/login/
@@ -89,7 +101,9 @@ Steps:
 Assert: Log in successful
 BZ: #1234567
 Status: Manual (REMOVE this field once automated)
+```
 
+```
 # python testimony.py auto
 
 TEST PATH: /home/apple/tests/login/
@@ -103,7 +117,9 @@ Steps:
  2.  Log in with invalid user credentials
 Assert: Log in successful
 BZ: #1234567
+```
 
+```
 # python testimony.py
 Please enter a valid option to proceed:
 print
@@ -112,7 +128,9 @@ validate_docstring
 bugs
 manual
 auto
+```
 
+```
 # python testimony.py invalid
 Please enter a valid option to proceed:
 print
@@ -121,6 +139,7 @@ validate_docstring
 bugs
 manual
 auto
+```
 
 Known Issues
 ============
@@ -129,5 +148,6 @@ None
 Author
 ------
 
-This software is developed by:
-`Suresh Thirugn <https://github.com/sthirugn/>`_.
+This software is developed by [Suresh Thirugn] [1].
+
+[1]: https://github.com/sthirugn/   "Suresh Thirugn"

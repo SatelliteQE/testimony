@@ -5,10 +5,10 @@
 Defines various constants
 """
 
-
+# please update right path(s) below
 TEST_PATH = [
-    '/home/suresh/hacking/framework/robottelo/tests/ui/',
-    '/home/suresh/hacking/framework/robottelo/tests/cli/']
+    '/home/apple/testfolder1/',
+    '/home/apple/testfolder2/']
 
 DOCSTRING_TAGS = [
     'Feature',
