@@ -8,7 +8,7 @@ DocString manipulation methods to create test reports
 import ast
 import os
 
-from testimony.constants import DOCSTRING_TAGS, REPORT_TAGS, TEST_PATH
+from testimony.constants import DOCSTRING_TAGS, REPORT_TAGS
 
 
 bugs = 0
@@ -32,41 +32,51 @@ def main(report, paths):
     global invalid_doc_string
     global userinput
 
-    userinput = report
-    for path in paths:
+    for path in os.listdir(os.path.abspath(paths)):
         reset_counts()
         print "\nTEST PATH: %s" % path
         print "--------------------------------------------------------------"
-        for root, dirs, files in os.walk(path):
-            for i in range(1, len(files)):  # Loop for each file
-                if str(files[i]).startswith('test_') and str(files[i]).endswith('.py'):  # @IgnorePep8
-                    #Do not print this text for test summary
-                    if userinput != REPORT_TAGS[1]:
-                        print "Analyzing %s..." % files[i]
-                    filepath = path + files[i]
-                    list_strings = get_docstrings(filepath)
-                    if userinput in REPORT_TAGS[0] or userinput in REPORT_TAGS[2:3]:
-                        #print the derived test cases
-                        print_testcases(list_strings)
-                    elif userinput == REPORT_TAGS[4]:
-                        #print manual test cases
-                        print_testcases(list_strings, test_type="manual")
-                    elif userinput == REPORT_TAGS[5]:
-                        #print auto test cases
-                        print_testcases(list_strings, test_type="auto")
-                    else:
-                        #for printing test summary later
-                        update_summary(list_strings)
+        module_name, ext = os.path.splitext(path)
+        if ext == '.py' and module_name.startswith('test_'):
+            module = __import__(module_name)
+            if report != REPORT_TAGS[1]:
+                print "Analyzing %s..." % path
+                list_strings = extract_docstrings(module)
+                if report in REPORT_TAGS[0] or report in REPORT_TAGS[2:3]:
+                    #print the derived test cases
+                    print_testcases(list_strings)
+                elif report == REPORT_TAGS[4]:
+                    #print manual test cases
+                    print_testcases(list_strings, test_type="manual")
+                elif report == REPORT_TAGS[5]:
+                    #print auto test cases
+                    print_testcases(list_strings, test_type="auto")
+                else:
+                    #for printing test summary later
+                    update_summary(list_strings)
+
         #Print for test summary
-        if userinput == REPORT_TAGS[1]:
+        if report == REPORT_TAGS[1]:
             print_summary()
         #Print total number of invalid doc strings
-        if userinput == REPORT_TAGS[2]:
-            print "Total Number of invalid docstrings:  %d" % invalid_doc_string  # @IgnorePep8
+        if report == REPORT_TAGS[2]:
+            print "Invalid docstrings:  %d" % invalid_doc_string
         #Print number of test cases affected by bugs and also the list of bugs
-        if userinput == REPORT_TAGS[3]:
-            print "Total Number of test cases affected by bugs: %d" % bugs
+        if report == REPORT_TAGS[3]:
+            print "Test cases affected by bugs: %d" % bugs
             print "List of bugs:                               ", bug_list
+
+
+def extract_docstrings(test_module):
+    """Given a test module, extract its doc string and parse it."""
+
+    doc_string = test_module.__doc__
+
+    #TODO: move parsing code here
+    print doc_string
+
+    obj = ast.parse(test_module.__file__)
+    pass
 
 
 def get_docstrings(path):
