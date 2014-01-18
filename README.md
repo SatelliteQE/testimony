@@ -10,18 +10,23 @@ The parameter options are
     manual - List all manual test cases
     auto - List all auto test cases
 
+Installation
+------------
+
+You could install testimony using pip
+
+```shell
+pip install git+https://github.com/sthirugn/testimony.git
+```
+
 Requirements
 ------------
-1)If you haven't cloned the source code yet, then make sure to do it now:
-
-```
-git clone https://github.com/sthirugn/testimony.git
-```
+1) Install testimony following the steps on the installation section
 
 2)Pre-requisites
   Expected Docstring format:
 
-```	
+```
 	"""
 	@Feature: Login
 	@Test: Log in as a valid user
@@ -35,13 +40,26 @@ git clone https://github.com/sthirugn/testimony.git
 	"""
 ```
 
-3) Update constants.py -> TEST_PATH to add any number of test folder paths as array items.
-
 Usage:
 -----
 
 ```
-#python testimony.py print
+$ testimony -h
+usage: testimony [-h] REPORT PATH [PATH ...]
+
+Inspects and report on the Python test cases.
+
+positional arguments:
+  REPORT      report type, possible values: print, summary,
+              validate_docstring, bugs, manual, auto
+  PATH        a list of paths to look for tests cases
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+```
+$ testimony print /home/apple/tests/login/
 
 TEST PATH: /home/apple/tests/login/
 ----------------------------------------------------------------
@@ -59,7 +77,7 @@ Status: Manual
 ```
 
 ```
-#python testimony.py summary
+$ testimony summary /home/apple/tests/login/
 
 TEST PATH: /home/apple/tests/login/
 ----------------------------------------------------------------
@@ -70,7 +88,7 @@ Test cases with no docstrings:   0
 ```
 
 ```
-#python testimony.py validate_docstring
+$ testimony validate_docstring /home/apple/test/login/
 
 TEST PATH: /home/apple/tests/login/
 ----------------------------------------------------------------
@@ -82,7 +100,7 @@ Total Number of invalid docstrings:  4
 ```
 
 ```
-#python testimony.py bugs
+$ testimony bugs /home/apple/tests/login/
 
 TEST PATH: /home/apple/tests/login/
 ----------------------------------------------------------------
@@ -92,7 +110,7 @@ List of bugs:                                ['#1234567']
 ```
 
 ```
-#python testimony.py manual
+$ testimony manual /home/apple/tests/login/
 
 TEST PATH: /home/apple/tests/login/
 ----------------------------------------------------------------
@@ -109,7 +127,7 @@ Status: Manual (REMOVE this field once automated)
 ```
 
 ```
-# python testimony.py auto
+$ testimony auto /home/apple/tests/login/
 
 TEST PATH: /home/apple/tests/login/
 ----------------------------------------------------------------
@@ -122,28 +140,6 @@ Steps:
  2.  Log in with invalid user credentials
 Assert: Log in successful
 BZ: #1234567
-```
-
-```
-# python testimony.py
-Please enter a valid option to proceed:
-print
-summary
-validate_docstring
-bugs
-manual
-auto
-```
-
-```
-# python testimony.py invalid
-Please enter a valid option to proceed:
-print
-summary
-validate_docstring
-bugs
-manual
-auto
 ```
 
 Known Issues
