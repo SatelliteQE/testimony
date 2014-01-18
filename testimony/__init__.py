@@ -9,7 +9,8 @@ import ast
 import os
 import sys
 
-from constants import DOCSTRING_TAGS, REPORT_TAGS, TEST_PATH
+from testimony.constants import DOCSTRING_TAGS, REPORT_TAGS, TEST_PATH
+
 
 bugs = 0
 bug_list = []
@@ -242,6 +243,3 @@ def get_root_path():
     """
     return os.path.realpath(
         os.path.join(os.path.dirname(__file__), os.pardir, os.pardir))
-
-if __name__ == "__main__":
-    main()
