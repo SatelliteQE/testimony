@@ -7,9 +7,8 @@ DocString manipulation methods to create test reports
 
 import ast
 import os
-import sys
 
-from testimony.constants import DOCSTRING_TAGS, REPORT_TAGS, TEST_PATH
+from testimony.constants import DOCSTRING_TAGS, REPORT_TAGS
 
 
 bugs = 0
@@ -21,26 +20,20 @@ tc_count = 0
 userinput = None
 
 
-def main():
+def main(report, paths):
     """
     Main function for testimony project
+
+    Expects a valid report type and valid directory paths, hopefully argparse
+    is taking care of validation
     """
     global bug_list
     global bugs
     global invalid_doc_string
     global userinput
 
-    #Accept only one paramter.  Error out if argv is < 2 or > 2
-    if len(sys.argv) < 2 or len(sys.argv) > 2:
-        print_user_message()
-    elif not any(x in sys.argv[1] for x in REPORT_TAGS):
-        #Error out if user enters a wrong option
-        print_user_message()
-    userinput = sys.argv[1]
-    for path in TEST_PATH:
-        if not os.path.isdir(path):
-            print ("Please enter a valid path in TEST_PATH in constants.py")
-            exit()
+    userinput = report
+    for path in paths:
         reset_counts()
         print "\nTEST PATH: %s" % path
         print "--------------------------------------------------------------"
@@ -225,16 +218,6 @@ def print_line_item(docstring):
     """
     for lineitem in docstring:
         print lineitem
-
-
-def print_user_message():
-    """
-    Prints all the options for the reporting module
-    """
-    print "Please enter a valid option to proceed:"
-    for attr in REPORT_TAGS:
-        print attr
-    exit()
 
 
 def get_root_path():
