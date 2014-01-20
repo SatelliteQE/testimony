@@ -43,7 +43,7 @@ Expected Docstring format:
     """
 
 Usage:
------
+------
 
 ::
 
