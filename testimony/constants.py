@@ -5,11 +5,6 @@
 Defines various constants
 """
 
-# please update right path(s) below
-TEST_PATH = [
-    '/home/apple/testfolder1/',
-    '/home/apple/testfolder2/']
-
 DOCSTRING_TAGS = [
     'Feature',
     'Test',
