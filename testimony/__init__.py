@@ -43,7 +43,7 @@ def main(report, paths):
                     #Do not print this text for test summary
                     if userinput != REPORT_TAGS[1]:
                         print "Analyzing %s..." % files[i]
-                    filepath = path + files[i]
+                    filepath = os.path.join(os.path.abspath(path), files[i])
                     list_strings = get_docstrings(filepath)
                     if userinput in REPORT_TAGS[0] or userinput in REPORT_TAGS[2:3]:
                         #print the derived test cases
