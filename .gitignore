@@ -19,3 +19,6 @@
 .pydevproject
 .settings/
 *.pyc
+MANIFEST
+build/
+dist/
