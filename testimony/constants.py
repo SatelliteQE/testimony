@@ -4,6 +4,7 @@
 """
 Defines various constants
 """
+
 DOCSTRING_TAGS = [
     'Feature',
     'Test',
@@ -20,4 +21,3 @@ REPORT_TAGS = [
     'bugs',
     'manual',
     'auto']
-

@@ -8,7 +8,7 @@ DocString manipulation methods to create test reports
 import ast
 import os
 
-from testimony.constants import DOCSTRING_TAGS, REPORT_TAGS, PARAMETER_TAGS
+from testimony.constants import DOCSTRING_TAGS, REPORT_TAGS
 from termcolor import colored
 
 try:
