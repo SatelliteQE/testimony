@@ -43,7 +43,6 @@ def main(report, paths):
     for path in paths:
         reset_counts()
         print colored("\nTEST PATH: %s\n", 'white', attrs=['bold', 'underline']) % colored(path, 'cyan')
-#        print "--------------------------------------------------------------"
         for root, dirs, files in os.walk(path):
             for i in range(1, len(files)):  # Loop for each file
                 if str(files[i]).startswith('test_') and str(files[i]).endswith('.py'):  # @IgnorePep8
