@@ -143,7 +143,8 @@ def get_docstrings(path):
                             return_list.append(item_list)
         except AttributeError:
             if userinput == REPORT_TAGS[0] or userinput == REPORT_TAGS[2]:
-                print colored("--> DocString Missing. Please update <--", 'red')
+                print colored("%s:", "cyan") % func_name
+                print colored("  Docstring missing. Please update. ", 'red')
             no_doc_string = no_doc_string + 1
             continue
         except:
