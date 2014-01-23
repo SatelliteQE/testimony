@@ -68,8 +68,12 @@ def main(report, paths):
             print_summary()
         #Print total number of invalid doc strings
         if userinput == REPORT_TAGS[2]:
+            if invalid_doc_string == 0:
+                col = 'white'
+            else:
+                col = 'red'
             print colored("Total Number of invalid docstrings: %s", 'white', attrs=['bold']) \
-                % colored(invalid_doc_string, 'red')  # @IgnorePep8
+                % colored(invalid_doc_string, col)  # @IgnorePep8
         #Print number of test cases affected by bugs and also the list of bugs
         if userinput == REPORT_TAGS[3]:
             print colored("Total Number of test cases affected by bugs: %d", 'white', attrs=['bold']) % bugs
