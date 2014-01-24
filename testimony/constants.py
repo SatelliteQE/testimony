@@ -6,13 +6,13 @@ Defines various constants
 """
 
 DOCSTRING_TAGS = [
-    'Feature',
-    'Test',
-    'Setup',
-    'Steps',
-    'Assert',
-    'BZ',
-    'Status']
+    'feature',
+    'test',
+    'setup',
+    'steps',
+    'assert',
+    'bz',
+    'status']
 
 REPORT_TAGS = [
     'print',
