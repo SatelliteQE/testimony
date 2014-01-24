@@ -19,13 +19,15 @@ def dir_arg(arg):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-            description='Inspects and report on the Python test cases.',
-            prog='testimony')
-    parser.add_argument('report', type=str, choices=REPORT_TAGS,
-            metavar='REPORT',
-            help='report type, possible values: %s' % ', '.join(REPORT_TAGS))
-    parser.add_argument('paths', metavar='PATH', type=dir_arg, nargs='+',
-            help='a list of paths to look for tests cases')
+        description='Inspects and report on the Python test cases.',
+        prog='testimony')
+    parser.add_argument(
+        'report', type=str, choices=REPORT_TAGS,
+        metavar='REPORT',
+        help='report type, possible values: %s' % ', '.join(REPORT_TAGS))
+    parser.add_argument(
+        'paths', metavar='PATH', type=dir_arg, nargs='+',
+        help='a list of paths to look for tests cases')
 
     args = parser.parse_args()
     main(args.report, args.paths)
