@@ -5,11 +5,12 @@
 Defines various constants
 """
 
+# Per termcolor webpage, these are the available colors:
+# grey, red, green, yellow, blue, magenta, cyan, white
 ANSI_TAGS = [
     {'resource':'cyan'},
     {'error':'yellow'},
     {'good':'green'},
-
 ]
 
 DOCSTRING_TAGS = [
