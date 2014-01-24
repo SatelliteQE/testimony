@@ -8,7 +8,18 @@ DocString manipulation methods to create test reports
 import ast
 import os
 
-from testimony.constants import DOCSTRING_TAGS, REPORT_TAGS
+from testimony.constants import DOCSTRING_TAGS, REPORT_TAGS, ANSI_TAGS
+from termcolor import colored
+
+try:
+    from termcolor import colored
+except ImportError, e:
+    print "Please install termcolor module."
+    sys.exit(-1)
+
+col_resource = ANSI_TAGS[0]["resource"] 
+col_error = ANSI_TAGS[1]["error"]
+col_good=ANSI_TAGS[2]["good"]
 
 
 def main(report, paths):
@@ -32,12 +43,12 @@ def main(report, paths):
         dir_list.append(path)
         dir_list = get_all_dirs(path, dir_list)
         for dirs in dir_list:
-            print "\nTEST PATH: %s" % dirs
+            print colored("\nTEST PATH: %s\n", attrs=['bold', 'underline']) % colored(dirs, col_resource)
             for files in os.listdir(str(dirs)):
                 if str(files).startswith('test_') and str(files).endswith('.py'):
                     #Do not print this text for test summary
                     if report != REPORT_TAGS[1]:
-                        print "Analyzing %s..." % files
+                        print colored("Analyzing %s...", attrs=['bold']) % files
                     filepath = os.path.join(str(dirs), str(files))
                     list_strings, result = get_docstrings(report, filepath, result)
                     if report != REPORT_TAGS[1]:
@@ -50,12 +61,16 @@ def main(report, paths):
             print_summary(result)
         #Print total number of invalid doc strings
         if report == REPORT_TAGS[2]:
-            print "\nTotal Number of invalid docstrings:  %d" % result['invalid_docstring']
-        #Print number of test cases affected by bugs and also the list of bugs
+			if result['invalid_docstring'] == 0:
+				col = col_good
+			else:
+				col = col_error
+			print colored("\nTotal Number of invalid docstrings:  %s", attrs=['bold']) % colored(result['invalid_docstring'], col)
+		#Print number of test cases affected by bugs and also the list of bugs
         if report == REPORT_TAGS[3]:
-            print "\nTotal Number of test cases affected by bugs: %d" % result['bugs']
-            print "List of bugs:                               ", result['bug_list']
-
+            print colored("\nTotal Number of test cases affected by bugs: %s", attrs=['bold']) % result['bugs']
+            for bug in result["bug_list"]:
+            	print bug 
 
 def get_docstrings(report, path, result):
     """
@@ -97,7 +112,7 @@ def get_docstrings(report, path, result):
                                     docstring_tag = attr.split(" ", 1)
                                     #Error out invalid docstring
                                     if not any(x in docstring_tag[0].lower() for x in DOCSTRING_TAGS):
-                                        item_list.append("-->Invalid DocString: %s<--" % attr)
+                                        item_list.append(" Invalid DocString: %s" % colored(attr, col_error, attrs=['bold']))
                                         result['invalid_docstring'] = result['invalid_docstring'] + 1
                                 elif report == REPORT_TAGS[3]:
                                     #Find the bug from docstring
@@ -110,14 +125,16 @@ def get_docstrings(report, path, result):
                                     #For printing all test cases
                                     item_list.append(attr)
                         if len(item_list) != 0:
+                            print colored("%s", col_resource) % func_name
                             return_list.append(item_list)
         except AttributeError:
             if report == REPORT_TAGS[0] or report == REPORT_TAGS[2]:
-                print "--> DocString Missing. Please update <--"
+                print colored("%s", col_resource) % func_name
+                print colored("  Docstring missing. Please update. ", col_error)
             result['no_docstring'] = result['no_docstring'] + 1
             continue
         except:
-            print "!!!!!Exception in parsing DocString!!!!!"
+            print colored("!!!!!Exception in parsing DocString!!!!!", col_error, attrs=['bold'])
     return return_list, result
 
 
@@ -166,10 +183,10 @@ def print_summary(result):
     """
     Prints summary for reporting
     """
-    print "Total Number of test cases:      %d" % result['tc_count']
-    print "Total Number of automated cases: %d" % (result['tc_count'] - result['manual_count'])
-    print "Total Number of manual cases:    %d" % result['manual_count']
-    print "Test cases with no docstrings:   %d" % result['no_docstring']
+    print colored("Total Number of test cases:      %s", attrs=['bold']) % result['tc_count']
+    print colored("Total Number of automated cases: %s", attrs=['bold']) % (result['tc_count'] - result['manual_count'])
+    print colored("Total Number of manual cases:    %s", attrs=['bold']) % result['manual_count']
+    print colored("Test cases with no docstrings:   %s", attrs=['bold']) % result['no_docstring']
 
 
 def reset_counts(result):
@@ -191,6 +208,7 @@ def print_line_item(docstring):
     """
     for lineitem in docstring:
         print lineitem
+    print "\n"
 
 
 def get_all_dirs(path, dir_list):
