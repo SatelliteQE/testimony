@@ -7,9 +7,9 @@ DocString manipulation methods to create test reports
 
 import ast
 import os
+import sys
 
 from testimony.constants import DOCSTRING_TAGS, REPORT_TAGS, ANSI_TAGS
-from termcolor import colored
 
 try:
     from termcolor import colored
@@ -17,9 +17,9 @@ except ImportError, e:
     print "Please install termcolor module."
     sys.exit(-1)
 
-col_resource = ANSI_TAGS[0]["resource"] 
+col_resource = ANSI_TAGS[0]["resource"]
 col_error = ANSI_TAGS[1]["error"]
-col_good=ANSI_TAGS[2]["good"]
+col_good = ANSI_TAGS[2]["good"]
 
 
 def main(report, paths):
@@ -61,16 +61,17 @@ def main(report, paths):
             print_summary(result)
         #Print total number of invalid doc strings
         if report == REPORT_TAGS[2]:
-			if result['invalid_docstring'] == 0:
-				col = col_good
-			else:
-				col = col_error
-			print colored("\nTotal Number of invalid docstrings:  %s", attrs=['bold']) % colored(result['invalid_docstring'], col)
-		#Print number of test cases affected by bugs and also the list of bugs
+            if result['invalid_docstring'] == 0:
+                col = col_good
+            else:
+                col = col_error
+            print colored("\nTotal Number of invalid docstrings:  %s", attrs=['bold']) % colored(result['invalid_docstring'], col)
+        #Print number of test cases affected by bugs and also the list of bugs
         if report == REPORT_TAGS[3]:
             print colored("\nTotal Number of test cases affected by bugs: %s", attrs=['bold']) % result['bugs']
             for bug in result["bug_list"]:
-            	print bug 
+                print bug
+
 
 def get_docstrings(report, path, result):
     """
