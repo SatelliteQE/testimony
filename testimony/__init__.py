@@ -8,7 +8,7 @@ DocString manipulation methods to create test reports
 import ast
 import os
 
-from testimony.constants import DOCSTRING_TAGS, REPORT_TAGS
+from testimony.constants import DOCSTRING_TAGS, REPORT_TAGS, ANSI_TAGS
 from termcolor import colored
 
 try:
@@ -25,6 +25,9 @@ manual_count = 0
 no_doc_string = 0
 tc_count = 0
 userinput = None
+col_resource = ANSI_TAGS[0]["resource"] 
+col_error = ANSI_TAGS[1]["error"]
+col_good=ANSI_TAGS[2]["good"]
 
 
 def main(report, paths):
@@ -42,13 +45,13 @@ def main(report, paths):
     userinput = report
     for path in paths:
         reset_counts()
-        print colored("\nTEST PATH: %s\n", attrs=['bold', 'underline']) % colored(path, 'cyan')
+        print colored("\nTEST PATH: %s\n", attrs=['bold', 'underline']) % colored(path, col_resource)
         for root, dirs, files in os.walk(path):
             for i in range(1, len(files)):  # Loop for each file
                 if str(files[i]).startswith('test_') and str(files[i]).endswith('.py'):  # @IgnorePep8
                     #Do not print this text for test summary
                     if userinput != REPORT_TAGS[1]:
-                        print colored("Analyzing %s...", attrs=['bold']) % colored(files[i], 'cyan')
+                        print colored("Analyzing %s...", attrs=['bold']) % colored(files[i], col_resource)
                     filepath = os.path.join(os.path.abspath(path), files[i])
                     list_strings = get_docstrings(filepath)
                     if userinput in REPORT_TAGS[0] or userinput in REPORT_TAGS[2:3]:
@@ -69,9 +72,9 @@ def main(report, paths):
         #Print total number of invalid doc strings
         if userinput == REPORT_TAGS[2]:
             if invalid_doc_string == 0:
-                col = 'green'
+                col = col_good
             else:
-                col = 'red'
+                col = col_error
             print colored("Total Number of invalid docstrings: %s", attrs=['bold']) \
                 % colored(invalid_doc_string, col)  # @IgnorePep8
         #Print number of test cases affected by bugs and also the list of bugs
@@ -127,7 +130,7 @@ def get_docstrings(path):
                                     #Error out invalid docstring
                                     if not any(x in docstring_tag[0] for x in DOCSTRING_TAGS):  # @IgnorePep8
                                         item_list.append(" Invalid Docstring, '%s'" \
-                                            % colored(attr, 'red', attrs=['bold']))  # @IgnorePep8
+                                            % colored(attr, col_error, attrs=['bold']))  # @IgnorePep8
                                         invalid_doc_string = invalid_doc_string + 1  # @IgnorePep8
                                 elif userinput == REPORT_TAGS[3]:
                                     #Find the bug from docstring
@@ -140,16 +143,16 @@ def get_docstrings(path):
                                     #For printing all test cases
                                     item_list.append(attr)
                         if len(item_list) != 0:
-                            print colored("%s", 'cyan') % func_name
+                            print colored("%s", col_resource) % func_name
                             return_list.append(item_list)
         except AttributeError:
             if userinput == REPORT_TAGS[0] or userinput == REPORT_TAGS[2]:
-                print colored("%s", "cyan") % func_name
-                print colored("  Docstring missing. Please update. ", 'red')
+                print colored("%s", col_resource) % func_name
+                print colored("  Docstring missing. Please update. ", col_error)
             no_doc_string = no_doc_string + 1
             continue
         except:
-            print colored("!!!!!Exception in parsing DocString!!!!!", 'red', attrs=['bold'])
+            print colored("!!!!!Exception in parsing DocString!!!!!", col_error, attrs=['bold'])
     return return_list
 
 
@@ -206,7 +209,7 @@ def print_summary():
     print colored("Total Number of test cases:      %s",  attrs=['bold']) % tc_count
     print colored("Total Number of automated cases: %s",  attrs=['bold']) % (tc_count - manual_count)
     print colored("Total Number of manual cases:    %s",  attrs=['bold']) % manual_count
-    print colored("Test cases with no docstrings:   %s",  attrs=['bold']) % colored(no_doc_string, 'red')
+    print colored("Test cases with no docstrings:   %s",  attrs=['bold']) % colored(no_doc_string, col_error)
 
 
 def reset_counts():

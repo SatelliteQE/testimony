@@ -5,6 +5,13 @@
 Defines various constants
 """
 
+ANSI_TAGS = [
+    {'resource':'cyan'},
+    {'error':'yellow'},
+    {'good':'green'},
+
+]
+
 DOCSTRING_TAGS = [
     'Feature',
     'Test',
