@@ -9,18 +9,18 @@ Defines various constants
 # grey, red, green, yellow, blue, magenta, cyan, white
 ANSI_TAGS = [
     {'resource':'cyan'},
-    {'error':'yellow'},
+    {'error':'red'},
     {'good':'green'},
 ]
 
 DOCSTRING_TAGS = [
-    'Feature',
-    'Test',
-    'Setup',
-    'Steps',
-    'Assert',
-    'BZ',
-    'Status']
+    'feature',
+    'test',
+    'setup',
+    'steps',
+    'assert',
+    'bz',
+    'status']
 
 REPORT_TAGS = [
     'print',
