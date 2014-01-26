@@ -14,11 +14,11 @@ The parameter options are:
 Installation
 ------------
 
-You could install testimony using pip
+You could install testimony from PyPI using pip:
 
 ::
 
-    pip install git+https://github.com/sthirugn/testimony.git
+    pip install testimony
 
 Requirements
 ------------
