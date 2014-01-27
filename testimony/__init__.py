@@ -78,7 +78,7 @@ def main(report, paths):
             print colored(
                 "\nTotal Number of test cases affected by bugs: %s",
                 attrs=['bold']) % result['bugs']
-            if len(result["bug_list"]) >= 0:
+            if len(result["bug_list"]) > 0:
                 print colored("\nBug list:", attrs=['bold'])
                 for bug in result["bug_list"]:
                     print bug
