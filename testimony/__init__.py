@@ -14,10 +14,10 @@ from testimony.constants import PRINT_TOTAL_TC, PRINT_AUTO_TC, \
     PRINT_MANUAL_TC, PRINT_NO_DOC, PRINT_PARSE_ERR
 
 try:
-    from termcolor import colored
+    print_error = False
+    import termcolor
 except ImportError, e:
-    print "Please install termcolor module."
-    sys.exit(-1)
+    print_error = True
 
 col_resource = ANSI_TAGS[0]["resource"]
 col_error = ANSI_TAGS[1]["error"]
@@ -241,3 +241,14 @@ def get_all_dirs(path, dir_list):
             if os.path.isdir(attr):
                 dir_list.append(attr)
     return dir_list
+
+
+def colored(text, color=None, attrs=None):
+    """
+    Checks if termcolor is installed before calling it
+    """
+    global print_error
+    if print_error is None or not print_error:
+        return termcolor.colored(text, color=color, attrs=attrs)
+    else:
+        return text
