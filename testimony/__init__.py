@@ -13,10 +13,9 @@ from testimony.constants import PRINT_TOTAL_TC, PRINT_AUTO_TC, \
     PRINT_MANUAL_TC, PRINT_NO_DOC, PRINT_PARSE_ERR
 
 try:
-    print_error = False
     import termcolor
 except ImportError, e:
-    print_error = True
+    pass
 
 col_resource = ANSI_TAGS[0]["resource"]
 col_error = ANSI_TAGS[1]["error"]
@@ -79,8 +78,10 @@ def main(report, paths):
             print colored(
                 "\nTotal Number of test cases affected by bugs: %s",
                 attrs=['bold']) % result['bugs']
-            for bug in result["bug_list"]:
-                print bug
+            if len(result["bug_list"]) >= 0:
+                print colored("\nBug list:", attrs=['bold'])
+                for bug in result["bug_list"]:
+                    print bug
 
 
 def get_docstrings(report, path, result):
@@ -246,8 +247,7 @@ def colored(text, color=None, attrs=None):
     """
     Checks if termcolor is installed before calling it
     """
-    global print_error
-    if print_error is None or not print_error:
+    try:
         return termcolor.colored(text, color=color, attrs=attrs)
-    else:
+    except NameError:
         return text
