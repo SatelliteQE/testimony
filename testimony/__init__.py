@@ -7,7 +7,6 @@ DocString manipulation methods to create test reports
 
 import ast
 import os
-import sys
 
 from testimony.constants import DOCSTRING_TAGS, REPORT_TAGS, ANSI_TAGS
 from testimony.constants import PRINT_TOTAL_TC, PRINT_AUTO_TC, \
