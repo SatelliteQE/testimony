@@ -14,8 +14,13 @@ from testimony.constants import PRINT_TOTAL_TC, PRINT_AUTO_TC, \
 
 try:
     import termcolor
+    has_termcolor = True
 except ImportError, e:
-    pass
+    has_termcolor = False
+
+settings = {
+    'nocolor': False,
+}
 
 col_resource = ANSI_TAGS[0]["resource"]
 col_error = ANSI_TAGS[1]["error"]
@@ -29,7 +34,7 @@ def main(report, paths, nocolor):
     Expects a valid report type and valid directory paths, hopefully argparse
     is taking care of validation
     """
-    main.no_color = nocolor
+    settings['nocolor'] = nocolor
     result = {
         'bugs': 0,
         'bugs_list': list(),
@@ -248,10 +253,7 @@ def colored(text, color=None, attrs=None):
     """
     Checks if termcolor is installed before calling it
     """
-    try:
-        if not main.no_color:
-            return termcolor.colored(text, color=color, attrs=attrs)
-        else:
-            return text
-    except NameError:
+    if has_termcolor and not settings['nocolor']:
+        return termcolor.colored(text, color=color, attrs=attrs)
+    else:
         return text
