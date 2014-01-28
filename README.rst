@@ -146,9 +146,10 @@ Usage:
     Assert: Log in successful
     BZ: #1234567
     
+Having termcolor installed, testimony produces colored output by default.  It can be disabled by:
+
 ::
-	
-	# Having termcolor installed, testimony produces colored output by default.  It can be disabled by:
+
     $ testimony auto /home/apple/tests/login/ --nocolor
     
     (or)
