@@ -248,7 +248,6 @@ def colored(text, color=None, attrs=None):
     """
     Checks if termcolor is installed before calling it
     """
-    #global no_color
     try:
         if not main.no_color:
             return termcolor.colored(text, color=color, attrs=attrs)
