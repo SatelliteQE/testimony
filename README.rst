@@ -42,6 +42,8 @@ Expected Docstring format:
     @Status: Manual (REMOVE this field once automated)
     """
 
+\3) Optional color formatting - If termcolor package is installed, output will be printed in colored text
+
 Usage:
 ------
 

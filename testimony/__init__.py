@@ -7,17 +7,15 @@ DocString manipulation methods to create test reports
 
 import ast
 import os
-import sys
 
 from testimony.constants import DOCSTRING_TAGS, REPORT_TAGS, ANSI_TAGS
 from testimony.constants import PRINT_TOTAL_TC, PRINT_AUTO_TC, \
     PRINT_MANUAL_TC, PRINT_NO_DOC, PRINT_PARSE_ERR
 
 try:
-    from termcolor import colored
+    import termcolor
 except ImportError, e:
-    print "Please install termcolor module."
-    sys.exit(-1)
+    pass
 
 col_resource = ANSI_TAGS[0]["resource"]
 col_error = ANSI_TAGS[1]["error"]
@@ -80,8 +78,10 @@ def main(report, paths):
             print colored(
                 "\nTotal Number of test cases affected by bugs: %s",
                 attrs=['bold']) % result['bugs']
-            for bug in result["bug_list"]:
-                print bug
+            if len(result["bug_list"]) > 0:
+                print colored("\nBug list:", attrs=['bold'])
+                for bug in result["bug_list"]:
+                    print bug
 
 
 def get_docstrings(report, path, result):
@@ -241,3 +241,13 @@ def get_all_dirs(path, dir_list):
             if os.path.isdir(attr):
                 dir_list.append(attr)
     return dir_list
+
+
+def colored(text, color=None, attrs=None):
+    """
+    Checks if termcolor is installed before calling it
+    """
+    try:
+        return termcolor.colored(text, color=color, attrs=attrs)
+    except NameError:
+        return text
