@@ -20,7 +20,6 @@ except ImportError, e:
 col_resource = ANSI_TAGS[0]["resource"]
 col_error = ANSI_TAGS[1]["error"]
 col_good = ANSI_TAGS[2]["good"]
-no_color = False
 
 
 def main(report, paths, nocolor):
@@ -30,8 +29,7 @@ def main(report, paths, nocolor):
     Expects a valid report type and valid directory paths, hopefully argparse
     is taking care of validation
     """
-    global no_color
-    no_color = nocolor
+    main.no_color = nocolor
     result = {
         'bugs': 0,
         'bugs_list': list(),
@@ -250,9 +248,9 @@ def colored(text, color=None, attrs=None):
     """
     Checks if termcolor is installed before calling it
     """
-    global no_color
+    #global no_color
     try:
-        if not no_color:
+        if not main.no_color:
             return termcolor.colored(text, color=color, attrs=attrs)
         else:
             return text
