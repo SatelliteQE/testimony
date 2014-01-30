@@ -9,9 +9,9 @@ import ast
 import os
 
 from testimony.constants import CLR_ERR, CLR_GOOD, CLR_RESOURCE, \
-    DOCSTRING_TAGS, PRINT_AUTO_TC, PRINT_DASHES, PRINT_INVALID_DOC, \
-    PRINT_MANUAL_TC, PRINT_NO_DOC, PRINT_PARSE_ERR, PRINT_TC_AFFECTED_BUGS, \
-    PRINT_TOTAL_TC, REPORT_TAGS
+    DOCSTRING_TAGS, PRINT_AUTO_TC, PRINT_DASHES, PRINT_DOC_MISSING, \
+    PRINT_INVALID_DOC, PRINT_MANUAL_TC, PRINT_NO_DOC, PRINT_PARSE_ERR, \
+    PRINT_TC_AFFECTED_BUGS, PRINT_TOTAL_TC, REPORT_TAGS
 
 try:
     import termcolor
@@ -151,7 +151,7 @@ def get_docstrings(report, path, result):
         except AttributeError:
             if report == REPORT_TAGS[0] or report == REPORT_TAGS[2]:
                 print colored("%s", CLR_RESOURCE) % func_name
-                print colored(" Docstring missing. Please update. ", CLR_ERR)
+                print colored(PRINT_DOC_MISSING, CLR_ERR)
             result['no_docstring'] = result['no_docstring'] + 1
             continue
         except:
