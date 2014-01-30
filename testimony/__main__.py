@@ -28,6 +28,8 @@ if __name__ == "__main__":
     parser.add_argument(
         'paths', metavar='PATH', type=dir_arg, nargs='+',
         help='a list of paths to look for tests cases')
+    parser.add_argument(
+        '-n', '--nocolor', action='store_true', help='Do not use color option')
 
     args = parser.parse_args()
-    main(args.report, args.paths)
+    main(args.report, args.paths, args.nocolor)

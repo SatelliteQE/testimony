@@ -145,6 +145,17 @@ Usage:
      2.  Log in with invalid user credentials
     Assert: Log in successful
     BZ: #1234567
+    
+Having termcolor installed, testimony produces colored output by default.  It can be disabled by:
+
+::
+
+    $ testimony auto /home/apple/tests/login/ --nocolor
+    
+    (or)
+	
+    $ testimony auto /home/apple/tests/login/ -n 
+
 
 Known Issues
 ------------
