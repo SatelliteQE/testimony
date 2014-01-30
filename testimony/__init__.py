@@ -8,10 +8,12 @@ DocString manipulation methods to create test reports
 import ast
 import os
 
-from testimony.constants import CLR_ERR, CLR_GOOD, CLR_RESOURCE, \
-    DOCSTRING_TAGS, PRINT_AUTO_TC, PRINT_DASHES, PRINT_DOC_MISSING, \
-    PRINT_INVALID_DOC, PRINT_MANUAL_TC, PRINT_NO_DOC, PRINT_PARSE_ERR, \
-    PRINT_TC_AFFECTED_BUGS, PRINT_TOTAL_TC, REPORT_TAGS
+from testimony.constants import (CLR_ERR, CLR_GOOD, CLR_RESOURCE,
+                                 DOCSTRING_TAGS, PRINT_AUTO_TC, PRINT_DASHES,
+                                 PRINT_DOC_MISSING, PRINT_INVALID_DOC,
+                                 PRINT_MANUAL_TC, PRINT_NO_DOC,
+                                 PRINT_PARSE_ERR, PRINT_TC_AFFECTED_BUGS,
+                                 PRINT_TOTAL_TC, REPORT_TAGS)
 
 try:
     import termcolor
