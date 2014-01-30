@@ -7,11 +7,9 @@ Defines various constants
 
 # Per termcolor webpage, these are the available colors:
 # grey, red, green, yellow, blue, magenta, cyan, white
-ANSI_TAGS = [
-    {'resource': 'cyan'},
-    {'error': 'red'},
-    {'good': 'green'},
-]
+CLR_RESOURCE = 'cyan'
+CLR_ERR = 'red'
+CLR_GOOD = 'green'
 
 DOCSTRING_TAGS = [
     'feature',
@@ -35,3 +33,6 @@ PRINT_AUTO_TC = 'Total Number of automated cases: %s'
 PRINT_MANUAL_TC = 'Total Number of manual cases:    %s'
 PRINT_NO_DOC = 'Test cases with no docstrings:   %s'
 PRINT_PARSE_ERR = '!!!!!Exception in parsing DocString!!!!!'
+PRINT_TC_AFFECTED_BUGS = '\nTotal Number of test cases affected by bugs: %s'
+PRINT_INVALID_DOC = '\nTotal Number of invalid docstrings:  %s'
+PRINT_DASHES = '--------------------------------------------------------------'
