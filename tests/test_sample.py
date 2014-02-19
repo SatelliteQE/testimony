@@ -6,7 +6,7 @@ Test class for Sample Test
 """
 
 
-class testsample():
+class Testsample():
     """
     This is a dummy test file used for testing testimony
     """
