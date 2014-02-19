@@ -132,7 +132,7 @@ def get_docstrings(report, path, result):
                 #Retrieve the func name to check if this is a test_* function
                 if attr == 'name':
                     func_name = getattr(obj.body[i].body[j], "name")
-                    if func_name.startswith('test'):
+                    if func_name.startswith('test_'):
                         #Find the docstring value of this function
                         #Remove the trailing spaces
                         value = obj.body[i].body[j].body[0].value.s.lstrip()
