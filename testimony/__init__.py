@@ -7,12 +7,13 @@ DocString manipulation methods to create test reports
 
 import ast
 import os
+import sys
 
 from testimony.constants import (
     CLR_ERR, CLR_GOOD, CLR_RESOURCE, DOCSTRING_TAGS, PRINT_AUTO_TC,
-    PRINT_DASHES, PRINT_DOC_MISSING, PRINT_INVALID_DOC, PRINT_MANUAL_TC,
-    PRINT_NO_DOC, PRINT_PARSE_ERR, PRINT_TC_AFFECTED_BUGS, PRINT_TOTAL_TC,
-    REPORT_TAGS)
+    PRINT_DOC_MISSING, PRINT_INVALID_DOC, PRINT_MANUAL_TC, PRINT_NO_DOC,
+    PRINT_NO_MINIMUM_DOC, PRINT_NO_MINIMUM_DOC_TC,
+    PRINT_PARSE_ERR, PRINT_TC_AFFECTED_BUGS, PRINT_TOTAL_TC, REPORT_TAGS)
 
 try:
     import termcolor
@@ -37,26 +38,28 @@ def main(report, paths, nocolor):
         'bugs': 0,
         'bugs_list': list(),
         'invalid_docstring': 0,
+        'no_docstring': 0,
+        'no_minimal_docstring': 0,
         'manual_count': 0,
         'tc_count': 0,
         }
+
     dir_list = []
     for path in paths:
         result = reset_counts(result)
-        print PRINT_DASHES
         dir_list.append(path)
         dir_list = get_all_dirs(path, dir_list)
         for dirs in dir_list:
             print colored(
-                "\nTEST PATH: %s\n",
-                attrs=['bold', 'underline']) % colored(dirs, CLR_RESOURCE)
+                "\nFetching Test Path %s\n",
+                attrs=['bold']) % colored(dirs, CLR_RESOURCE)
             for files in os.listdir(str(dirs)):
                 if (str(files).startswith('test_') and
                         str(files).endswith('.py')):
                     #Do not print this text for test summary
                     if report != REPORT_TAGS[1]:
                         print colored(
-                            "Analyzing %s...", attrs=['bold']) % files
+                            "Scanning %s...", attrs=['bold']) % files
                     filepath = os.path.join(str(dirs), str(files))
                     list_strings, result = get_docstrings(
                         report, filepath, result)
@@ -77,6 +80,20 @@ def main(report, paths, nocolor):
             print colored(
                 PRINT_INVALID_DOC,
                 attrs=['bold']) % colored(result['invalid_docstring'], col)
+            if result['no_docstring'] == 0:
+                col = CLR_GOOD
+            else:
+                col = CLR_ERR
+            print colored(
+                PRINT_NO_DOC,
+                attrs=['bold']) % colored(result['no_docstring'], col)
+            if result['no_minimal_docstring'] == 0:
+                col = CLR_GOOD
+            else:
+                col = CLR_ERR
+            print colored(
+                PRINT_NO_MINIMUM_DOC_TC,
+                attrs=['bold']) % colored(result['no_minimal_docstring'], col)
         #Print number of test cases affected by bugs and also the list of bugs
         if report == REPORT_TAGS[3]:
             print colored(
@@ -85,6 +102,10 @@ def main(report, paths, nocolor):
                 print colored("\nBug list:", attrs=['bold'])
                 for bug in result["bug_list"]:
                     print bug
+        #Send error code back to caller
+        if (result['invalid_docstring'] != 0 or result['no_docstring'] != 0
+                or result['no_minimal_docstring'] != 0):
+            sys.exit(-1)
 
 
 def get_docstrings(report, path, result):
@@ -104,6 +125,7 @@ def get_docstrings(report, path, result):
     #Remember that this body[] list will have all different items like class
     #docstrings and functions. So first find the items which are functions
     for j in range(0, len(obj.body[i].body)):
+        item_list = []
         try:
             obj_param = obj.body[i].body[j]._fields
             for attr in obj_param:
@@ -116,7 +138,9 @@ def get_docstrings(report, path, result):
                         value = obj.body[i].body[j].body[0].value.s.lstrip()
                         #Split the docstring with @
                         doclines = value.split('@',)
-                        item_list = []
+                        featurefound = False
+                        testfound = False
+                        assertfound = False
                         for attr in doclines:
                             #Remove trailing spaces
                             attr = attr.rstrip()
@@ -130,11 +154,21 @@ def get_docstrings(report, path, result):
                                             x in docstring_tag[0].lower() for
                                             x in DOCSTRING_TAGS):
                                         item_list.append(
-                                            " Invalid DocString: %s"
-                                            % colored(attr, CLR_ERR,
-                                                      attrs=['bold']))
+                                            "%s: Invalid DocString: %s"
+                                            % (func_name, colored(
+                                                attr, CLR_ERR,
+                                                attrs=['bold'])))
                                         result['invalid_docstring'] = result[
                                             'invalid_docstring'] + 1
+                                    if (DOCSTRING_TAGS[0] in
+                                            docstring_tag[0].lower()):
+                                        featurefound = True
+                                    if (DOCSTRING_TAGS[1] in
+                                            docstring_tag[0].lower()):
+                                        testfound = True
+                                    if (DOCSTRING_TAGS[4] in
+                                            docstring_tag[0].lower()):
+                                        assertfound = True
                                 elif report == REPORT_TAGS[3]:
                                     #Find the bug from docstring
                                     docstring_tag = attr.split(" ", 1)
@@ -147,12 +181,23 @@ def get_docstrings(report, path, result):
                                 else:
                                     #For printing all test cases
                                     item_list.append(attr)
+                        if report == REPORT_TAGS[2]:
+                            if (not featurefound or
+                                    not testfound or
+                                    not assertfound):
+                                item_list.append(
+                                    "%s: %s" % (
+                                        func_name, PRINT_NO_MINIMUM_DOC))
+                                result['no_minimal_docstring'] =\
+                                    result['no_minimal_docstring'] + 1
                         if len(item_list) != 0:
                             return_list.append(item_list)
         except AttributeError:
             if report == REPORT_TAGS[0] or report == REPORT_TAGS[2]:
-                print colored("%s", CLR_RESOURCE) % func_name
-                print colored(PRINT_DOC_MISSING, CLR_ERR)
+                item_list.append(
+                    "%s: %s" % (
+                        func_name, colored(PRINT_DOC_MISSING, CLR_ERR)))
+                return_list.append(item_list)
             result['no_docstring'] = result['no_docstring'] + 1
             continue
         except:
@@ -168,7 +213,7 @@ def print_testcases(report, list_strings, result):
     for docstring in list_strings:
         if report == REPORT_TAGS[0]:
             tc = tc + 1
-            print "TC %d" % tc
+            print "\nTC %d" % tc
 
         #verify if this needs to be printed
         manual_print = False
@@ -231,7 +276,6 @@ def print_line_item(docstring):
     """
     for lineitem in docstring:
         print lineitem
-    print "\n"
 
 
 def get_all_dirs(path, dir_list):
