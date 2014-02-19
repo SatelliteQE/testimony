@@ -138,7 +138,6 @@ def get_docstrings(report, path, result):
                         value = obj.body[i].body[j].body[0].value.s.lstrip()
                         #Split the docstring with @
                         doclines = value.split('@',)
-                        #item_list = []
                         featurefound = False
                         testfound = False
                         assertfound = False
