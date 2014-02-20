@@ -9,18 +9,18 @@ The parameter options are:
 * print - List all test cases
 * summary - Summary of number of automated cases vs. manual cases
 * validate_docstring - Validate docstrings
-    * Reports test cases with invalid docstrings
-    * Reports test cases with missing docstrings
-    * Reports test cases that does not have minimal required docstrings (This will enforce that all test cases have a minimal set of docstrings)
-        * Currently testimony enforces to have Feature, Test, Assert as mandatory docstrings for each test case
+  - Reports test cases with invalid docstrings
+  - Reports test cases with missing docstrings
+  - Reports test cases that does not have minimal required docstrings (This will enforce that all test cases have a minimal set of docstrings)
+    - Currently testimony enforces Feature, Test, Assert as mandatory docstrings for each test case
 * bugs - Test cases affected by Bugs and the corresponding Bug list
 * manual - List all manual test cases
 * auto - List all auto test cases
 
 Note:
-* testimony returns a non-zero error code when the test case docstrings does not follow the intended rules, returns zero otherwise
-* testimony also parses different folders under the given folder to verify the test files
-* testimony also displays optional colored outputs when termcolor is installed
+- testimony returns a non-zero error code when the test case docstrings does not follow the intended rules, returns zero otherwise
+- testimony also parses different folders under the given folder to verify the test files
+- testimony also displays optional colored outputs when termcolor is installed
 
 Advantages
 ----------
@@ -223,7 +223,25 @@ Usage:
  
     $ echo $?
     255
-    
+
+
+Success scenario in which testimony returns 0
+
+ ::
+ 
+    $ python testimony/__main__.py validate_docstring /home/tests/ui/sample/
+ 
+	Fetching Test Path home/tests/ui/sample/
+ 
+	Scanning test_activationkey.py...
+	Total Number of invalid docstrings:  0
+	Test cases with no docstrings:   0
+	Test cases missing minimal docstrings:  0
+ 
+	$ echo $?
+	0
+
+ 
 Having termcolor installed, testimony produces colored output by default.  It can be disabled by:
 
 ::
@@ -248,6 +266,6 @@ This software is developed by `Suresh Thirugn`_.
 
 Contributors
 ------------
-Og Maciel
-Corey Welton
-Elyézer Rezende
+- Og Maciel
+- Corey Welton
+- Elyézer Rezende
