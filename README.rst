@@ -6,16 +6,15 @@ The project testimony is written to inspect and report on the python test cases.
 
 The parameter options are:
 
-* print - List all test cases
-* summary - Summary of number of automated cases vs. manual cases
-* validate_docstring - Validate docstrings
-  - Reports test cases with invalid docstrings
-  - Reports test cases with missing docstrings
-  - Reports test cases that does not have minimal required docstrings (This will enforce that all test cases have a minimal set of docstrings)
-    - Currently testimony enforces Feature, Test, Assert as mandatory docstrings for each test case
-* bugs - Test cases affected by Bugs and the corresponding Bug list
-* manual - List all manual test cases
-* auto - List all auto test cases
+1. print - List all test cases
+2. summary - Summary of number of automated cases vs. manual cases
+3. validate_docstring - Validate docstrings
+  	a. Reports test cases with invalid docstrings
+    b. Reports test cases with missing docstrings
+    c. Reports test cases that does not have minimal required docstrings (This will enforce that all test cases have a minimal set of docstrings). Currently testimony enforces Feature, Test, Assert as mandatory docstrings for each test case
+4. bugs - Test cases affected by Bugs and the corresponding Bug list
+5. manual - List all manual test cases
+6. auto - List all auto test cases
 
 Note:
 - testimony returns a non-zero error code when the test case docstrings does not follow the intended rules, returns zero otherwise
@@ -24,10 +23,10 @@ Note:
 
 Advantages
 ----------
-* Avoids a separate test case management tool to document test cases by using the python automation framework for the same
-* Enforces test cases to follow a defined standard
-* Runs in integration with tools like Travis to get a report as and when you check in code
-* Saves a lot of time from the conventional way of writing test cases using a test management tool
+1. Avoids a separate test case management tool to document test cases by using the python automation framework for the same
+2. Enforces test cases to follow a defined standard
+3. Runs in integration with tools like Travis to get a report as and when you check in code
+4. Saves a lot of time from the conventional way of writing test cases using a test management tool
 
 Installation
 ------------
@@ -227,7 +226,7 @@ Usage:
 
 Success scenario in which testimony returns 0
 
- ::
+::
  
     $ python testimony/__main__.py validate_docstring /home/tests/ui/sample/
  
