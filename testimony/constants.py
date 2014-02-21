@@ -29,9 +29,9 @@ REPORT_TAGS = [
     'auto']
 
 PRINT_TOTAL_TC = 'Total Number of test cases:      %s'
-PRINT_AUTO_TC = 'Total Number of automated cases: %s'
-PRINT_MANUAL_TC = 'Total Number of manual cases:    %s'
-PRINT_NO_DOC = 'Test cases with no docstrings:   %s'
+PRINT_AUTO_TC = 'Total Number of automated cases: %d '
+PRINT_MANUAL_TC = 'Total Number of manual cases:    %d '
+PRINT_NO_DOC = 'Test cases with no docstrings:   %d'
 PRINT_PARSE_ERR = '!!!!!Exception in parsing DocString!!!!!'
 PRINT_TC_AFFECTED_BUGS = '\nTotal Number of test cases affected by bugs: %s'
 PRINT_INVALID_DOC = 'Total Number of invalid docstrings:  %s'
