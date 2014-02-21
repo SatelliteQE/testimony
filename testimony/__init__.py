@@ -9,6 +9,7 @@ import ast
 import os
 import sys
 
+from decimal import Decimal
 from testimony.constants import (
     CLR_ERR, CLR_GOOD, CLR_RESOURCE, DOCSTRING_TAGS, PRINT_AUTO_TC,
     PRINT_DOC_MISSING, PRINT_INVALID_DOC, PRINT_MANUAL_TC, PRINT_NO_DOC,
@@ -241,7 +242,8 @@ def update_summary(list_strings, result):
     for docstring in list_strings:
         result['tc_count'] = result['tc_count'] + 1
         for lineitem in docstring:
-            if lineitem.startswith("Status") and "Manual" in lineitem:
+            lineitem = lineitem.lower()
+            if lineitem.startswith(DOCSTRING_TAGS[6]) and 'manual' in lineitem:
                 result['manual_count'] = result['manual_count'] + 1
     return result
 
@@ -250,10 +252,15 @@ def print_summary(result):
     """
     Prints summary for reporting
     """
+    manual_percent = (Decimal(result['manual_count']) /
+                      Decimal(result['tc_count']))
+    auto_count = result['tc_count'] - result['manual_count']
+    auto_percent = Decimal(int(auto_count)) / Decimal(result['tc_count'])
     print colored(PRINT_TOTAL_TC, attrs=['bold']) % result['tc_count']
-    print colored(PRINT_AUTO_TC, attrs=['bold']) % (
-        result['tc_count'] - result['manual_count'])
-    print colored(PRINT_MANUAL_TC, attrs=['bold']) % result['manual_count']
+    print (colored(PRINT_AUTO_TC, attrs=['bold']) % auto_count +
+           '({0:.0%})'.format(auto_percent))
+    print (colored(PRINT_MANUAL_TC, attrs=['bold']) % result['manual_count'] +
+           '({0:.0%})'.format(manual_percent))
     print colored(PRINT_NO_DOC, attrs=['bold']) % result['no_docstring']
 
 
