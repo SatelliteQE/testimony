@@ -253,19 +253,19 @@ def print_summary(result):
     Prints summary for reporting
     """
     manual_percent = (Decimal(result['manual_count']) /
-                        Decimal(result['tc_count']))
+                      Decimal(result['tc_count']))
     auto_count = result['tc_count'] - result['manual_count']
     auto_percent = Decimal(int(auto_count)) / Decimal(result['tc_count'])
     nodoc_percent = (Decimal(result['no_docstring']) /
-                        Decimal(result['tc_count']))
+                     Decimal(result['tc_count']))
 
     print colored(PRINT_TOTAL_TC, attrs=['bold']) % result['tc_count']
     print (colored(PRINT_AUTO_TC, attrs=['bold']) % auto_count +
            '({0:.0%})'.format(auto_percent))
     print (colored(PRINT_MANUAL_TC, attrs=['bold']) % result['manual_count'] +
-        '({0:.0%})'.format(manual_percent))
+           '({0:.0%})'.format(manual_percent))
     print (colored(PRINT_NO_DOC, attrs=['bold']) % result['no_docstring'] +
-        '({0:.0%})'.format(nodoc_percent))
+           '({0:.0%})'.format(nodoc_percent))
 
 
 def reset_counts(result):
