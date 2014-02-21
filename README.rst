@@ -258,6 +258,25 @@ Known Issues
 ------------
 None
 
+Version History
+---------------
+* 0.1.0
+
+- fix to check the tests starting with test_ rather than just test
+- Testimony will return error code when docstrings are missing, incorrect docstrings found, minimal docstrings not present
+- Make validate_docstring return a 0 success return code if no errors are found
+- Organized Constants
+- Now testimony accepts --nocolor or --n argument to avoid color output
+- testimony will now not error out if termcolor is not installed.
+- Make termcolor an optional dependency
+- Add Travis configuration to automatically run pep8 when testimony is updated
+- Get tests from subfolders of the given path
+
+
+* 0.1.0 
+
+- Initial Release
+
 Author
 ------
 
