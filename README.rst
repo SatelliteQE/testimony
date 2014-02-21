@@ -8,19 +8,22 @@ The parameter options are:
 
 1. print - List all test cases
 2. summary - Summary of number of automated cases vs. manual cases
-3. validate_docstring - Validate docstrings
+3. validate_docstring - Validate docstrings. This does the following:
+
 ::
+
 - Reports test cases with invalid docstrings
 - Reports test cases with missing docstrings
 - Reports test cases that does not have minimal required docstrings (This will enforce that all test cases have a minimal set of docstrings). Currently testimony enforces Feature, Test, Assert as mandatory docstrings for each test case"
+
 4. bugs - Test cases affected by Bugs and the corresponding Bug list
 5. manual - List all manual test cases
 6. auto - List all auto test cases
 
 Note:
-- testimony returns a non-zero error code when the test case docstrings does not follow the intended rules, returns zero otherwise
-- testimony also parses different folders under the given folder to verify the test files
-- testimony also displays optional colored outputs when termcolor is installed
+1. testimony returns a non-zero error code when the test case docstrings does not follow the intended rules, returns zero otherwise
+2. testimony also parses different folders under the given folder to verify the test files
+3. testimony also displays optional colored outputs when termcolor is installed
 
 Advantages
 ----------
