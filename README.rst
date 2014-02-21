@@ -260,7 +260,7 @@ None
 
 Version History
 ---------------
-* 0.1.0
+1. Version 0.1.0
 
 - fix to check the tests starting with test_ rather than just test
 - Testimony will return error code when docstrings are missing, incorrect docstrings found, minimal docstrings not present
@@ -273,7 +273,7 @@ Version History
 - Get tests from subfolders of the given path
 
 
-* 0.1.0 
+2. Version 0.1.0 
 
 - Initial Release
 
