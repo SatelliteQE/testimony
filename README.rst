@@ -9,9 +9,9 @@ The parameter options are:
 1. print - List all test cases
 2. summary - Summary of number of automated cases vs. manual cases
 3. validate_docstring - Validate docstrings
- a. Reports test cases with invalid docstrings
+""a. Reports test cases with invalid docstrings
  b. Reports test cases with missing docstrings
- c. Reports test cases that does not have minimal required docstrings (This will enforce that all test cases have a minimal set of docstrings). Currently testimony enforces Feature, Test, Assert as mandatory docstrings for each test case
+ c. Reports test cases that does not have minimal required docstrings (This will enforce that all test cases have a minimal set of docstrings). Currently testimony enforces Feature, Test, Assert as mandatory docstrings for each test case"
 4. bugs - Test cases affected by Bugs and the corresponding Bug list
 5. manual - List all manual test cases
 6. auto - List all auto test cases
@@ -268,5 +268,3 @@ Contributors
 | `Og Maciel <https://github.com/omaciel/>`_
 | `Corey Welton <https://github.com/cswiii/>`_
 | `Elyézer Rezende <https://github.com/elyezer/>`_
-
-`Python home page <http://www.python.org>`_
