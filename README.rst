@@ -8,9 +8,7 @@ The parameter options are:
 
 1. print - List all test cases
 2. summary - Summary of number of automated cases vs. manual cases
-3. validate_docstring - Validate docstrings. This does the following:
-
-::
+3. validate_docstring - Validate docstrings. This does the following:s
 
 - Reports test cases with invalid docstrings
 - Reports test cases with missing docstrings
