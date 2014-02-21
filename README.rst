@@ -266,9 +266,14 @@ This software is developed by `Suresh Thirugn`_.
 
 Contributors
 ------------
-- 'Og Maciel'_.
+- 'Og Maciel'_
+
 .. _Og Maciel: https://github.com/omaciel/
-- 'Corey Welton'_.
+
+- 'Corey Welton'_
+
 .. _Corey Welton: https://github.com/cswiii/
+
 - 'Elyézer Rezende'
+
 .. _Elyézer Rezende: https://github.com/elyezer/
