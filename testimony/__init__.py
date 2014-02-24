@@ -45,23 +45,20 @@ def main(report, paths, nocolor):
         'tc_count': 0,
         }
 
-    dir_list = []
     for path in paths:
         result = reset_counts(result)
-        dir_list.append(path)
-        dir_list = get_all_dirs(path, dir_list)
-        for dirs in dir_list:
+        for dirpath, dirnames, filenames in os.walk(path):
             print colored(
                 "\nFetching Test Path %s\n",
-                attrs=['bold']) % colored(dirs, CLR_RESOURCE)
-            for files in os.listdir(str(dirs)):
-                if (str(files).startswith('test_') and
-                        str(files).endswith('.py')):
+                attrs=['bold']) % colored(dirpath, CLR_RESOURCE)
+            for filename in filenames:
+                if (filename.startswith('test_') and
+                        filename.endswith('.py')):
                     #Do not print this text for test summary
                     if report != REPORT_TAGS[1]:
                         print colored(
-                            "Scanning %s...", attrs=['bold']) % files
-                    filepath = os.path.join(str(dirs), str(files))
+                            "Scanning %s...", attrs=['bold']) % filename
+                    filepath = os.path.join(dirpath, filename)
                     list_strings, result = get_docstrings(
                         report, filepath, result)
                     if report != REPORT_TAGS[1]:
@@ -283,18 +280,6 @@ def print_line_item(docstring):
     """
     for lineitem in docstring:
         print lineitem
-
-
-def get_all_dirs(path, dir_list):
-    """
-    Returns all folders recursively
-    """
-    for root, dirs, files in os.walk(path):
-        for attr in dirs:
-            attr = os.path.join(os.path.abspath(root), attr)
-            if os.path.isdir(attr):
-                dir_list.append(attr)
-    return dir_list
 
 
 def colored(text, color=None, attrs=None):
