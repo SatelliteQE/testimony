@@ -260,6 +260,14 @@ None
 
 Version History
 ---------------
+
+- Version 0.3.0
+
+::
+
+- Bug fix: Manual vs. automated test count is wrong when the test cases are written with "status" tag vs. "Status"
+
+
 - Version 0.2.0
 
 ::
