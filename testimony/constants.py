@@ -20,13 +20,21 @@ DOCSTRING_TAGS = [
     'bz',
     'status']
 
-REPORT_TAGS = [
-    'print',
-    'summary',
-    'validate_docstring',
-    'bugs',
-    'manual',
-    'auto']
+PRINT_REPORT = 'print'
+SUMMARY_REPORT = 'summary'
+VALIDATE_DOCSTRING_REPORT = 'validate_docstring'
+BUGS_REPORT = 'bugs'
+MANUAL_REPORT = 'manual'
+AUTO_REPORT = 'auto'
+
+REPORT_TAGS = (
+    PRINT_REPORT,
+    SUMMARY_REPORT,
+    VALIDATE_DOCSTRING_REPORT,
+    BUGS_REPORT,
+    MANUAL_REPORT,
+    AUTO_REPORT,
+)
 
 PRINT_TOTAL_TC = 'Total Number of test cases:      %s'
 PRINT_AUTO_TC = 'Total Number of automated cases: %d '
