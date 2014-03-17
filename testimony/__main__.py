@@ -29,7 +29,9 @@ if __name__ == "__main__":
         'paths', metavar='PATH', type=dir_arg, nargs='+',
         help='a list of paths to look for tests cases')
     parser.add_argument(
+        '-j', '--json', action='store_true', help='JSON output')
+    parser.add_argument(
         '-n', '--nocolor', action='store_true', help='Do not use color option')
 
     args = parser.parse_args()
-    main(args.report, args.paths, args.nocolor)
+    main(args.report, args.paths, args.json, args.nocolor)
