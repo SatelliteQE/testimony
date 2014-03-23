@@ -333,6 +333,7 @@ def get_summary_result(result):
     auto_percent = float(Decimal(int(auto_count)) / Decimal(result.tc_count) *
                          100)
     return {
+        'path': result.paths[0]['path'],  # get the root path
         'tc_count': result.tc_count,
         'auto_count': auto_count,
         'auto_percent': auto_percent,
