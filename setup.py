@@ -8,7 +8,7 @@ with open('README.rst') as file:
 
 setup(
     name='testimony',
-    version='0.3.0',
+    version='1.0.0',
     url='https://github.com/sthirugn/testimony/',
     author='Suresh Thirugn',
     author_email='sthirugn@redhat.com',
