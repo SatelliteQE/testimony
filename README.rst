@@ -70,14 +70,14 @@ Usage:
 
     $ testimony -h
     usage: testimony [-h] [-n] REPORT PATH [PATH ...]
-    
+
     Inspects and report on the Python test cases.
 
     positional arguments:
   	REPORT         report type, possible values: print, summary,
     	           validate_docstring, bugs, manual, auto
   	PATH           a list of paths to look for tests cases
-  	
+
   	optional arguments:
   	-h, --help     show this help message and exit
   	-j, --json     JSON output
