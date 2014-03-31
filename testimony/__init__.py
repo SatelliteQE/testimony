@@ -89,7 +89,7 @@ def main(report, paths, json, nocolor):
                         'docstrings': list_strings,
                     })
                     if report == SUMMARY_REPORT:
-                        #for printing test summary later
+                        # for printing test summary later
                         result = update_summary(list_strings, result)
             result.paths.append(dir_contents)
         results.append(result)
@@ -99,7 +99,7 @@ def main(report, paths, json, nocolor):
     else:
         print_text_ouput(report, results)
 
-    #Send error code back to caller
+    # Send error code back to caller
     if any([r.invalid_docstring != 0 or r.no_docstring != 0 for r in results]):
         sys.exit(-1)
 
@@ -112,16 +112,16 @@ def print_text_ouput(report, results):
                 "\nFetching Test Path %s\n",
                 attrs=['bold']) % colored(path['path'], CLR_RESOURCE)
             for f in path['files']:
-                #Do not print this text for test summary
+                # Do not print this text for test summary
                 if report != SUMMARY_REPORT:
                     print colored(
                         "Scanning %s...", attrs=['bold']) % f['name']
                 if report != SUMMARY_REPORT:
                     print_testcases(report, f['docstrings'], result)
-        #Print for test summary
+        # Print for test summary
         if report == SUMMARY_REPORT:
             print_summary(result)
-        #Print total number of invalid doc strings
+        # Print total number of invalid doc strings
         if report == VALIDATE_DOCSTRING_REPORT:
             if result.invalid_docstring == 0:
                 col = CLR_GOOD
@@ -144,7 +144,7 @@ def print_text_ouput(report, results):
             print colored(
                 PRINT_NO_MINIMUM_DOC_TC,
                 attrs=['bold']) % colored(result.no_minimal_docstring, col)
-        #Print number of test cases affected by bugs and also the list of bugs
+        # Print number of test cases affected by bugs and also the list of bugs
         if report == BUGS_REPORT:
             print colored(
                 PRINT_TC_AFFECTED_BUGS, attrs=['bold']) % result.bugs
@@ -195,42 +195,42 @@ def get_docstrings(report, path, result):
     """
     return_list = []
     obj = ast.parse(''.join(open(path)))
-    #The body field inside obj.body[] contains the docstring
-    #So first find the body field of obj.body[] array
+    # The body field inside obj.body[] contains the docstring
+    # So first find the body field of obj.body[] array
     for i in range(0, len(obj.body)):
         parameters = obj.body[i]._fields
         for attr in parameters:
             if attr == 'body':
                 break
-    #Now iterate the found body[] list from obj.body[] to find the docstrings
-    #Remember that this body[] list will have all different items like class
-    #docstrings and functions. So first find the items which are functions
+    # Now iterate the found body[] list from obj.body[] to find the docstrings
+    # Remember that this body[] list will have all different items like class
+    # docstrings and functions. So first find the items which are functions
     for j in range(0, len(obj.body[i].body)):
         item_list = []
         try:
             obj_param = obj.body[i].body[j]._fields
             for attr in obj_param:
-                #Retrieve the func name to check if this is a test_* function
+                # Retrieve the func name to check if this is a test_* function
                 if attr == 'name':
                     func_name = getattr(obj.body[i].body[j], "name")
                     if func_name.startswith('test_'):
-                        #Find the docstring value of this function
-                        #Remove the trailing spaces
+                        # Find the docstring value of this function
+                        # Remove the trailing spaces
                         value = obj.body[i].body[j].body[0].value.s.lstrip()
-                        #Split the docstring with @
+                        # Split the docstring with @
                         doclines = value.split('@',)
                         featurefound = False
                         testfound = False
                         assertfound = False
                         for attr in doclines:
-                            #Remove trailing spaces
+                            # Remove trailing spaces
                             attr = attr.rstrip()
-                            #Remove any new line characters
+                            # Remove any new line characters
                             attr = attr.rstrip('\n')
                             if attr != '':
                                 if report == VALIDATE_DOCSTRING_REPORT:
                                     docstring_tag = attr.split(" ", 1)
-                                    #Error out invalid docstring
+                                    # Error out invalid docstring
                                     if not any(
                                             x in docstring_tag[0].lower() for
                                             x in DOCSTRING_TAGS):
@@ -250,7 +250,7 @@ def get_docstrings(report, path, result):
                                             docstring_tag[0].lower()):
                                         assertfound = True
                                 elif report == BUGS_REPORT:
-                                    #Find the bug from docstring
+                                    # Find the bug from docstring
                                     docstring_tag = attr.split(" ", 1)
                                     if (DOCSTRING_TAGS[5] in
                                             docstring_tag[0].lower()):
@@ -259,7 +259,7 @@ def get_docstrings(report, path, result):
                                         result.bugs_list.append(
                                             docstring_tag[1])
                                 else:
-                                    #For printing all test cases
+                                    # For printing all test cases
                                     item_list.append(attr)
                         if report == VALIDATE_DOCSTRING_REPORT:
                             if (not featurefound or
@@ -294,7 +294,7 @@ def print_testcases(report, list_strings, result):
             tc = tc + 1
             print "\nTC %d" % tc
 
-        #verify if this needs to be printed
+        # verify if this needs to be printed
         manual_print = False
         auto_print = True
         for lineitem in docstring:
