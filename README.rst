@@ -71,16 +71,16 @@ Usage:
     $ testimony -h
     usage: testimony [-h] [-n] REPORT PATH [PATH ...]
 
-    Inspects and report on the Python test cases.
+	positional arguments:
+  	REPORT         report type, possible values: print, summary,
+    	           validate_docstring, bugs, manual, auto
+  	PATH           a list of paths to look for tests cases
 
-    positional arguments:
-      REPORT       report type, possible values: print, summary,
-                 validate_docstring, bugs, manual, auto
-      PATH         a list of paths to look for tests cases
-
-    optional arguments:
-      -h, --help     show this help message and exit
-      -n, --nocolor  Do not use color option
+	optional arguments:
+  	-h, --help     show this help message and exit
+  	-j, --json     JSON output
+  	-n, --nocolor  Do not use color option
+      
 
 
 ::
@@ -253,6 +253,16 @@ Having termcolor installed, testimony produces colored output by default.  It ca
     
     $ testimony auto /home/apple/tests/login/ -n
 
+Testimony support json output format inorder to integrate with other applications easily.  This can be done by adding --json or -j to any of the testimony commands as shown below:
+
+::
+
+    $ testimony summary --json tests/
+	[{"auto_count": 2, "manual_count": 2, "auto_percent": 50.0, "no_docstring": 1, "path": "tests/", "tc_count": 4, "manual_percent": 50.0}]
+	
+	$ testimony summary -j tests/
+	[{"auto_count": 2, "manual_count": 2, "auto_percent": 50.0, "no_docstring": 1, "path": "tests/", "tc_count": 4, "manual_percent": 50.0}]
+
 
 Known Issues
 ------------
@@ -260,6 +270,11 @@ None
 
 Version History
 ---------------
+- Version 1.0.0
+
+::
+
+- json support now incorporated
 
 - Version 0.3.0
 
