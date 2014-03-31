@@ -254,7 +254,7 @@ Having termcolor installed, testimony produces colored output by default.  It ca
     
     $ testimony auto /home/apple/tests/login/ -n
 
-Testimony support json output format inorder to integrate with other applications easily.  This can be done by adding --json or -j to any of the testimony commands as shown below:
+Testimony supports json output format to integrate with other applications easily.  This can be done by adding --json or -j to any of the testimony commands as shown below:
 
 ::
 
