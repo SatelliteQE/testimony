@@ -49,16 +49,22 @@ Expected Docstring format:
 
 ::
 
-    """
-    @Feature: Login
+    """@Feature: Login
+    
     @Test: Log in as a valid user
+    
     @Setup: Navigate to abc.com
+    
     @Steps:
      1.  Launch the url
      2.  Log in with valid user credentials
+    
     @Assert: Log in successful
+    
     @BZ: #1234567
+    
     @Status: Manual (REMOVE this field once automated)
+    
     """
 
 \3) Optional color formatting - If termcolor package is installed, output will be printed in colored text
