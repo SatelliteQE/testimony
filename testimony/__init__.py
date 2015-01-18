@@ -1,9 +1,5 @@
 # -*- encoding: utf-8 -*-
-# vim: ts=4 sw=4 expandtab ai
-
-"""
-DocString manipulation methods to create test reports
-"""
+"""DocString manipulation methods to create test reports"""
 
 import ast
 import json
@@ -37,8 +33,7 @@ class Result(object):
     def __init__(self, bugs=0, bugs_list=[], invalid_docstring=0,
                  no_docstring=0, no_minimal_docstring=0, manual_count=0,
                  tc_count=0):
-        """
-        bugs: number of bugs found
+        """bugs: number of bugs found
         bugs_list: list of bugs found
         invalid_docstrings: number of testcases with invalid docstrings found
         no_docstring: number of testcases with no docstring
@@ -46,6 +41,7 @@ class Result(object):
             feature, test and assert tags
         manual_count: number of testcases that represents manual testing
         tc_count: total number of testcases found
+
         """
 
         self.bugs = bugs
@@ -59,11 +55,11 @@ class Result(object):
 
 
 def main(report, paths, json, nocolor):
-    """
-    Main function for testimony project
+    """Main function for testimony project
 
     Expects a valid report type and valid directory paths, hopefully argparse
     is taking care of validation
+
     """
 
     settings['json'] = json
@@ -190,9 +186,7 @@ def print_json_output(report, results):
 
 
 def get_docstrings(report, path, result):
-    """
-    Function to read docstrings from test_*** methods for a given file
-    """
+    """Function to read docstrings from test_*** methods for a given file"""
     return_list = []
     obj = ast.parse(''.join(open(path)))
     # The body field inside obj.body[] contains the docstring
@@ -285,9 +279,7 @@ def get_docstrings(report, path, result):
 
 
 def print_testcases(report, list_strings, result):
-    """
-    Prints all the test cases based on given criteria
-    """
+    """Prints all the test cases based on given criteria"""
     tc = 0
     for docstring in list_strings:
         if report == PRINT_REPORT:
@@ -314,9 +306,7 @@ def print_testcases(report, list_strings, result):
 
 
 def update_summary(list_strings, result):
-    """
-    Updates summary for reporting
-    """
+    """Updates summary for reporting"""
     for docstring in list_strings:
         result.tc_count += 1
         for lineitem in docstring:
@@ -344,9 +334,7 @@ def get_summary_result(result):
 
 
 def print_summary(result):
-    """
-    Prints summary for reporting
-    """
+    """Prints summary for reporting"""
     summary_result = get_summary_result(result)
     print colored(PRINT_TOTAL_TC, attrs=['bold']) % summary_result['tc_count']
     print (colored(PRINT_AUTO_TC, attrs=['bold']) %
@@ -360,17 +348,13 @@ def print_summary(result):
 
 
 def print_line_item(docstring):
-    """
-    Parses the given docstring list to print out each line item
-    """
+    """Parses the given docstring list to print out each line item"""
     for lineitem in docstring:
         print lineitem
 
 
 def colored(text, color=None, attrs=None):
-    """
-    Checks if termcolor is installed before calling it
-    """
+    """Checks if termcolor is installed before calling it"""
     if has_termcolor and not settings['nocolor']:
         return termcolor.colored(text, color=color, attrs=attrs)
     else:
