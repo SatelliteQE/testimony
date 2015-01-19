@@ -49,22 +49,23 @@ Expected Docstring format:
 
 ::
 
-    """@Feature: Login
-    
-    @Test: Log in as a valid user
-    
+    """@Test: Log in as a valid user
+
+    @Feature: Login
+
     @Setup: Navigate to abc.com
-    
+
     @Steps:
-     1.  Launch the url
-     2.  Log in with valid user credentials
-    
+
+    1. Launch the url
+    2. Log in with valid user credentials
+
     @Assert: Log in successful
-    
+
     @BZ: #1234567
-    
+
     @Status: Manual (REMOVE this field once automated)
-    
+
     """
 
 \3) Optional color formatting - If termcolor package is installed, output will be printed in colored text
@@ -93,11 +94,11 @@ Usage:
 ::
 
     $ testimony print /home/testimony/tests/
-    
+
     Fetching Test Path /home/testimony/tests/
- 
+
     Scanning test_sample.py...
- 
+
     TC 1
     Feture: Login - Positive
     Test: Login with right credentials
@@ -106,17 +107,17 @@ Usage:
     Assert: Login is successful
     Bug: 123456
     Statues: Manual
- 
+
     TC 2
     test_positive_login_2: Docstring missing. Please update.
- 
+
     TC 3
     Feature: Login - Positive
     Test: Login with Latin credentials
     Steps:
         1. Login to the application with valid Latin credentials
     Assert: Login is successful
- 
+
     TC 4
     Feature: Login - Positive
     Test: Login with Credentials having special characters
@@ -125,38 +126,38 @@ Usage:
         special characters
     Assert: Activation key is created
     Status: Manual
- 
+
     TC 5
     Steps:
         1. Login to the application with invalid credentials
     BZ: 123456
     Status: Manual
- 
+
     $ echo $?
     255
-    
+
 
 ::
 
     $ testimony summary /home/testimony/tests/
- 
+
     Fetching Test Path /home/testimony/tests/
- 
+
     Total Number of test cases:      4
     Total Number of automated cases: 2
     Total Number of manual cases:    2
     Test cases with no docstrings:   1
- 
- 
+
+
     $ echo $?
     255
 
 ::
 
     $ testimony validate_docstring /home/testimony/tests/
- 
+
     Fetching Test Path /home/testimony/tests/
- 
+
     Scanning test_sample.py...
     test_positive_login_1: Invalid DocString: Feture: Login - Positive
     test_positive_login_1: Invalid DocString: Bug: 123456
@@ -167,32 +168,32 @@ Usage:
     Total Number of invalid docstrings:  3
     Test cases with no docstrings:   1
     Test cases missing minimal docstrings:  2
- 
+
     $ echo $?
     255
 
 ::
 
     $ testimony bugs /home/testimony/tests/
- 
+
     Fetching Test Path /home/estimony/tests/
- 
+
     Scanning test_sample.py...
- 
+
     Total Number of test cases affected by bugs: 1
- 
+
     Bug list:
     123456
- 
+
     $ echo $?
     255
 
 ::
 
      $ testimony manual /home/testimony/tests/
- 
+
     Fetching Test Path /home/estimony/tests/
- 
+
     Scanning test_sample.py...
     Feature: Login - Positive
     Test: Login with Credentials having special characters
@@ -205,16 +206,16 @@ Usage:
         1. Login to the application with invalid credentials
     BZ: 123456
     Status: Manual
- 
+
     $ echo $?
     255
 
 ::
 
     $ testimony auto /home/testimony/tests/
- 
+
     Fetching Test Path /home/estimony/tests/
- 
+
     Scanning test_sample.py...
     Feture: Login - Positive
     Test: Login with right credentials
@@ -228,7 +229,7 @@ Usage:
     Steps:
         1. Login to the application with valid Latin credentials
     Assert: Login is successful
- 
+
     $ echo $?
     255
 
@@ -236,28 +237,28 @@ Usage:
 Success scenario in which testimony returns 0
 
 ::
- 
+
     $ testimony validate_docstring /home/tests/ui/sample/
- 
+
     Fetching Test Path home/tests/ui/sample/
- 
+
     Scanning test_activationkey.py...
     Total Number of invalid docstrings:  0
     Test cases with no docstrings:   0
     Test cases missing minimal docstrings:  0
- 
+
     $ echo $?
     0
 
- 
+
 Having termcolor installed, testimony produces colored output by default.  It can be disabled by:
 
 ::
 
     $ testimony auto /home/apple/tests/login/ --nocolor
-    
+
     (or)
-    
+
     $ testimony auto /home/apple/tests/login/ -n
 
 Testimony supports json output format to integrate with other applications easily.  This can be done by adding --json or -j to any of the testimony commands as shown below:
@@ -266,7 +267,7 @@ Testimony supports json output format to integrate with other applications easil
 
     $ testimony summary --json tests/
 	[{"auto_count": 2, "manual_count": 2, "auto_percent": 50.0, "no_docstring": 1, "path": "tests/", "tc_count": 4, "manual_percent": 50.0}]
-	
+
 	$ testimony summary -j tests/
 	[{"auto_count": 2, "manual_count": 2, "auto_percent": 50.0, "no_docstring": 1, "path": "tests/", "tc_count": 4, "manual_percent": 50.0}]
 
