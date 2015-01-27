@@ -2,7 +2,7 @@
 """Test class for Sample Test"""
 
 
-class Testsample():
+class Testsample1():
     """This is a dummy test file used for testing testimony"""
 
     # Test with incorrect doctrings:
@@ -80,3 +80,49 @@ class Testsample():
 
         """
         # Login to the application
+
+
+class Testsample2():
+    """This is the second class in this test module.  This is added to make
+    sure testimony covers test functions in multiple classes in a test
+    module"""
+
+    def test_negative_login_6(self):
+        """@Test: Login with invalid credentials
+
+        @Feature: Login - Negative
+
+        @Steps:
+
+        1. Login to the application with invalid credentials
+
+        @Assert: Login failed
+
+        @BZ: 123456
+
+        @Status: Manual
+
+        """
+        # Code to perform the test
+        pass
+
+
+class Testsample3():
+    """This is the third class in this test module.  This is added to make
+    sure testimony covers test functions in multiple classes in a test
+    module"""
+
+    def test_negative_login_7(self):
+        """@Test: Login with invalid credentials
+
+        @Feature: Login - Negative
+
+        @Steps:
+
+        1. Login to the application with valid username and no password
+
+        @Assert: Login failed
+
+        """
+        # Code to perform the test
+        pass
