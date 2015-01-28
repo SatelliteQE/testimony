@@ -7,7 +7,7 @@ CLR_RESOURCE = 'cyan'
 CLR_ERR = 'red'
 CLR_GOOD = 'green'
 
-DOCSTRING_TAGS = [
+DOC_TAGS = [
     'feature',
     'test',
     'setup',
@@ -18,7 +18,7 @@ DOCSTRING_TAGS = [
 
 PRINT_REPORT = 'print'
 SUMMARY_REPORT = 'summary'
-VALIDATE_DOCSTRING_REPORT = 'validate_docstring'
+VALIDATE_REPORT = 'validate_docstring'
 BUGS_REPORT = 'bugs'
 MANUAL_REPORT = 'manual'
 AUTO_REPORT = 'auto'
@@ -26,7 +26,7 @@ AUTO_REPORT = 'auto'
 REPORT_TAGS = (
     PRINT_REPORT,
     SUMMARY_REPORT,
-    VALIDATE_DOCSTRING_REPORT,
+    VALIDATE_REPORT,
     BUGS_REPORT,
     MANUAL_REPORT,
     AUTO_REPORT,

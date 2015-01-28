@@ -1,4 +1,6 @@
 # -*- encoding: utf-8 -*-
+"""Main module for testimony"""
+
 import argparse
 import os.path
 
@@ -15,7 +17,8 @@ def dir_arg(arg):
         raise argparse.ArgumentTypeError(msg)
 
 
-if __name__ == "__main__":
+def parse_args():
+    """Argument parser for testimony"""
     parser = argparse.ArgumentParser(
         description='Inspects and report on the Python test cases.',
         prog='testimony')
@@ -30,6 +33,13 @@ if __name__ == "__main__":
         '-j', '--json', action='store_true', help='JSON output')
     parser.add_argument(
         '-n', '--nocolor', action='store_true', help='Do not use color option')
-
     args = parser.parse_args()
+    return args
+
+
+def run(args):
+    """Run testimony with given args"""
     main(args.report, args.paths, args.json, args.nocolor)
+
+if __name__ == "__main__":
+    run(parse_args())
