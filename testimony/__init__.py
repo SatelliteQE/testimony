@@ -93,7 +93,7 @@ def main(report, paths, json_output, nocolor):
             result.paths.append(dir_contents)
         results.append(result)
 
-    if json is True:
+    if SETTINGS['json'] is True:
         print_json_output(report, results)
     else:
         print_text_ouput(report, results)
