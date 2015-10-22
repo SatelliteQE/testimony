@@ -2,17 +2,30 @@
 """DocString manipulation methods to create test reports"""
 
 import ast
+import collections
+import itertools
 import json
 import os
 import sys
+import textwrap
 
 from decimal import Decimal
 from testimony.constants import (
-    CLR_ERR, CLR_GOOD, CLR_RESOURCE, DOC_TAGS, PRINT_AUTO_TC,
-    PRINT_DOC_MISSING, PRINT_INVALID_DOC, PRINT_MANUAL_TC, PRINT_NO_DOC,
-    PRINT_NO_MINIMUM_DOC, PRINT_NO_MINIMUM_DOC_TC, PRINT_TC_AFFECTED_BUGS,
-    PRINT_TOTAL_TC, PRINT_REPORT, SUMMARY_REPORT, VALIDATE_REPORT, BUGS_REPORT,
-    MANUAL_REPORT, AUTO_REPORT)
+    AUTO_REPORT,
+    CLR_ERR,
+    CLR_GOOD,
+    MANUAL_REPORT,
+    PRINT_AUTO_TC,
+    PRINT_INVALID_DOC,
+    PRINT_MANUAL_TC,
+    PRINT_NO_DOC,
+    PRINT_NO_MINIMUM_DOC_TC,
+    PRINT_REPORT,
+    PRINT_TC_AFFECTED_BUGS,
+    PRINT_TOTAL_TC,
+    SUMMARY_REPORT,
+    VALIDATE_DOCSTRING_REPORT, BUGS_REPORT,
+)
 
 try:
     import termcolor
@@ -26,34 +39,165 @@ SETTINGS = {
 }
 
 
-class Result(object):
-    """Class that represents a path result"""
+def indent(text, prefix, predicate=None):
+    """Adds 'prefix' to the beginning of selected lines in 'text'.
 
-    def __init__(self, bugs=0, bugs_list=None, invalid_doc=0,
-                 no_docstring=0, no_minimal_docstring=0, manual_count=0,
-                 tc_count=0):
-        """bugs: number of bugs found
-        bugs_list: list of bugs found
-        invalid_doc: number of testcases with invalid docstrings found
-        no_docstring: number of testcases with no docstring
-        no_minimal_docstring: number of testcases that don't have at least
-            feature, test and assert tags
-        manual_count: number of testcases that represents manual testing
-        tc_count: total number of testcases found
+    If 'predicate' is provided, 'prefix' will only be added to the lines
+    where 'predicate(line)' is True. If 'predicate' is not provided,
+    it will default to adding 'prefix' to all non-empty lines that do not
+    consist solely of whitespace characters.
 
+    PS.: From Python 3.3+ textwrap.indent.
+    """
+    if predicate is None:
+        def predicate(line):
+            return line.strip()
+
+    def prefixed_lines():
+        for line in text.splitlines(True):
+            yield (prefix + line if predicate(line) else line)
+    return ''.join(prefixed_lines())
+
+
+class TestFunction(object):
+    """Class that wraps a ``ast.FunctionDef`` instance and provide useful
+    information for creating the reports.
+
+    An instance of ``TestFunction`` will proxy attribute lookups to the wrapped
+    ``ast.FunctionDef`` in order to make easy access to atribute like
+    ``name``.
+
+    """
+
+    #: A sentinel to make sure the proxied attribute lookup to ``function_def``
+    #: is not available.
+    _undefined = object()
+
+    def __init__(self, function_def, parent_class=None):
+        #: A ``ast.FunctionDef`` instance used to extract information
+        self.function_def = function_def
+        self.parent_class = parent_class
+        self.docstring = ast.get_docstring(function_def)
+        self.assertion = None
+        self.bugs = None
+        self.feature = None
+        self.setup = None
+        self.status = None
+        self.steps = None
+        self.test = None
+        self.skipped_lines = []
+        self._parse_docstring()
+
+    def _parse_docstring(self):
+        """Parses the test docstring extracting expected values.
+
+        If the expected tags is not spelled right they will not be parsed.
         """
+        if self.docstring is None:
+            return
 
-        self.bugs = bugs
-        if bugs_list is None:
-            self.bugs_list = []
+        for line in self.docstring.split('@'):
+            # Remove trailing spaces
+            line = line.rstrip()
+            # Sometimes there are double new line
+            # characters in the middle.  We need
+            # only one of those to print
+            line = line.replace('\n\n', '\n')
+            if len(line) > 0 and ':' in line:
+                tag, value = line.split(':', 1)
+                tag = tag.lower()
+                value = value.strip()
+                if tag == 'assert':
+                    self.assertion = value
+                elif tag == 'bz':
+                    self.bugs = [bz.strip() for bz in value.split(',')]
+                elif tag == 'feature':
+                    self.feature = value
+                elif tag == 'setup':
+                    self.setup = value
+                elif tag == 'status':
+                    self.status = value
+                elif tag == 'steps':
+                    self.steps = value
+                elif tag == 'test':
+                    self.test = value
+                else:
+                    self.skipped_lines.append(line)
+
+    @property
+    def automated(self):
+        """Indicate if the test case is automated or not."""
+        if self.status and self.status.lower() == 'manual':
+            return False
+        return True
+
+    @property
+    def has_valid_docstring(self):
+        """Returns ``True`` if at least assert, feature and test tags are
+        defined.
+        """
+        return (
+            self.assertion is not None and
+            self.feature is not None and
+            self.test is not None
+        )
+
+    def to_dict(self):
+        """Return the information in dict format.
+
+        This is a helper for converting to JSON.
+        """
+        return {
+            'assertion': self.assertion,
+            'automated': self.automated,
+            'bugs': self.bugs,
+            'feature': self.feature,
+            'name': self.name,
+            'parent_class': self.parent_class,
+            'setup': self.setup,
+            'skipped-lines': self.skipped_lines,
+            'status': self.status,
+            'steps': self.steps,
+            'test': self.test,
+        }
+
+    def __getattr__(self, name):
+        """Proxy missing attributes to the ``ast.FunctionDef`` instance."""
+        attr = getattr(self.function_def, name, self._undefined)
+        if attr is self._undefined:
+            return super(TestFunction, self).__getattr__(name)
         else:
-            self.bugs_list = bugs_list
-        self.invalid_doc = invalid_doc
-        self.no_docstring = no_docstring
-        self.no_minimal_docstring = no_minimal_docstring
-        self.manual_count = manual_count
-        self.tc_count = tc_count
-        self.paths = []
+            return attr
+
+    def __str__(self):
+        output = []
+        if self.test is not None:
+            output.append('Test: ' + self.test)
+        if self.feature is not None:
+            output.append('Feature: ' + self.feature)
+        if self.assertion is not None:
+            output.append('Assert: ' + self.assertion)
+        if self.setup is not None:
+            output.append('Setup: ' + self.setup)
+        if self.steps is not None:
+            output.append('Steps: ' + self.steps)
+        if self.bugs is not None:
+            output.append('Bugs: ' + ', '.join(self.bugs))
+        if self.status is not None:
+            output.append('Status: ' + self.status)
+        if self.skipped_lines:
+            output.append(
+                'Skipped lines:\n' +
+                '\n'.join([
+                    textwrap.fill(
+                        line,
+                        initial_indent=' ' * 2,
+                        subsequent_indent=' ' * 4
+                    )
+                    for line in self.skipped_lines
+                ])
+            )
+        return '\n'.join(output)
 
 
 def main(report, paths, json_output, nocolor):
@@ -63,274 +207,284 @@ def main(report, paths, json_output, nocolor):
     is taking care of validation
 
     """
-
     SETTINGS['json'] = json_output
     SETTINGS['nocolor'] = nocolor
-    results = []
 
-    for path in paths:
-        result = Result()
-        for dirpath, _, filenames in os.walk(path):
-            dir_contents = {
-                'path': dirpath,
-                'files': [],
-            }
-
-            for filename in filenames:
-                if (filename.startswith('test_') and
-                        filename.endswith('.py')):
-                    filepath = os.path.join(dirpath, filename)
-                    list_strings, result = get_docstrings(
-                        report, filepath, result)
-                    dir_contents['files'].append({
-                        'name': filename,
-                        'docstrings': list_strings,
-                    })
-                    if report == SUMMARY_REPORT:
-                        # for printing test summary later
-                        result = update_summary(list_strings, result)
-            result.paths.append(dir_contents)
-        results.append(result)
-
-    if SETTINGS['json'] is True:
-        print_json_output(report, results)
-    else:
-        print_text_ouput(report, results)
-
-    # Send error code back to caller
-    if any([r.invalid_doc != 0 or r.no_docstring != 0 for r in results]):
-        sys.exit(-1)
-
-
-def print_text_ouput(report, results):
-    """Prints the report output in text format"""
-    for result in results:
-        for path in result.paths:
-            print colored(
-                "\nFetching Test Path %s\n",
-                attrs=['bold']) % colored(path['path'], CLR_RESOURCE)
-            for filepath in path['files']:
-                # Do not print this text for test summary
-                if report != SUMMARY_REPORT:
-                    print colored(
-                        "Scanning %s...", attrs=['bold']) % filepath['name']
-                if report != SUMMARY_REPORT:
-                    print_testcases(report, filepath['docstrings'])
-        # Print for test summary
-        if report == SUMMARY_REPORT:
-            print_summary(result)
-        # Print total number of invalid doc strings
-        if report == VALIDATE_REPORT:
-            if result.invalid_doc == 0:
-                col = CLR_GOOD
-            else:
-                col = CLR_ERR
-            print colored(
-                PRINT_INVALID_DOC,
-                attrs=['bold']) % colored(result.invalid_doc, col)
-            if result.no_docstring == 0:
-                col = CLR_GOOD
-            else:
-                col = CLR_ERR
-            print colored(
-                PRINT_NO_DOC,
-                attrs=['bold']) % colored(result.no_docstring, col)
-            if result.no_minimal_docstring == 0:
-                col = CLR_GOOD
-            else:
-                col = CLR_ERR
-            print colored(
-                PRINT_NO_MINIMUM_DOC_TC,
-                attrs=['bold']) % colored(result.no_minimal_docstring, col)
-        # Print number of test cases affected by bugs and also the list of bugs
-        if report == BUGS_REPORT:
-            print colored(
-                PRINT_TC_AFFECTED_BUGS, attrs=['bold']) % result.bugs
-            if len(result.bugs_list) > 0:
-                print colored("\nBug list:", attrs=['bold'])
-                for bug in result.bugs_list:
-                    print bug
-
-
-def print_json_output(report, results):
-    """Prints the report output in JSON format"""
-
-    if report == PRINT_REPORT:
-        output = [result.paths for result in results]
-    elif report == SUMMARY_REPORT:
-        output = [get_summary_result(result) for result in results]
-    elif report == VALIDATE_REPORT:
-        output = [result.__dict__ for result in results]
+    if report == SUMMARY_REPORT:
+        report_function = summary_report
+    elif report == PRINT_REPORT:
+        report_function = print_report
+    elif report == VALIDATE_DOCSTRING_REPORT:
+        report_function = validate_docstring_report
     elif report == BUGS_REPORT:
-        output = [{'bugs': result.bugs,
-                   'bugs_list': result.bugs_list} for result in results]
-    elif report == MANUAL_REPORT or report == AUTO_REPORT:
-        for result in results:
-            for path in result.paths:
-                for filepath in path['files']:
-                    docstrings = []
-                    for docstring in filepath['docstrings']:
-                        status_tag = False
-                        for line in docstring:
-                            tag = line.split(' ', 1)[0].lower()
-                            if DOC_TAGS[6] in tag:
-                                status_tag = True
-                        if ((report == AUTO_REPORT and not status_tag) or
-                                (report == MANUAL_REPORT and status_tag)):
-                            docstrings.append(docstring)
-                    filepath['docstrings'] = docstrings
-        output = [result.paths for result in results]
-    else:
-        # Will not get here because argparse validation, but just to make sure
-        raise Exception('Report %s not available' % report)
+        report_function = bugs_report
+    elif report == MANUAL_REPORT:
+        report_function = manual_report
+    elif report == AUTO_REPORT:
+        report_function = auto_report
 
-    print json.dumps(output)
+    sys.exit(report_function(get_testcases(paths)))
 
 
-def get_docstrings(report, path, result):
-    """Function to read docstrings from test_*** methods for a given file"""
-    return_list = []
-    with open(path) as handler:
-        test_methods = [
-            node for node in ast.walk(ast.parse(handler.read()))
-            if isinstance(node, ast.FunctionDef) and
-            node.name.startswith('test_')
-        ]
-    for test_method in test_methods:
-        docstring = ast.get_docstring(test_method)
-        item_list = []
-        if docstring is None:
-            if (report == PRINT_REPORT or report == VALIDATE_REPORT):
-                item_list.append('%s: %s' % (
-                    test_method.name, colored(PRINT_DOC_MISSING, CLR_ERR)))
-            return_list.append(item_list)
-            result.no_docstring += 1
+def print_testcases(testcases, test_filter='all'):
+    """Print the list of test cases.
+
+    :param testcases: A dict where the key is a path and value is a list of
+        found testcases on that path.
+    :param test_filter: One of all, automated or manual. Indicates if will be
+        printed all testcases or just automated ones or just manual ones.
+    """
+    result = {}
+    for path, tests in testcases.items():
+        if test_filter == 'automated':
+            tests = filter(
+                lambda t: t.automated and t.docstring is not None, tests)
+        elif test_filter == 'manual':
+            tests = filter(lambda t: not t.automated, tests)
+        result[path] = [test.to_dict() for test in tests]
+
+        if not SETTINGS['json']:
+            print '{0}\n{1}\n'.format(
+                colored(path, attrs=['bold']), '=' * len(path))
+            if len(tests) == 0:
+                print 'No {0}test cases found.\n'.format(
+                    '' if test_filter not in ('automated', 'manual')
+                    else test_filter + ' '
+                )
+            for index, value in enumerate(tests):
+                print 'TC {0}\n{1}\n'.format(index + 1, value)
+
+    if SETTINGS['json']:
+        print json.dumps(result)
+        return 0
+
+
+def print_report(testcases):
+    """All test cases report."""
+    print_testcases(testcases)
+
+
+def auto_report(testcases):
+    """Automated test cases report."""
+    print_testcases(testcases, 'automated')
+
+
+def manual_report(testcases):
+    """Manual test cases report."""
+    print_testcases(testcases, 'manual')
+
+
+def summary_report(testcases):
+    """Summary about the test cases report."""
+    count = automated = manual = no_docstring = 0
+    for testcase in itertools.chain(*testcases.values()):
+        count += 1
+        if testcase.docstring is None:
+            no_docstring += 1
             continue
+        if testcase.automated:
+            automated += 1
         else:
-            featurefound = False
-            testfound = False
-            assertfound = False
-            for line in docstring.split('@'):
-                # Remove trailing spaces
-                line = line.rstrip()
-                # Sometimes there are double new line
-                # characters in the middle.  We need
-                # only one of those to print
-                line = line.replace('\n\n', '\n')
-                if len(line) > 0:
-                    if report == VALIDATE_REPORT:
-                        tag = line.split(' ', 1)
-                        # Error out invalid docstring
-                        if not any(x in tag[0].lower() for x in DOC_TAGS):
-                            item_list.append('%s: Invalid Doc:%s' % (
-                                test_method.name,
-                                colored(line, CLR_ERR, attrs=['bold'])
-                            ))
-                            result.invalid_doc += 1
-                        if (DOC_TAGS[0] in tag[0].lower()):
-                            featurefound = True
-                        if (DOC_TAGS[1] in tag[0].lower()):
-                            testfound = True
-                        if (DOC_TAGS[4] in tag[0].lower()):
-                            assertfound = True
-                    elif report == BUGS_REPORT:
-                        # Find the bug from docstring
-                        bug = line.split(' ', 1)
-                        if (DOC_TAGS[5] in bug[0].lower()):
-                            item_list.append(line)
-                            result.bugs += 1
-                            result.bugs_list.append(bug[1])
-                    else:
-                        # For printing all test cases
-                        item_list.append(line)
-            if report == VALIDATE_REPORT:
-                if (not featurefound or not testfound or not assertfound):
-                    item_list.append('%s: %s' % (
-                        test_method.name, PRINT_NO_MINIMUM_DOC))
-                    result.no_minimal_docstring += 1
-            if len(item_list) != 0:
-                return_list.append(item_list)
-    return return_list, result
+            manual += 1
 
-
-def print_testcases(report, list_strings):
-    """Prints all the test cases based on given criteria"""
-    testcase_number = 0
-    for docstring in list_strings:
-        if report == PRINT_REPORT:
-            testcase_number = testcase_number + 1
-            print "\nTC %d" % testcase_number
-
-        # verify if this needs to be printed
-        manual_print = False
-        auto_print = True
-        for lineitem in docstring:
-            docstring_tag = lineitem.split(" ", 1)
-            if report == AUTO_REPORT:
-                if DOC_TAGS[6] in docstring_tag[0].lower():
-                    auto_print = False
-            if report == MANUAL_REPORT:
-                if DOC_TAGS[6] in docstring_tag[0].lower():
-                    manual_print = True
-        if report == AUTO_REPORT and auto_print is True:
-            print_line_item(docstring)
-        if report == MANUAL_REPORT and manual_print is True:
-            print_line_item(docstring)
-        if report == PRINT_REPORT or report == VALIDATE_REPORT:
-            print_line_item(docstring)
-
-
-def update_summary(list_strings, result):
-    """Updates summary for reporting"""
-    for docstring in list_strings:
-        result.tc_count += 1
-        for lineitem in docstring:
-            lineitem = lineitem.lower()
-            if lineitem.startswith(DOC_TAGS[6]) and 'manual' in lineitem:
-                result.manual_count += 1
-    return result
-
-
-def get_summary_result(result):
-    """Calculate summary results"""
-    manual_percent = float(Decimal(result.manual_count) /
-                           Decimal(result.tc_count) * 100)
-    auto_count = result.tc_count - result.manual_count
-    auto_percent = float(Decimal(int(auto_count)) / Decimal(result.tc_count) *
-                         100)
-    return {
-        'path': result.paths[0]['path'],  # get the root path
-        'tc_count': result.tc_count,
-        'auto_count': auto_count,
-        'auto_percent': auto_percent,
-        'manual_count': result.manual_count,
+    manual_percent = float(Decimal(manual) / Decimal(count) * 100)
+    automated_percent = float(Decimal(automated) / Decimal(count) * 100)
+    no_docstring_percent = float(Decimal(no_docstring) / Decimal(count) * 100)
+    summary_result = {
+        'count': count,
+        'automated': automated,
+        'automated_percent': automated_percent,
+        'manual': manual,
         'manual_percent': manual_percent,
-        'no_docstring': result.no_docstring,
+        'no_docstring': no_docstring,
+        'no_docstring_percent': no_docstring_percent,
     }
 
+    if SETTINGS['json']:
+        print json.dumps(summary_result)
+        return 0
 
-def print_summary(result):
-    """Prints summary for reporting"""
-    summary_result = get_summary_result(result)
-    print colored(PRINT_TOTAL_TC, attrs=['bold']) % summary_result['tc_count']
+    print colored(PRINT_TOTAL_TC, attrs=['bold']) % summary_result['count']
     print (colored(PRINT_AUTO_TC, attrs=['bold']) %
-           summary_result['auto_count'] +
-           '({0:.0f}%)'.format(summary_result['auto_percent']))
+           summary_result['automated'] +
+           '({0:.0f}%)'.format(summary_result['automated_percent']))
     print (colored(PRINT_MANUAL_TC, attrs=['bold']) %
-           summary_result['manual_count'] +
+           summary_result['manual'] +
            '({0:.0f}%)'.format(summary_result['manual_percent']))
     print (colored(PRINT_NO_DOC, attrs=['bold']) %
-           summary_result['no_docstring'])
+           summary_result['no_docstring'] +
+           '({0:.0f}%)'.format(summary_result['no_docstring_percent']))
 
 
-def print_line_item(docstring):
-    """Parses the given docstring list to print out each line item"""
-    for lineitem in docstring:
-        print lineitem
+def validate_docstring_report(testcases):
+    """Check for presence of invalid docstrings report."""
+    result = {}
+    invalid_docstring_count = 0
+    invalid_tags_docstring_count = 0
+    minimum_docstring_count = 0
+    missing_docstring_count = 0
+    testcase_count = 0
+    for path, tests in testcases.items():
+        testcase_count += len(tests)
+        for testcase in tests:
+            issues = []
+            if not testcase.docstring:
+                issues.append('Missing docstring.')
+                missing_docstring_count += 1
+            if not testcase.has_valid_docstring:
+                issues.append(
+                    'Docstring should have at least feature, test and assert '
+                    'tags.'
+                )
+                minimum_docstring_count += 1
+            if testcase.skipped_lines:
+                issues.append('Not expected tags found:\n{0}'.format(
+                    indent('\n'.join(testcase.skipped_lines), '  ')
+                ))
+                invalid_tags_docstring_count += 1
+            if issues:
+                if path not in result:
+                    result[path] = {}
+                result[path][testcase.name] = issues
+                invalid_docstring_count += 1
+
+    if SETTINGS['json']:
+        print json.dumps(result)
+        return
+
+    for path, testcases in result.items():
+        print '{0}\n{1}\n'.format(path, '=' * len(path))
+        for testcase, issues in testcases.items():
+            print '{0}\n{1}\n'.format(testcase, '-' * len(testcase))
+            print '\n'.join(['* {0}'.format(issue) for issue in issues]) + '\n'
+
+    if invalid_docstring_count == 0:
+        color = CLR_GOOD
+    else:
+        color = CLR_ERR
+    print colored(PRINT_INVALID_DOC, attrs=['bold']) % colored(
+        '{0}/{1} ({2:.02f}%)'.format(
+            invalid_docstring_count,
+            testcase_count,
+            float(invalid_docstring_count)/testcase_count * 100
+        ),
+        color
+    )
+    if missing_docstring_count == 0:
+        color = CLR_GOOD
+    else:
+        color = CLR_ERR
+    print colored(PRINT_NO_DOC, attrs=['bold']) % colored(
+        '{0}/{1} ({2:.02f}%)'.format(
+            missing_docstring_count,
+            testcase_count,
+            float(missing_docstring_count)/testcase_count * 100
+        ),
+        color
+    )
+    if minimum_docstring_count == 0:
+        color = CLR_GOOD
+    else:
+        color = CLR_ERR
+    print colored(PRINT_NO_MINIMUM_DOC_TC, attrs=['bold']) % colored(
+        '{0}/{1} ({2:.02f}%)'.format(
+            minimum_docstring_count,
+            testcase_count,
+            float(minimum_docstring_count)/testcase_count * 100
+        ),
+        color
+    )
+    if invalid_tags_docstring_count == 0:
+        color = CLR_GOOD
+    else:
+        color = CLR_ERR
+    print colored('Test cases with invalid tags %s', attrs=['bold']) % colored(
+        '{0}/{1} ({2:.02f}%)'.format(
+            invalid_tags_docstring_count,
+            testcase_count,
+            float(invalid_tags_docstring_count)/testcase_count * 100
+        ),
+        color
+    )
+
+    if len(result) > 0:
+        return -1
+
+
+def bugs_report(testcases):
+    """List test cases affected by bugs report."""
+    result = {}
+    affected_count = 0
+    testcase_count = 0
+    for path, tests in testcases.items():
+        testcase_count += len(tests)
+        for testcase in tests:
+            if not testcase.bugs:
+                continue
+            for bug in testcase.bugs:
+                if bug not in result:
+                    result[bug] = {}
+                if path not in result[bug]:
+                    result[bug][path] = []
+                result[bug][path].append(testcase.name)
+                affected_count += 1
+
+    if SETTINGS['json']:
+        print json.dumps(result)
+        return
+
+    for bug, paths in result.items():
+        msg = 'Test cases affected by {0}'.format(bug)
+        print '{0}\n{1}\n'.format(msg, '=' * len(msg))
+        for path, names in paths.items():
+            print '{0}\n{1}\n'.format(path, '-' * len(path))
+            print '\n'.join(['* {0}'.format(name) for name in names]) + '\n'
+
+    print colored(
+        PRINT_TC_AFFECTED_BUGS % '{0}/{1} ({2:.02f}%)'.format(
+            affected_count,
+            testcase_count,
+            float(affected_count)/testcase_count * 100
+        ),
+        attrs=['bold']
+    )
+
+
+def get_testcases(paths):
+    """Walk each path in ``paths`` and return the test cases found.
+
+    :param path: List o directories to find test modules and test cases.
+    :return: A dict mapping a test module path and its test cases.
+    """
+    testmodules = []
+    for path in paths:
+        for dirpath, _, filenames in os.walk(path):
+            for filename in filenames:
+                if filename.startswith('test_') and filename.endswith('.py'):
+                    testmodules.append(os.path.join(dirpath, filename))
+    testcases = collections.OrderedDict()
+    for testmodule in testmodules:
+        testcases[testmodule] = []
+        with open(testmodule) as handler:
+            for node in ast.iter_child_nodes(ast.parse(handler.read())):
+                if isinstance(node, ast.ClassDef):
+                    # Class test methods
+                    class_name = node.name
+                    testcases[testmodule].extend([
+                        TestFunction(subnode, class_name)
+                        for subnode in ast.iter_child_nodes(node)
+                        if isinstance(subnode, ast.FunctionDef) and
+                        subnode.name.startswith('test_')
+                    ])
+                elif (isinstance(node, ast.FunctionDef) and
+                      node.name.startswith('test_')):
+                    # Module's test functions
+                    testcases[testmodule].append(TestFunction(node))
+    return testcases
 
 
 def colored(text, color=None, attrs=None):
-    """Checks if termcolor is installed before calling it"""
+    """Use termcolor.colored if available otherwise return the same string."""
     if HAS_TERMCOLOR and not SETTINGS['nocolor']:
         return termcolor.colored(text, color=color, attrs=attrs)
     else:

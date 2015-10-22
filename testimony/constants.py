@@ -7,18 +7,9 @@ CLR_RESOURCE = 'cyan'
 CLR_ERR = 'red'
 CLR_GOOD = 'green'
 
-DOC_TAGS = [
-    'feature',
-    'test',
-    'setup',
-    'steps',
-    'assert',
-    'bz',
-    'status']
-
 PRINT_REPORT = 'print'
 SUMMARY_REPORT = 'summary'
-VALIDATE_REPORT = 'validate_docstring'
+VALIDATE_DOCSTRING_REPORT = 'validate_docstring'
 BUGS_REPORT = 'bugs'
 MANUAL_REPORT = 'manual'
 AUTO_REPORT = 'auto'
@@ -26,7 +17,7 @@ AUTO_REPORT = 'auto'
 REPORT_TAGS = (
     PRINT_REPORT,
     SUMMARY_REPORT,
-    VALIDATE_REPORT,
+    VALIDATE_DOCSTRING_REPORT,
     BUGS_REPORT,
     MANUAL_REPORT,
     AUTO_REPORT,
@@ -35,7 +26,7 @@ REPORT_TAGS = (
 PRINT_TOTAL_TC = 'Total Number of test cases:      %s'
 PRINT_AUTO_TC = 'Total Number of automated cases: %d '
 PRINT_MANUAL_TC = 'Total Number of manual cases:    %d '
-PRINT_NO_DOC = 'Test cases with no docstrings:   %s'
+PRINT_NO_DOC = 'Test cases with no docstrings:   %s '
 PRINT_PARSE_ERR = '!!!!!Exception in parsing DocString!!!!!'
 PRINT_TC_AFFECTED_BUGS = '\nTotal Number of test cases affected by bugs: %s'
 PRINT_INVALID_DOC = 'Total Number of invalid docstrings:  %s'
