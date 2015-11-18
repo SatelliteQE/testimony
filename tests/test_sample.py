@@ -24,6 +24,8 @@ class Testsample1():
 
         @Statues: Manual
 
+        @Tags: t1, t2, t3
+
         """
         # Code to perform the test
         pass
@@ -44,6 +46,8 @@ class Testsample1():
         1. Login to the application with valid Latin credentials
 
         @Assert: Login is successful
+
+        @Tags: t1
 
         """
         # Code to perform the test
@@ -78,6 +82,8 @@ class Testsample1():
 
         @Status: Manual
 
+        @Tags: t2
+
         """
         # Login to the application
 
@@ -101,6 +107,8 @@ class Testsample2():
         @BZ: 123456
 
         @Status: Manual
+
+        @Tags: t3
 
         """
         # Code to perform the test

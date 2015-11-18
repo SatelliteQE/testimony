@@ -13,6 +13,7 @@ VALIDATE_DOCSTRING_REPORT = 'validate_docstring'
 BUGS_REPORT = 'bugs'
 MANUAL_REPORT = 'manual'
 AUTO_REPORT = 'auto'
+TAGS_REPORT = 'tags'
 
 REPORT_TAGS = (
     PRINT_REPORT,
@@ -21,6 +22,7 @@ REPORT_TAGS = (
     BUGS_REPORT,
     MANUAL_REPORT,
     AUTO_REPORT,
+    TAGS_REPORT,
 )
 
 PRINT_TOTAL_TC = 'Total Number of test cases:      %s'
