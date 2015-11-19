@@ -124,6 +124,7 @@ class TestFunction(object):
                 else:
                     self.skipped_lines.append(line)
 
+        # if @Test tag not found, use the first line of docstring
         if self.test is None:
             self.test = self.docstring.strip().split('\n')[0]
 
