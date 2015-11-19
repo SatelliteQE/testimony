@@ -124,6 +124,9 @@ class TestFunction(object):
                 else:
                     self.skipped_lines.append(line)
 
+        if self.test is None:
+            self.test = self.docstring.strip().split('\n')[0]
+
     @property
     def automated(self):
         """Indicate if the test case is automated or not."""
