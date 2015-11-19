@@ -33,13 +33,20 @@ def parse_args():
         '-j', '--json', action='store_true', help='JSON output')
     parser.add_argument(
         '-n', '--nocolor', action='store_true', help='Do not use color option')
+    parser.add_argument(
+        '-t',
+        '--tags',
+        nargs='*',
+        help='space separated tags to search.  Note: Always run this '
+             'only in the root of the project where test cases are stored'
+    )
     args = parser.parse_args()
     return args
 
 
 def run(args):
     """Run testimony with given args"""
-    main(args.report, args.paths, args.json, args.nocolor)
+    main(args.report, args.paths, args.json, args.nocolor, args.tags)
 
 if __name__ == "__main__":
     run(parse_args())

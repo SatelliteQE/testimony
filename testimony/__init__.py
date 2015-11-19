@@ -12,6 +12,7 @@ import textwrap
 from decimal import Decimal
 from testimony.constants import (
     AUTO_REPORT,
+    BUGS_REPORT,
     CLR_ERR,
     CLR_GOOD,
     MANUAL_REPORT,
@@ -24,7 +25,8 @@ from testimony.constants import (
     PRINT_TC_AFFECTED_BUGS,
     PRINT_TOTAL_TC,
     SUMMARY_REPORT,
-    VALIDATE_DOCSTRING_REPORT, BUGS_REPORT,
+    TAGS_REPORT,
+    VALIDATE_DOCSTRING_REPORT,
 )
 
 try:
@@ -73,17 +75,19 @@ class TestFunction(object):
     #: is not available.
     _undefined = object()
 
-    def __init__(self, function_def, parent_class=None):
+    def __init__(self, function_def, parent_class=None, testmodule=None):
         #: A ``ast.FunctionDef`` instance used to extract information
         self.function_def = function_def
         self.parent_class = parent_class
         self.docstring = ast.get_docstring(function_def)
+        self.testmodule = testmodule
         self.assertion = None
         self.bugs = None
         self.feature = None
         self.setup = None
         self.status = None
         self.steps = None
+        self.tags = None
         self.test = None
         self.skipped_lines = []
         self._parse_docstring()
@@ -119,10 +123,16 @@ class TestFunction(object):
                     self.status = value
                 elif tag == 'steps':
                     self.steps = value
+                elif tag == 'tags':
+                    self.tags = value
                 elif tag == 'test':
                     self.test = value
                 else:
                     self.skipped_lines.append(line)
+
+        # if @Test tag not found, use the first line of docstring
+        if self.test is None:
+            self.test = self.docstring.strip().split('\n')[0]
 
     @property
     def automated(self):
@@ -158,6 +168,7 @@ class TestFunction(object):
             'skipped-lines': self.skipped_lines,
             'status': self.status,
             'steps': self.steps,
+            'tags': self.tags,
             'test': self.test,
         }
 
@@ -185,6 +196,8 @@ class TestFunction(object):
             output.append('Bugs: ' + ', '.join(self.bugs))
         if self.status is not None:
             output.append('Status: ' + self.status)
+        if self.tags is not None:
+            output.append('Tags: ' + self.tags)
         if self.skipped_lines:
             output.append(
                 'Skipped lines:\n' +
@@ -200,7 +213,7 @@ class TestFunction(object):
         return '\n'.join(output)
 
 
-def main(report, paths, json_output, nocolor):
+def main(report, paths, json_output, nocolor, tags):
     """Main function for testimony project
 
     Expects a valid report type and valid directory paths, hopefully argparse
@@ -209,6 +222,7 @@ def main(report, paths, json_output, nocolor):
     """
     SETTINGS['json'] = json_output
     SETTINGS['nocolor'] = nocolor
+    SETTINGS['input_tags'] = tags
 
     if report == SUMMARY_REPORT:
         report_function = summary_report
@@ -222,6 +236,8 @@ def main(report, paths, json_output, nocolor):
         report_function = manual_report
     elif report == AUTO_REPORT:
         report_function = auto_report
+    elif report == TAGS_REPORT:
+        report_function = tags_report
 
     sys.exit(report_function(get_testcases(paths)))
 
@@ -450,6 +466,40 @@ def bugs_report(testcases):
     )
 
 
+def tags_report(testcases):
+    """Lists the test cases matching the input tag."""
+    result = {
+        'tagged_testcases': [],
+    }
+    if not SETTINGS['input_tags']:
+        print 'Input tags required for this report.  See testimony --help'
+        sys.exit()
+    # Change the input tags to lower case
+    input_tags_list = {tag.lower() for tag in SETTINGS['input_tags']}
+    for _, tests in testcases.items():
+        for testcase in tests:
+            if testcase.tags:
+                testcase_tags_list = {
+                    tag.lower().strip()
+                    for tag in testcase.tags.split(',')
+                }
+                # Check if any items in either list match. If so, derive the
+                # full path of the test case. Expected sample output:
+                # `tests.test_sample.Testsample1.test_positive_login_1`
+                if testcase_tags_list.intersection(input_tags_list):
+                    value = testcase.testmodule
+                    if testcase.parent_class:
+                        value = value + '.' + testcase.parent_class
+                    value = value + '.' + testcase.name
+                    value = value.replace('/', '.')
+                    value = value.replace('.py', '', 1)
+                    result['tagged_testcases'].append(value)
+    if SETTINGS['json']:
+        print json.dumps(result)
+        return
+    print result['tagged_testcases']
+
+
 def get_testcases(paths):
     """Walk each path in ``paths`` and return the test cases found.
 
@@ -471,7 +521,7 @@ def get_testcases(paths):
                     # Class test methods
                     class_name = node.name
                     testcases[testmodule].extend([
-                        TestFunction(subnode, class_name)
+                        TestFunction(subnode, class_name, testmodule)
                         for subnode in ast.iter_child_nodes(node)
                         if isinstance(subnode, ast.FunctionDef) and
                         subnode.name.startswith('test_')
@@ -479,7 +529,8 @@ def get_testcases(paths):
                 elif (isinstance(node, ast.FunctionDef) and
                       node.name.startswith('test_')):
                     # Module's test functions
-                    testcases[testmodule].append(TestFunction(node))
+                    testcases[testmodule].append(TestFunction(
+                        node, testmodule=testmodule))
     return testcases
 
 
