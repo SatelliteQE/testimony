@@ -17,6 +17,7 @@ The parameter options are:
 4. bugs - Test cases affected by Bugs and the corresponding Bug list
 5. manual - List all manual test cases
 6. auto - List all auto test cases
+7. tags - Prints all test cases with the specified tags
 
 Note:
 1. testimony returns a non-zero error code when the test case docstrings does not follow the intended rules, returns zero otherwise
@@ -66,6 +67,8 @@ Expected Docstring format:
 
     @Status: Manual (REMOVE this field once automated)
 
+    @Tags: T1, T2, T3
+
     """
 
 \3) Optional color formatting - If termcolor package is installed, output will be printed in colored text
@@ -76,20 +79,24 @@ Usage:
 ::
 
     $ testimony -h
-    usage: testimony [-h] [-n] REPORT PATH [PATH ...]
+    usage: testimony [-h] [-n] [-t TAGS] REPORT PATH [PATH ...]
 
     Inspects and report on the Python test cases.
 
     positional arguments:
-  	REPORT         report type, possible values: print, summary,
-    	           validate_docstring, bugs, manual, auto
-  	PATH           a list of paths to look for tests cases
+  	REPORT                report type, possible values: print, summary,
+    	                  validate_docstring, bugs, manual, auto, tags
+  	PATH                  a list of paths to look for tests cases
 
   	optional arguments:
-  	-h, --help     show this help message and exit
-  	-j, --json     JSON output
-  	-n, --nocolor  Do not use color option
-
+  	-h, --help            show this help message and exit
+  	-j, --json            JSON output
+  	-n, --nocolor         Do not use color option
+	-t [TAGS [TAGS ...]], --tags [TAGS [TAGS ...]]
+                          space separated tags to search.  Note: Always run this
+                          only in the root of the project where test cases are
+                          stored
+	
 
 ::
 
@@ -233,6 +240,17 @@ Usage:
     $ echo $?
     255
 
+::
+
+    $ testimony tags tests/ --tag t1
+	['tests.test_sample.Testsample1.test_positive_login_1',
+	 'tests.test_sample.Testsample1.test_positive_login_3']
+
+    $ testimony tags tests/ --tag t1 t2
+	['tests.test_sample.Testsample1.test_positive_login_1',
+	 'tests.test_sample.Testsample1.test_positive_login_3',
+	 'tests.test_sample.Testsample1.test_negative_login_5']
+    
 
 Success scenario in which testimony returns 0
 
