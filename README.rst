@@ -296,6 +296,14 @@ None
 
 Version History
 ---------------
+- Version 1.0.1
+
+::
+
+- Major code refactor for modularizing the code
+- Added Tags support
+- If @Test is not present, the first line of docstring will be used instead
+
 - Version 1.0.0
 
 ::

@@ -8,8 +8,8 @@ with open('README.rst') as file:
 
 setup(
     name='testimony',
-    version='1.0.0',
-    url='https://github.com/sthirugn/testimony/',
+    version='1.0.1',
+    url='https://github.com/SatelliteQE/testimony/',
     author='Suresh Thirugn',
     author_email='sthirugn@redhat.com',
     packages=['testimony'],
