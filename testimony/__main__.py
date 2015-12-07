@@ -8,12 +8,12 @@ from testimony import main
 from testimony.constants import REPORT_TAGS
 
 
-def dir_arg(arg):
-    """Checks if a path argument is a directory"""
-    if os.path.isdir(arg):
+def file_or_dir_arg(arg):
+    """Checks if a path argument is a file or a directory."""
+    if os.path.isdir(arg) or os.path.isfile(arg):
         return arg
     else:
-        msg = '%s is not a directory' % arg
+        msg = '%s is not a file or a directory' % arg
         raise argparse.ArgumentTypeError(msg)
 
 
@@ -27,7 +27,7 @@ def parse_args():
         metavar='REPORT',
         help='report type, possible values: %s' % ', '.join(REPORT_TAGS))
     parser.add_argument(
-        'paths', metavar='PATH', type=dir_arg, nargs='+',
+        'paths', metavar='PATH', type=file_or_dir_arg, nargs='+',
         help='a list of paths to look for tests cases')
     parser.add_argument(
         '-j', '--json', action='store_true', help='JSON output')
