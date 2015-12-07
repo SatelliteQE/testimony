@@ -61,6 +61,13 @@ def indent(text, prefix, predicate=None):
     return ''.join(prefixed_lines())
 
 
+def is_test_module(filename):
+    """Return ``True`` if the ``filename`` matches an expected test
+    module name.
+    """
+    return filename.startswith('test_') and filename.endswith('.py')
+
+
 class TestFunction(object):
     """Class that wraps a ``ast.FunctionDef`` instance and provide useful
     information for creating the reports.
@@ -508,9 +515,14 @@ def get_testcases(paths):
     """
     testmodules = []
     for path in paths:
+        if os.path.isfile(path):
+            filename = os.path.basename(path)
+            if is_test_module(filename):
+                    testmodules.append(path)
+            continue
         for dirpath, _, filenames in os.walk(path):
             for filename in filenames:
-                if filename.startswith('test_') and filename.endswith('.py'):
+                if is_test_module(filename):
                     testmodules.append(os.path.join(dirpath, filename))
     testcases = collections.OrderedDict()
     for testmodule in testmodules:
