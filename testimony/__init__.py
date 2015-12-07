@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 """DocString manipulation methods to create test reports"""
+from __future__ import print_function
 
 import ast
 import collections
@@ -267,18 +268,18 @@ def print_testcases(testcases, test_filter='all'):
         result[path] = [test.to_dict() for test in tests]
 
         if not SETTINGS['json']:
-            print '{0}\n{1}\n'.format(
-                colored(path, attrs=['bold']), '=' * len(path))
+            print('{0}\n{1}\n'.format(
+                colored(path, attrs=['bold']), '=' * len(path)))
             if len(tests) == 0:
-                print 'No {0}test cases found.\n'.format(
+                print('No {0}test cases found.\n'.format(
                     '' if test_filter not in ('automated', 'manual')
                     else test_filter + ' '
-                )
+                ))
             for index, value in enumerate(tests):
-                print 'TC {0}\n{1}\n'.format(index + 1, value)
+                print('TC {0}\n{1}\n'.format(index + 1, value))
 
     if SETTINGS['json']:
-        print json.dumps(result)
+        print(json.dumps(result))
         return 0
 
 
@@ -324,19 +325,19 @@ def summary_report(testcases):
     }
 
     if SETTINGS['json']:
-        print json.dumps(summary_result)
+        print(json.dumps(summary_result))
         return 0
 
-    print colored(PRINT_TOTAL_TC, attrs=['bold']) % summary_result['count']
-    print (colored(PRINT_AUTO_TC, attrs=['bold']) %
-           summary_result['automated'] +
-           '({0:.0f}%)'.format(summary_result['automated_percent']))
-    print (colored(PRINT_MANUAL_TC, attrs=['bold']) %
-           summary_result['manual'] +
-           '({0:.0f}%)'.format(summary_result['manual_percent']))
-    print (colored(PRINT_NO_DOC, attrs=['bold']) %
-           summary_result['no_docstring'] +
-           '({0:.0f}%)'.format(summary_result['no_docstring_percent']))
+    print(colored(PRINT_TOTAL_TC, attrs=['bold']) % summary_result['count'])
+    print(colored(PRINT_AUTO_TC, attrs=['bold']) %
+          summary_result['automated'] +
+          '({0:.0f}%)'.format(summary_result['automated_percent']))
+    print(colored(PRINT_MANUAL_TC, attrs=['bold']) %
+          summary_result['manual'] +
+          '({0:.0f}%)'.format(summary_result['manual_percent']))
+    print(colored(PRINT_NO_DOC, attrs=['bold']) %
+          summary_result['no_docstring'] +
+          '({0:.0f}%)'.format(summary_result['no_docstring_percent']))
 
 
 def validate_docstring_report(testcases):
@@ -372,63 +373,64 @@ def validate_docstring_report(testcases):
                 invalid_docstring_count += 1
 
     if SETTINGS['json']:
-        print json.dumps(result)
+        print(json.dumps(result))
         return
 
     for path, testcases in result.items():
-        print '{0}\n{1}\n'.format(path, '=' * len(path))
+        print('{0}\n{1}\n'.format(path, '=' * len(path)))
         for testcase, issues in testcases.items():
-            print '{0}\n{1}\n'.format(testcase, '-' * len(testcase))
-            print '\n'.join(['* {0}'.format(issue) for issue in issues]) + '\n'
+            print('{0}\n{1}\n'.format(testcase, '-' * len(testcase)))
+            print(
+                '\n'.join(['* {0}'.format(issue) for issue in issues]) + '\n')
 
     if invalid_docstring_count == 0:
         color = CLR_GOOD
     else:
         color = CLR_ERR
-    print colored(PRINT_INVALID_DOC, attrs=['bold']) % colored(
+    print(colored(PRINT_INVALID_DOC, attrs=['bold']) % colored(
         '{0}/{1} ({2:.02f}%)'.format(
             invalid_docstring_count,
             testcase_count,
             float(invalid_docstring_count)/testcase_count * 100
         ),
         color
-    )
+    ))
     if missing_docstring_count == 0:
         color = CLR_GOOD
     else:
         color = CLR_ERR
-    print colored(PRINT_NO_DOC, attrs=['bold']) % colored(
+    print(colored(PRINT_NO_DOC, attrs=['bold']) % colored(
         '{0}/{1} ({2:.02f}%)'.format(
             missing_docstring_count,
             testcase_count,
             float(missing_docstring_count)/testcase_count * 100
         ),
         color
-    )
+    ))
     if minimum_docstring_count == 0:
         color = CLR_GOOD
     else:
         color = CLR_ERR
-    print colored(PRINT_NO_MINIMUM_DOC_TC, attrs=['bold']) % colored(
+    print(colored(PRINT_NO_MINIMUM_DOC_TC, attrs=['bold']) % colored(
         '{0}/{1} ({2:.02f}%)'.format(
             minimum_docstring_count,
             testcase_count,
             float(minimum_docstring_count)/testcase_count * 100
         ),
         color
-    )
+    ))
     if invalid_tags_docstring_count == 0:
         color = CLR_GOOD
     else:
         color = CLR_ERR
-    print colored('Test cases with invalid tags %s', attrs=['bold']) % colored(
+    print(colored('Test cases with invalid tags %s', attrs=['bold']) % colored(
         '{0}/{1} ({2:.02f}%)'.format(
             invalid_tags_docstring_count,
             testcase_count,
             float(invalid_tags_docstring_count)/testcase_count * 100
         ),
         color
-    )
+    ))
 
     if len(result) > 0:
         return -1
@@ -453,24 +455,24 @@ def bugs_report(testcases):
                 affected_count += 1
 
     if SETTINGS['json']:
-        print json.dumps(result)
+        print(json.dumps(result))
         return
 
     for bug, paths in result.items():
         msg = 'Test cases affected by {0}'.format(bug)
-        print '{0}\n{1}\n'.format(msg, '=' * len(msg))
+        print('{0}\n{1}\n'.format(msg, '=' * len(msg)))
         for path, names in paths.items():
-            print '{0}\n{1}\n'.format(path, '-' * len(path))
-            print '\n'.join(['* {0}'.format(name) for name in names]) + '\n'
+            print('{0}\n{1}\n'.format(path, '-' * len(path)))
+            print('\n'.join(['* {0}'.format(name) for name in names]) + '\n')
 
-    print colored(
+    print(colored(
         PRINT_TC_AFFECTED_BUGS % '{0}/{1} ({2:.02f}%)'.format(
             affected_count,
             testcase_count,
             float(affected_count)/testcase_count * 100
         ),
         attrs=['bold']
-    )
+    ))
 
 
 def tags_report(testcases):
@@ -479,7 +481,7 @@ def tags_report(testcases):
         'tagged_testcases': [],
     }
     if not SETTINGS['input_tags']:
-        print 'Input tags required for this report.  See testimony --help'
+        print('Input tags required for this report.  See testimony --help')
         sys.exit()
     # Change the input tags to lower case
     input_tags_list = {tag.lower() for tag in SETTINGS['input_tags']}
@@ -502,9 +504,9 @@ def tags_report(testcases):
                     value = value.replace('.py', '', 1)
                     result['tagged_testcases'].append(value)
     if SETTINGS['json']:
-        print json.dumps(result)
+        print(json.dumps(result))
         return
-    print result['tagged_testcases']
+    print(result['tagged_testcases'])
 
 
 def get_testcases(paths):
