@@ -307,6 +307,12 @@ Contribute
 Version History:
 ----------------
 
+v1.0.3
+  - Support added to accept test modules as input (Only directory was supported earlier)
+
+v1.0.2
+  - Code refresh
+
 v1.0.1
   - Major code refactor for modularizing the code
   - Added Tags support
