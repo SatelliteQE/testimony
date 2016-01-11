@@ -53,7 +53,7 @@ Requirements
 
 Expected Docstring format::
 
-    """@Test: Log in as a valid user
+    """Log in as a valid user
 
     @Feature: Login
 
@@ -73,6 +73,8 @@ Expected Docstring format::
     @Tags: T1, T2, T3
 
     """
+
+    Note: The first line of docstring will be considered as the test case name.
 
 \3) Optional color formatting - If termcolor package is installed, output will be printed in colored text
 
