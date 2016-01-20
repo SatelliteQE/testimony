@@ -104,170 +104,205 @@ help::
 	
 print - test cases::
 
-    $ testimony print /home/testimony/tests/
+    $ testimony print testimony/tests
 
-    Fetching Test Path /home/testimony/tests/
-
-    Scanning test_sample.py...
+    tests/test_sample.py
+    ====================
 
     TC 1
-    Feture: Login - Positive
     Test: Login with right credentials
-    Steps:
-        1. Login to the application with valid credentials
     Assert: Login is successful
-    Bug: 123456
-    Statues: Manual
+    Steps: 1. Login to the application with valid credentials
+    Tags: t1, t2, t3
+    Skipped lines:
+      Feture: Login - Positive
+      Bug: 123456
+      Statues: Manual
 
     TC 2
-    test_positive_login_2: Docstring missing. Please update.
+    <intentionally blank to show a missing docstring>
 
     TC 3
-    Feature: Login - Positive
     Test: Login with Latin credentials
-    Steps:
-        1. Login to the application with valid Latin credentials
+    Feature: Login - Positive
     Assert: Login is successful
+    Steps: 1. Login to the application with valid Latin credentials
+    Tags: t1
 
     TC 4
-    Feature: Login - Positive
     Test: Login with Credentials having special characters
-    Steps:
-        1. Login to the application with valid credentials having
-        special characters
+    Feature: Login - Positive
     Assert: Activation key is created
+    Steps: 1. Login to the application with valid credentials having
+    special characters
     Status: Manual
 
     TC 5
-    Steps:
-        1. Login to the application with invalid credentials
-    BZ: 123456
+    Test: Test missing required docstrings
+    Steps: 1. Login to the application with invalid credentials
+    Bugs: 123456
     Status: Manual
+    Tags: t2
 
-    $ echo $?
-    255
+    TC 6
+    Test: Login with invalid credentials
+    Feature: Login - Negative
+    Assert: Login failed
+    Steps: 1. Login to the application with invalid credentials
+    Bugs: 123456
+    Status: Manual
+    Tags: t3
+
+    TC 7
+    Test: Login with invalid credentials
+    Feature: Login - Negative
+    Assert: Login failed
+    Steps: 1. Login to the application with valid username and no password
 
 
-summary - print summary of all tests::
+summary - prints summary of all tests::
 
-    $ testimony summary /home/testimony/tests/
+    $ testimony summary /home/testimony/tests
 
-    Fetching Test Path /home/testimony/tests/
+    Total Number of test cases:      7
+    Total Number of automated cases: 3 (43%)
+    Total Number of manual cases:    3 (43%)
+    Test cases with no docstrings:   1 (14%)
 
-    Total Number of test cases:      4
-    Total Number of automated cases: 2
-    Total Number of manual cases:    2
-    Test cases with no docstrings:   1
-
-
-    $ echo $?
-    255
 
 validate_docstring - to validate all tests::
 
-    $ testimony validate_docstring /home/testimony/tests/
+    $ testimony validate_docstring /home/testimony/tests
 
-    Fetching Test Path /home/testimony/tests/
+    tests/test_sample.py
+    ====================
 
-    Scanning test_sample.py...
-    test_positive_login_1: Invalid DocString: Feture: Login - Positive
-    test_positive_login_1: Invalid DocString: Bug: 123456
-    test_positive_login_1: Invalid DocString: Statues: Manual
-    test_positive_login_1: Need feature, test and assert at the minimum
-    test_positive_login_2: Docstring missing. Please update.
-    test_negative_login_5: Need feature, test and assert at the minimum
-    Total Number of invalid docstrings:  3
-    Test cases with no docstrings:   1
-    Test cases missing minimal docstrings:  2
+    test_positive_login_1
+    ---------------------
 
-    $ echo $?
-    255
+    * Docstring should have at least feature and assert tags
+    * Unexpected tags found:
+      Feture: Login - Positive
+      Bug: 123456
+      Statues: Manual
+
+    test_positive_login_2
+    ---------------------
+
+    * Missing docstring.
+    * Docstring should have at least feature and assert tags
+
+    test_negative_login_5
+    ---------------------
+
+    * Docstring should have at least feature and assert tags
+
+    Total Number of invalid docstrings:  3/7 (42.86%)
+    Test cases with no docstrings:   1/7 (14.29%)
+    Test cases missing minimal docstrings:  3/7 (42.86%)
+    Test cases with invalid tags 1/7 (14.29%)
+
 
 bugs - print test cases affected with bugs::
 
-    $ testimony bugs /home/testimony/tests/
+    $ testimony bugs /home/testimony/tests
 
-    Fetching Test Path /home/estimony/tests/
+    Test cases affected by 123456
+    =============================
 
-    Scanning test_sample.py...
+    tests/test_sample.py
+    --------------------
 
-    Total Number of test cases affected by bugs: 1
+    * test_negative_login_5
+    * test_negative_login_6
 
-    Bug list:
-    123456
 
-    $ echo $?
-    255
+    Total Number of test cases affected by bugs: 2/7 (28.57%)
+
 
 manual - print manual tests::
 
-     $ testimony manual /home/testimony/tests/
+    $ testimony manual /home/testimony/tests/
 
-    Fetching Test Path /home/estimony/tests/
+    tests/test_sample.py
+    ====================
 
-    Scanning test_sample.py...
-    Feature: Login - Positive
+    TC 1
     Test: Login with Credentials having special characters
-    Steps:
-        1. Login to the application with valid credentials having
-        special characters
+    Feature: Login - Positive
     Assert: Activation key is created
-    Status: Manual
-    Steps:
-        1. Login to the application with invalid credentials
-    BZ: 123456
+    Steps: 1. Login to the application with valid credentials having
+    special characters
     Status: Manual
 
-    $ echo $?
-    255
+    TC 2
+    Test: Test missing required docstrings
+    Steps: 1. Login to the application with invalid credentials
+    Bugs: 123456
+    Status: Manual
+    Tags: t2
+
+    TC 3
+    Test: Login with invalid credentials
+    Feature: Login - Negative
+    Assert: Login failed
+    Steps: 1. Login to the application with invalid credentials
+    Bugs: 123456
+    Status: Manual
+    Tags: t3
 
 auto - print auto tests::
 
     $ testimony auto /home/testimony/tests/
 
-    Fetching Test Path /home/estimony/tests/
+    tests/test_sample.py
+    ====================
 
-    Scanning test_sample.py...
-    Feture: Login - Positive
+    TC 1
     Test: Login with right credentials
-    Steps:
-        1. Login to the application with valid credentials
     Assert: Login is successful
-    Bug: 123456
-    Statues: Manual
-    Feature: Login - Positive
+    Steps: 1. Login to the application with valid credentials
+    Tags: t1, t2, t3
+    Skipped lines:
+      Feture: Login - Positive
+      Bug: 123456
+      Statues: Manual
+
+    TC 2
     Test: Login with Latin credentials
-    Steps:
-        1. Login to the application with valid Latin credentials
+    Feature: Login - Positive
     Assert: Login is successful
+    Steps: 1. Login to the application with valid Latin credentials
+    Tags: t1
 
-    $ echo $?
-    255
+    TC 3
+    Test: Login with invalid credentials
+    Feature: Login - Negative
+    Assert: Login failed
+    Steps: 1. Login to the application with valid username and no password
 
-tags - print tests with given tags::
+    tags - print tests with given tags::
 
-    $ testimony tags tests/ --tag t1
-	['tests.test_sample.Testsample1.test_positive_login_1',
-	 'tests.test_sample.Testsample1.test_positive_login_3']
+        $ testimony tags tests/ --tag t1
+	    ['tests.test_sample.Testsample1.test_positive_login_1',
+	     'tests.test_sample.Testsample1.test_positive_login_3']
 
-    $ testimony tags tests/ --tag t1 t2
-	['tests.test_sample.Testsample1.test_positive_login_1',
-	 'tests.test_sample.Testsample1.test_positive_login_3',
-	 'tests.test_sample.Testsample1.test_negative_login_5']
+        $ testimony tags tests/ --tag t1 t2
+	    ['tests.test_sample.Testsample1.test_positive_login_1',
+	     'tests.test_sample.Testsample1.test_positive_login_3',
+	     'tests.test_sample.Testsample1.test_negative_login_5']
     
 
 Success scenario in which testimony returns 0:
 
 Testimony returns zero when there are no validation errors encountered::
 
-    $ testimony validate_docstring /home/tests/ui/sample/
+    $ testimony validate_docstring tests/
 
-    Fetching Test Path home/tests/ui/sample/
-
-    Scanning test_activationkey.py...
-    Total Number of invalid docstrings:  0
-    Test cases with no docstrings:   0
-    Test cases missing minimal docstrings:  0
+    Total Number of invalid docstrings:  0/10 (0.00%)
+    Test cases with no docstrings:   0/10 (0.00%)
+    Test cases missing minimal docstrings:  0/10 (0.00%)
+    Test Cases with invalid tags: 0/10 (0.00%)
 
     $ echo $?
     0

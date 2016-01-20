@@ -10,7 +10,7 @@ class Testsample1():
     # Statues vs. Status
     # bug vs bz
     def test_positive_login_1(self):
-        """@Test: Login with right credentials
+        """Login with right credentials
 
         @Feture: Login - Positive
 
@@ -37,7 +37,7 @@ class Testsample1():
 
     # Test with all required docstrings and is automated
     def test_positive_login_3(self):
-        """@Test: Login with Latin credentials
+        """Login with Latin credentials
 
         @Feature: Login - Positive
 
@@ -55,7 +55,7 @@ class Testsample1():
 
     # Test with all required docstrings and is manual
     def test_positive_login_4(self):
-        """@Test: Login with Credentials having special characters
+        """Login with Credentials having special characters
 
         @Feature: Login - Positive
 
@@ -74,7 +74,9 @@ class Testsample1():
 
 # Test missing required docstrings
     def test_negative_login_5(self):
-        """@Steps:
+        """Test missing required docstrings
+
+        @Steps:
 
         1. Login to the application with invalid credentials
 
@@ -94,7 +96,7 @@ class Testsample2():
     module"""
 
     def test_negative_login_6(self):
-        """@Test: Login with invalid credentials
+        """Login with invalid credentials
 
         @Feature: Login - Negative
 
@@ -121,7 +123,7 @@ class Testsample3():
     module"""
 
     def test_negative_login_7(self):
-        """@Test: Login with invalid credentials
+        """Login with invalid credentials
 
         @Feature: Login - Negative
 

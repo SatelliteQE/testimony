@@ -133,12 +133,10 @@ class TestFunction(object):
                     self.steps = value
                 elif tag == 'tags':
                     self.tags = value
-                elif tag == 'test':
-                    self.test = value
                 else:
                     self.skipped_lines.append(line)
 
-        # if @Test tag not found, use the first line of docstring
+        # Always use the first line of docstring as test case name
         if self.test is None:
             self.test = self.docstring.strip().split('\n')[0]
 
@@ -151,8 +149,7 @@ class TestFunction(object):
 
     @property
     def has_valid_docstring(self):
-        """Returns ``True`` if at least assert, feature and test tags are
-        defined.
+        """Returns ``True`` if at least feature and assert tags are defined.
         """
         return (
             self.assertion is not None and
@@ -357,12 +354,11 @@ def validate_docstring_report(testcases):
                 missing_docstring_count += 1
             if not testcase.has_valid_docstring:
                 issues.append(
-                    'Docstring should have at least feature, test and assert '
-                    'tags.'
+                    'Docstring should have at least feature and assert tags'
                 )
                 minimum_docstring_count += 1
             if testcase.skipped_lines:
-                issues.append('Not expected tags found:\n{0}'.format(
+                issues.append('Unexpected tags found:\n{0}'.format(
                     indent('\n'.join(testcase.skipped_lines), '  ')
                 ))
                 invalid_tags_docstring_count += 1
@@ -423,14 +419,14 @@ def validate_docstring_report(testcases):
         color = CLR_GOOD
     else:
         color = CLR_ERR
-    print(colored('Test cases with invalid tags %s', attrs=['bold']) % colored(
-        '{0}/{1} ({2:.02f}%)'.format(
-            invalid_tags_docstring_count,
-            testcase_count,
-            float(invalid_tags_docstring_count)/testcase_count * 100
-        ),
-        color
-    ))
+    print(
+        colored('Test cases with invalid tags: %s', attrs=['bold']) % colored(
+            '{0}/{1} ({2:.02f}%)'.format(
+                invalid_tags_docstring_count,
+                testcase_count,
+                float(invalid_tags_docstring_count)/testcase_count * 100
+            ),
+            color))
 
     if len(result) > 0:
         return -1
@@ -520,7 +516,7 @@ def get_testcases(paths):
         if os.path.isfile(path):
             filename = os.path.basename(path)
             if is_test_module(filename):
-                    testmodules.append(path)
+                testmodules.append(path)
             continue
         for dirpath, _, filenames in os.walk(path):
             for filename in filenames:
