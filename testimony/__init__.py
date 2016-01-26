@@ -85,9 +85,10 @@ class TestFunction(object):
 
     def __init__(self, function_def, parent_class=None, testmodule=None):
         #: A ``ast.FunctionDef`` instance used to extract information
-        self.function_def = function_def
-        self.parent_class = parent_class
         self.docstring = ast.get_docstring(function_def)
+        self.function_def = function_def
+        self.name = function_def.name
+        self.parent_class = parent_class
         self.testmodule = testmodule
         self.assertion = None
         self.bugs = None
@@ -176,14 +177,6 @@ class TestFunction(object):
             'tags': self.tags,
             'test': self.test,
         }
-
-    def __getattr__(self, name):
-        """Proxy missing attributes to the ``ast.FunctionDef`` instance."""
-        attr = getattr(self.function_def, name, self._undefined)
-        if attr is self._undefined:
-            return super(TestFunction, self).__getattr__(name)
-        else:
-            return attr
 
     def __str__(self):
         output = []
