@@ -388,7 +388,7 @@ def validate_docstring_report(testcases):
         color = CLR_GOOD
     else:
         color = CLR_ERR
-    print(colored(PRINT_NO_DOC, attrs=['bold']) % colored(
+    print(colored(PRINT_NO_DOC.strip(), attrs=['bold']) % colored(
         '{0}/{1} ({2:.02f}%)'.format(
             missing_docstring_count,
             testcase_count,

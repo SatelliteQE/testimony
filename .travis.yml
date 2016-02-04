@@ -1,5 +1,8 @@
+sudo: false
 language: python
-install: "pip install flake8"
-script: flake8 testimony
+install: "pip install flake8 ."
+script:
+    - flake8 testimony
+    - make test
 notifications:
     irc: "chat.freenode.net#robottelo"
