@@ -8,7 +8,7 @@ with open('README.rst') as file:
 
 setup(
     name='testimony',
-    version='1.0.4',
+    version='1.0.5',
     url='https://github.com/SatelliteQE/testimony/',
     author='Suresh Thirugn',
     author_email='sthirugn@redhat.com',
