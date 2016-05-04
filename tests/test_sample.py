@@ -26,6 +26,7 @@ class Testsample1():
 
         @Tags: t1, t2, t3
 
+        @Types: Functional
         """
         # Code to perform the test
         pass
@@ -112,6 +113,7 @@ class Testsample2():
 
         @Tags: t3
 
+        @Type: Functional
         """
         # Code to perform the test
         pass

@@ -98,6 +98,7 @@ class TestFunction(object):
         self.steps = None
         self.tags = None
         self.test = None
+        self.test_type = None
         self.skipped_lines = []
         self._parse_docstring()
 
@@ -134,6 +135,8 @@ class TestFunction(object):
                     self.steps = value
                 elif tag == 'tags':
                     self.tags = value
+                elif tag == 'type':
+                    self.test_type = value
                 else:
                     self.skipped_lines.append(line)
 
@@ -176,6 +179,7 @@ class TestFunction(object):
             'steps': self.steps,
             'tags': self.tags,
             'test': self.test,
+            'test_type': self.test_type
         }
 
     def __str__(self):
@@ -196,6 +200,8 @@ class TestFunction(object):
             output.append('Status: ' + self.status)
         if self.tags is not None:
             output.append('Tags: ' + self.tags)
+        if self.test_type is not None:
+            output.append('Type: ' + self.test_type)
         if self.skipped_lines:
             output.append(
                 'Skipped lines:\n' +
