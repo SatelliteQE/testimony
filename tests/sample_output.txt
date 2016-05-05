@@ -14,6 +14,7 @@ Skipped lines:
   Feture: Login - Positive
   Bug: 123456
   Statues: Manual
+  Types: Functional
 
 TC 2
 Test: Login with Latin credentials
@@ -75,6 +76,7 @@ Steps: 1. Login to the application with invalid credentials
 Bugs: 123456
 Status: Manual
 Tags: t3
+Type: Functional
 
 
 ================
@@ -93,6 +95,7 @@ Skipped lines:
   Feture: Login - Positive
   Bug: 123456
   Statues: Manual
+  Types: Functional
 
 TC 2
 
@@ -127,6 +130,7 @@ Steps: 1. Login to the application with invalid credentials
 Bugs: 123456
 Status: Manual
 Tags: t3
+Type: Functional
 
 TC 7
 Test: Login with invalid credentials
@@ -165,6 +169,7 @@ test_positive_login_1
   Feture: Login - Positive
   Bug: 123456
   Statues: Manual
+  Types: Functional
 
 test_positive_login_2
 ---------------------
