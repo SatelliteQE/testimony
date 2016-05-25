@@ -88,8 +88,10 @@ class TestFunction(object):
         self.docstring = ast.get_docstring(function_def)
         self.function_def = function_def
         self.name = function_def.name
-        self.parent_class = parent_class
-        self.testmodule = testmodule
+        self.parent_class = parent_class.name
+        self.parent_class_def = parent_class
+        self.testmodule = testmodule.path
+        self.module_def = testmodule
         self.assertion = None
         self.bugs = None
         self.feature = None
@@ -100,17 +102,45 @@ class TestFunction(object):
         self.test = None
         self.test_type = None
         self.skipped_lines = []
+        self.unexpected_tags = {}
         self._parse_docstring()
 
-    def _parse_docstring(self):
-        """Parses the test docstring extracting expected values.
+    def _parse_tags(self, docstring):
+        """Parses the docstring and returns the expected tags, unexpected tags
+        and the docstring lines of the unexpected tags.
 
-        If the expected tags is not spelled right they will not be parsed.
+        For example in the following docstring (using single quote to demo)::
+
+            '''First line
+
+            @expected_tag1: value
+            @expected_tag2: value2
+            @unexpected_tag1: value
+            @unexpected_tag2: value2
+            '''
+
+        Will return a tuple with the following content::
+
+            (
+                {'expected_tag1': 'value', 'expected_tag2': 'value2'},
+                {'unexpected_tag1': 'value', 'unexpected_tag2': 'value2'},
+                ['@unexpected_tag1: value', '@unexpected_tag2: value2']
+            )
         """
-        if self.docstring is None:
-            return
-
-        for line in self.docstring.split('@'):
+        valid_tags = [
+            'assert',
+            'bz',
+            'feature',
+            'setup',
+            'status',
+            'steps',
+            'tags',
+            'type',
+        ]
+        expected_tags = {}
+        unexpected_tags = {}
+        unexpected_lines = []
+        for line in docstring.split('@'):
             # Remove trailing spaces
             line = line.rstrip()
             # Sometimes there are double new line
@@ -121,24 +151,46 @@ class TestFunction(object):
                 tag, value = line.split(':', 1)
                 tag = tag.lower()
                 value = value.strip()
-                if tag == 'assert':
-                    self.assertion = value
-                elif tag == 'bz':
-                    self.bugs = [bz.strip() for bz in value.split(',')]
-                elif tag == 'feature':
-                    self.feature = value
-                elif tag == 'setup':
-                    self.setup = value
-                elif tag == 'status':
-                    self.status = value
-                elif tag == 'steps':
-                    self.steps = value
-                elif tag == 'tags':
-                    self.tags = value
-                elif tag == 'type':
-                    self.test_type = value
+                if tag in valid_tags:
+                    if tag == 'bz':
+                        value = [bz.strip() for bz in value.split(',')]
+                    expected_tags[tag] = value
                 else:
-                    self.skipped_lines.append(line)
+                    unexpected_tags[tag] = value
+                    unexpected_lines.append(line)
+        return expected_tags, unexpected_tags, unexpected_lines
+
+    def _parse_docstring(self):
+        """Parses the test docstring extracting expected values.
+
+        If the expected tags is not spelled right they will not be parsed.
+        """
+        if self.docstring is None:
+            return
+
+        # Create the contexts
+        tags, unexpected_tags, _ = self._parse_tags(
+            ast.get_docstring(self.module_def))
+        class_tags, class_unexpected_tags, _ = self._parse_tags(
+            ast.get_docstring(self.parent_class_def))
+        function_tags, function_unexpected_tags, self.skipped_lines = (
+            self._parse_tags(self.docstring))
+
+        # Update context dictionaries
+        tags.update(class_tags)
+        tags.update(function_tags)
+        unexpected_tags.update(class_unexpected_tags)
+        unexpected_tags.update(function_unexpected_tags)
+
+        for tag, value in tags.items():
+            if tag == 'bz':
+                tag = 'bugs'
+            if tag == 'assert':
+                tag = 'assertion'
+            if tag == 'type':
+                tag = 'test_type'
+            setattr(self, tag, value)
+        self.unexpected_tags = unexpected_tags
 
         # Always use the first line of docstring as test case name
         if self.test is None:
@@ -179,7 +231,8 @@ class TestFunction(object):
             'steps': self.steps,
             'tags': self.tags,
             'test': self.test,
-            'test_type': self.test_type
+            'test_type': self.test_type,
+            'unexpected-tags': self.unexpected_tags,
         }
 
     def __str__(self):
@@ -513,8 +566,7 @@ def get_testcases(paths):
     testmodules = []
     for path in paths:
         if os.path.isfile(path):
-            filename = os.path.basename(path)
-            if is_test_module(filename):
+            if is_test_module(os.path.basename(path)):
                 testmodules.append(path)
             continue
         for dirpath, _, filenames in os.walk(path):
@@ -525,12 +577,12 @@ def get_testcases(paths):
     for testmodule in testmodules:
         testcases[testmodule] = []
         with open(testmodule) as handler:
-            for node in ast.iter_child_nodes(ast.parse(handler.read())):
+            root = ast.parse(handler.read())
+            root.path = testmodule
+            for node in ast.iter_child_nodes(root):
                 if isinstance(node, ast.ClassDef):
-                    # Class test methods
-                    class_name = node.name
                     testcases[testmodule].extend([
-                        TestFunction(subnode, class_name, testmodule)
+                        TestFunction(subnode, node, root)
                         for subnode in ast.iter_child_nodes(node)
                         if isinstance(subnode, ast.FunctionDef) and
                         subnode.name.startswith('test_')
@@ -538,8 +590,9 @@ def get_testcases(paths):
                 elif (isinstance(node, ast.FunctionDef) and
                       node.name.startswith('test_')):
                     # Module's test functions
-                    testcases[testmodule].append(TestFunction(
-                        node, testmodule=testmodule))
+                    testcases[testmodule].append(
+                        TestFunction(node, testmodule=root)
+                    )
     return testcases
 
 

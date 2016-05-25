@@ -1,9 +1,15 @@
 # -*- encoding: utf-8 -*-
-"""Test class for Sample Test"""
+"""Test class for Sample Test
+
+@Setup: Global setup
+"""
 
 
 class Testsample1():
-    """This is a dummy test file used for testing testimony"""
+    """This is a dummy test file used for testing testimony
+
+    @Setup: Setup Testsample1
+    """
 
     # Test with incorrect doctrings:
     # Feture vs. Feature, Statues vs. Status,
@@ -39,6 +45,8 @@ class Testsample1():
     # Test with all required docstrings and is automated
     def test_positive_login_3(self):
         """Login with Latin credentials
+
+        @Setup: Setup test_positive_login_3
 
         @Feature: Login - Positive
 
