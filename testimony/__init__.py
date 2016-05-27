@@ -127,6 +127,8 @@ class TestFunction(object):
                 ['@unexpected_tag1: value', '@unexpected_tag2: value2']
             )
         """
+        if docstring is None:
+            return {}, {}, []
         valid_tags = [
             'assert',
             'bz',
