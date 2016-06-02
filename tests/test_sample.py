@@ -33,6 +33,8 @@ class Testsample1():
         @Tags: t1, t2, t3
 
         @Types: Functional
+
+        @CaseComponents: ipa
         """
         # Code to perform the test
         pass
@@ -122,6 +124,8 @@ class Testsample2():
         @Tags: t3
 
         @Type: Functional
+
+        @CaseComponent: ipa
         """
         # Code to perform the test
         pass
