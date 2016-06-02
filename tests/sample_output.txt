@@ -16,6 +16,7 @@ Skipped lines:
   Bug: 123456
   Statues: Manual
   Types: Functional
+  CaseComponents: ipa
 
 TC 2
 Test: Login with Latin credentials
@@ -83,6 +84,7 @@ Bugs: 123456
 Status: Manual
 Tags: t3
 Type: Functional
+Case Component: ipa
 
 
 ================
@@ -103,6 +105,7 @@ Skipped lines:
   Bug: 123456
   Statues: Manual
   Types: Functional
+  CaseComponents: ipa
 
 TC 2
 
@@ -142,6 +145,7 @@ Bugs: 123456
 Status: Manual
 Tags: t3
 Type: Functional
+Case Component: ipa
 
 TC 7
 Test: Login with invalid credentials
@@ -182,6 +186,7 @@ test_positive_login_1
   Bug: 123456
   Statues: Manual
   Types: Functional
+  CaseComponents: ipa
 
 test_positive_login_2
 ---------------------

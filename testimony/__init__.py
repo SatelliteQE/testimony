@@ -101,6 +101,7 @@ class TestFunction(object):
         self.tags = None
         self.test = None
         self.test_type = None
+        self.case_component = None
         self.skipped_lines = []
         self.unexpected_tags = {}
         self._parse_docstring()
@@ -138,6 +139,7 @@ class TestFunction(object):
             'steps',
             'tags',
             'type',
+            'casecomponent',
         ]
         expected_tags = {}
         unexpected_tags = {}
@@ -191,6 +193,8 @@ class TestFunction(object):
                 tag = 'assertion'
             if tag == 'type':
                 tag = 'test_type'
+            if tag == 'casecomponent':
+                tag = 'case_component'
             setattr(self, tag, value)
         self.unexpected_tags = unexpected_tags
 
@@ -257,6 +261,8 @@ class TestFunction(object):
             output.append('Tags: ' + self.tags)
         if self.test_type is not None:
             output.append('Type: ' + self.test_type)
+        if self.case_component is not None:
+            output.append('Case Component: ' + self.case_component)
         if self.skipped_lines:
             output.append(
                 'Skipped lines:\n' +
