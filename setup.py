@@ -13,7 +13,11 @@ setup(
     author='Suresh Thirugn',
     author_email='sthirugn@redhat.com',
     packages=['testimony'],
-    scripts=['bin/testimony'],
+    install_requires=['Click'],
+    entry_points='''
+        [console_scripts]
+        testimony=testimony.cli:testimony
+    ''',
     description='Testimony inspects and reports on the python test cases.',
     long_description=long_description,
     license=license,
