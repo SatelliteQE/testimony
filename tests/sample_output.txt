@@ -1,90 +1,3 @@
-===============
-= auto report =
-===============
-
-tests/test_sample.py
-====================
-
-TC 1
-Test: Login with right credentials
-Assert: Login is successful
-Setup: Setup Testsample1
-Steps: 1. Login to the application with valid credentials
-Tags: t1, t2, t3
-Skipped lines:
-  Feture: Login - Positive
-  Bug: 123456
-  Statues: Manual
-  Types: Functional
-
-TC 2
-Test: Login with Latin credentials
-Feature: Login - Positive
-Assert: Login is successful
-Setup: Setup test_positive_login_3
-Steps: 1. Login to the application with valid Latin credentials
-Tags: t1
-
-TC 3
-Test: Login with invalid credentials
-Feature: Login - Negative
-Assert: Login failed
-Setup: Global setup
-Steps: 1. Login to the application with valid username and no password
-
-
-===============
-= bugs report =
-===============
-
-Test cases affected by 123456
-=============================
-
-tests/test_sample.py
---------------------
-
-* test_negative_login_5
-* test_negative_login_6
-
-
-Total Number of test cases affected by bugs: 2/7 (28.57%)
-
-=================
-= manual report =
-=================
-
-tests/test_sample.py
-====================
-
-TC 1
-Test: Login with Credentials having special characters
-Feature: Login - Positive
-Assert: Activation key is created
-Setup: Setup Testsample1
-Steps: 1. Login to the application with valid credentials having
-special characters
-Status: Manual
-
-TC 2
-Test: Test missing required docstrings
-Setup: Setup Testsample1
-Steps: 1. Login to the application with invalid credentials
-Bugs: 123456
-Status: Manual
-Tags: t2
-
-TC 3
-Test: Login with invalid credentials
-Feature: Login - Negative
-Assert: Login failed
-Setup: Global setup
-Steps: 1. Login to the application with invalid credentials
-Bugs: 123456
-Status: Manual
-Tags: t3
-Type: Functional
-
-
 ================
 = print report =
 ================
@@ -92,79 +5,168 @@ Type: Functional
 tests/test_sample.py
 ====================
 
-TC 1
-Test: Login with right credentials
-Assert: Login is successful
-Setup: Setup Testsample1
-Steps: 1. Login to the application with valid credentials
-Tags: t1, t2, t3
-Skipped lines:
-  Feture: Login - Positive
+test_positive_login_1
+---------------------
+
+Assert:
+ Login is successful
+
+Setup:
+ Setup Testsample1
+
+Steps:
+ 1. Login to the application with valid credentials
+
+Tags:
+ t1, t2, t3
+
+Test:
+ Login with right credentials
+
+Unexpected tokens:
   Bug: 123456
+  Feture: Login - Positive
   Statues: Manual
   Types: Functional
 
-TC 2
+test_positive_login_2
+---------------------
 
 
-TC 3
-Test: Login with Latin credentials
-Feature: Login - Positive
-Assert: Login is successful
-Setup: Setup test_positive_login_3
-Steps: 1. Login to the application with valid Latin credentials
-Tags: t1
 
-TC 4
-Test: Login with Credentials having special characters
-Feature: Login - Positive
-Assert: Activation key is created
-Setup: Setup Testsample1
-Steps: 1. Login to the application with valid credentials having
-special characters
-Status: Manual
+test_positive_login_3
+---------------------
 
-TC 5
-Test: Test missing required docstrings
-Setup: Setup Testsample1
-Steps: 1. Login to the application with invalid credentials
-Bugs: 123456
-Status: Manual
-Tags: t2
+Assert:
+ Login is successful
 
-TC 6
-Test: Login with invalid credentials
-Feature: Login - Negative
-Assert: Login failed
-Setup: Global setup
-Steps: 1. Login to the application with invalid credentials
-Bugs: 123456
-Status: Manual
-Tags: t3
-Type: Functional
+Feature:
+ Login - Positive
 
-TC 7
-Test: Login with invalid credentials
-Feature: Login - Negative
-Assert: Login failed
-Setup: Global setup
-Steps: 1. Login to the application with valid username and no password
+Setup:
+ Setup test_positive_login_3
+
+Steps:
+ 1. Login to the application with valid Latin credentials
+
+Tags:
+ t1
+
+Test:
+ Login with Latin credentials
+
+
+test_positive_login_4
+---------------------
+
+Assert:
+ Activation key is created
+
+Feature:
+ Login - Positive
+
+Setup:
+ Setup Testsample1
+
+Status:
+ Manual
+
+Steps:
+ 1. Login to the application with valid credentials having
+ special characters
+
+Test:
+ Login with Credentials having special characters
+
+
+test_negative_login_5
+---------------------
+
+Bz:
+ 123456
+
+Setup:
+ Setup Testsample1
+
+Status:
+ Manual
+
+Steps:
+ 1. Login to the application with invalid credentials
+
+Tags:
+ t2
+
+Test:
+ Test missing required docstrings
+
+
+test_negative_login_6
+---------------------
+
+Assert:
+ Login failed
+
+Bz:
+ 123456
+
+Feature:
+ Login - Negative
+
+Setup:
+ Global setup
+
+Status:
+ Manual
+
+Steps:
+ 1. Login to the application with invalid credentials
+
+Tags:
+ t3
+
+Test:
+ Login with invalid credentials
+
+Type:
+ Functional
+
+
+test_negative_login_7
+---------------------
+
+Assert:
+ Login failed
+
+Feature:
+ Login - Negative
+
+Setup:
+ Global setup
+
+Steps:
+ 1. Login to the application with valid username and no password
+
+Test:
+ Login with invalid credentials
+
 
 
 ==================
 = summary report =
 ==================
 
-Total Number of test cases:      7
-Total Number of automated cases: 3 (43%)
-Total Number of manual cases:    3 (43%)
-Test cases with no docstrings:   1 (14%)
-
-===============
-= tags report =
-===============
-
-Input tags required for this report.  See testimony --help
+Total number of tests:          7
+Test cases with no docstrings:  1 (14.29%)
+Assert:                         5 (71.43%)
+Bz:                             2 (28.57%)
+Feature:                        4 (57.14%)
+Setup:                          6 (85.71%)
+Status:                         3 (42.86%)
+Steps:                          6 (85.71%)
+Tags:                           4 (57.14%)
+Test:                           6 (85.71%)
+Type:                           1 (14.29%)
 
 =============================
 = validate_docstring report =
@@ -176,10 +178,10 @@ tests/test_sample.py
 test_positive_login_1
 ---------------------
 
-* Docstring should have at least feature and assert tags
-* Unexpected tags found:
-  Feture: Login - Positive
+* Docstring should have at least assert, feature, test token(s)
+* Unexpected tokens:
   Bug: 123456
+  Feture: Login - Positive
   Statues: Manual
   Types: Functional
 
@@ -187,14 +189,15 @@ test_positive_login_2
 ---------------------
 
 * Missing docstring.
-* Docstring should have at least feature and assert tags
+* Docstring should have at least assert, feature, test token(s)
 
 test_negative_login_5
 ---------------------
 
-* Docstring should have at least feature and assert tags
+* Docstring should have at least assert, feature, test token(s)
 
-Total Number of invalid docstrings:  3/7 (42.86%)
-Test cases with no docstrings:   1/7 (14.29%)
-Test cases missing minimal docstrings:  3/7 (42.86%)
-Test cases with invalid tags: 1/7 (14.29%)
+Total number of tests: 7
+Total number of invalid docstrings: 3 (42.86%)
+Test cases with no docstrings: 1 (14.29%)
+Test cases missing minimal docstrings: 3 (42.86%)
+Test cases with invalid tags: 1 (14.29%)

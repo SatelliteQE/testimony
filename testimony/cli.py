@@ -2,22 +2,23 @@
 """Testimony CLI utilities."""
 import click
 
-from testimony import main
-from testimony.constants import REPORT_TAGS
+from testimony import SETTINGS, constants, main
 
 
 @click.command()
 @click.option('-j', '--json', help='JSON output', is_flag=True)
 @click.option('-n', '--nocolor', default=False, help='Color output',
               is_flag=True)
+@click.option('--tokens', help='Comma separated list of expected tokens')
 @click.option(
-    '-t', '--tag', multiple=True,
-    help='specify a tag to search. This option can be specified multiple '
-         'times. Note: Always run this only in the root of the project where '
-         'test cases are stored'
-)
-@click.argument('report', type=click.Choice(REPORT_TAGS))
+    '--minimum-tokens', help='Comma separated list of minimum expected tokens')
+@click.argument('report', type=click.Choice(constants.REPORT_TAGS))
 @click.argument('path', nargs=-1, type=click.Path(exists=True))
-def testimony(json, nocolor, tag, report, path):
+def testimony(json, nocolor, tokens, minimum_tokens, report, path):
     """Inspects and report on the Python test cases."""
-    main(report, path, json, nocolor, tag)
+    if tokens:
+        SETTINGS['tokens'] = [token.strip() for token in tokens.split(',')]
+    if minimum_tokens:
+        SETTINGS['minimum_tokens'] = [
+            token.strip() for token in minimum_tokens.split(',')]
+    main(report, path, json, nocolor)
