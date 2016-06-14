@@ -171,12 +171,21 @@ class TestFunction(object):
             return
 
         # Create the contexts
-        tags, unexpected_tags, _ = self._parse_tags(
-            ast.get_docstring(self.module_def))
+        module_docstring = ast.get_docstring(self.module_def)
+        if module_docstring and not isinstance(module_docstring, type(u'')):
+            module_docstring = module_docstring.decode('utf-8')
+        class_docstring = ast.get_docstring(self.parent_class_def)
+        if class_docstring and not isinstance(class_docstring, type(u'')):
+            class_docstring = class_docstring.decode('utf-8')
+        function_docstring = self.docstring
+        if function_docstring and not isinstance(
+                function_docstring, type(u'')):
+            function_docstring = function_docstring.decode('utf-8')
+        tags, unexpected_tags, _ = self._parse_tags(module_docstring)
         class_tags, class_unexpected_tags, _ = self._parse_tags(
-            ast.get_docstring(self.parent_class_def))
+            class_docstring)
         function_tags, function_unexpected_tags, self.skipped_lines = (
-            self._parse_tags(self.docstring))
+            self._parse_tags(function_docstring))
 
         # Update context dictionaries
         tags.update(class_tags)
