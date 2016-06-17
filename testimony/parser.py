@@ -1,6 +1,10 @@
 # coding=utf-8
 """Docstring parser utilities for Testimony."""
+import re
+
 from testimony.constants import DEFAULT_MINIMUM_TOKENS, DEFAULT_TOKENS
+
+TOKEN_RE = re.compile(r'^@(\w+):\s+([^@]+)(\n|$)', flags=re.MULTILINE)
 
 
 class DocstringParser(object):
@@ -46,19 +50,13 @@ class DocstringParser(object):
             return {}, {}
         valid_tokens = {}
         invalid_tokens = {}
-        for line in docstring.split('@'):
-            line = line.rstrip()
-            # Sometimes there are double new line characters in the middle.  We
-            # need only one of those to print
-            line = line.replace('\n\n', '\n')
-            if len(line) > 0 and ':' in line:
-                token, value = line.split(':', 1)
-                token = token.lower()
-                value = value.strip()
-                if token in self.tokens:
-                    valid_tokens[token] = value
-                else:
-                    invalid_tokens[token] = value
+        for match in TOKEN_RE.finditer(docstring):
+            token = match.group(1).strip().lower()
+            value = match.group(2).strip()
+            if token in self.tokens:
+                valid_tokens[token] = value
+            else:
+                invalid_tokens[token] = value
         return valid_tokens, invalid_tokens
 
     def validate_tokens(self, tokens):
