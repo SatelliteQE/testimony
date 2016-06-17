@@ -1,0 +1,35 @@
+v1.0.3
+  - Support added to accept test modules as input (Only directory was supported
+    earlier)
+
+v1.0.2
+  - Code refresh
+
+v1.0.1
+  - Major code refactor for modularizing the code
+  - Added Tags support
+  - If `@Test` is not present, the first line of docstring will be used instead
+
+v1.0.0
+  - json support now incorporated
+
+v0.3.0
+  - Bug fix: manual vs automated test count is wrong when the test cases are
+    written with "status" tag vs. "Status"
+
+v0.2.0
+  - fix to check the tests starting with `test_` rather than just `test`
+  - Testimony will return error code when docstrings are missing, incorrect
+    docstrings found, minimal docstrings not present
+  - Make validate_docstring return a 0 success return code if no errors are
+    found
+  - Organized Constants
+  - Now Testimony accepts --nocolor or --n argument to avoid color output
+  - Testimony will now not error out if termcolor is not installed.
+  - Make termcolor an optional dependency
+  - Add Travis configuration to automatically run pep8 when Testimony is
+    updated
+  - Get tests from subfolders of the given path
+
+v0.1.0
+  - Initial Release
