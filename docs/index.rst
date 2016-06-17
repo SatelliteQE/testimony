@@ -5,86 +5,76 @@ An approach to document test cases in the Python source code
 ------------------------------------------------------------
 
 Are you tired of managing your test cases in a test case management tool and
-your test code in a Python automation framework?  Testimony can help to use the
-Python automation framework as a test case repository tool.
+your test code in a Python automation framework?  Testimony can help you to use
+your Python automation framework as a test case repository tool.
 
 The project Testimony is written to inspect and report on the Python test
 cases.  There are several reporting features in this program.
 
-Testimony allows you configure a set of expected tokens in order to customize
-the information you need to be present on every test, also it allows you to
-configure the minimum set of tokens to be considered as a valid docstring.
+Testimony allows you to configure:
 
-Testimony comes with a default set of tokens: ``assert``, ``bz``, ``feature``,
-``setup``, ``status``, ``steps``, ``tags``, ``test`` and ``type``. Also, it
-comes with a default set of minimum tokens: ``assert``, ``feature`` and
-``test``.
+1. tokens - Allowed values to be used as docstring items in your tests.  Default
+   tokens are ``assert``, ``bz``, ``feature``, ``setup``, ``status``, ``steps``,
+   ``tags``, ``test`` and ``type``.
+2. minimum-tokens - minimum set of tokens that are needed for each of your
+   tests.  Default minimum tokens are ``assert``, ``feature`` and ``test``.
 
-On a docstring, every token should be prefixed with ``@`` and suffixed with
-``:``. This will ensure that Testimony parses the information and provide the
-following reports:
+In a test case docstring, every token should be prefixed with ``@`` and
+suffixed with ``:``. This will ensure that Testimony provides right reports.
+The reports supported by testimony are:
 
-1. print - will print out all captured test and will present all tokens parsed
-   for each test. Also it will present of a non recognized tokens to help
-   identifying some spell issues for example.
-2. summary - as the name states, a summary of all tests will presented, you
-   will be able to see how many tests is missing docstrings, how many tests
-   each token was defined and the total number of test cases.
-3. validate - validate report helps you ensure the minimal set of tokens are
-   present on each test, a non-zero return code will be returned whenever the
-   minimal docstring is not match, whenever a test is missing the docstring and
-   whenever a unexpected token was found. In addition it will print all the
-   issues found for each test and also a summary with how many tests have
-   failed each of the checks.
+1. print - prints all captured tests with the parsed tokens for each test. Also
+   it prints non-recognized tokens.
+2. summary - presents a summary of all tests with useful information like:
+   number of tests missing docstring, number of tests corresponding to each
+   defined token, and total number of test cases.
+3. validate - helps ensure that all your tests atleast have the minimal set
+   of tokens defined.  The information presented by this command will help you
+   identify the issues pertaining to each test.  A non-zero return code will be
+   returned when:
 
-Testimony can also print colored output, make sure ``termcolor`` package is
-installed and the ``--no-color`` option was not specified.
+     - minimal set of tokens is not present for atleast 1 test case
+     - one or more tests is missing the docstring
+     - An unexpected token identified
 
 Advantages
 ----------
-1. Avoids a separate test case management tool to document test cases by using
-   the Python automation framework for the same
-2. Enforces test cases to follow a defined standard
+1. Avoids using a test case management tool to document test cases by reusing
+   the Python automation framework.
+2. Enforces test cases to follow a defined standard.
 3. Runs in integration with tools like Travis to get a report as and when you
-   check in code
+   check in the code.
 4. Saves a lot of time from the conventional way of writing test cases using a
-   test management tool
+   test management tool.
 5. The test case information can be easily extracted from Testimony and can be
-   ported to any test management tool
-
-Installation
-------------
-
-You can install Testimony from PyPI using pip::
-
-    pip install testimony
+   ported to any test management tool.
 
 Test lookup and definition
 --------------------------
 
-Testimony will capture every ``.py`` file found on the ``PATH`` argument which
-can be specified multiple times. If the ``PATH`` is a directory, the directory
-and its subdirectories will be searched for ``.py`` files. Worth mention that
-only files that its filename starts with ``test_`` will be considered test
-modules and will be captured.
+The ``PATH`` argument of testimony accepts more than one value.  Testimony
+captures all python test modules (``.py`` files whose names start with
+``test_``) in the given paths. If ``PATH`` is a directory, then the directory
+and its subdirectories will be considered as well.
 
-Inside a test module, Testimony will look for functions or methods which names
-start with ``test_`` in order to parse the docstring and extract the tokens
-information. Also it will create some namespaces, the module as well as every
-test case class docstrings will be parsed as well and it allows you define
-tokens that will reused on children tests. For example, if a module have
-defined the token ``feature`` then all tests will inherit it by default, but
-tests can override that token by defining it on its docstring. The token lookup
-will happen from the function or method, then the class and finally the module
-and the lookup will end on the first match.
+Inside a test module, Testimony looks for functions whose names start with
+``test_``.  It then parses the function docstrings and extracts the tokens.
+Also it creates namespaces for module and class level docstrings which will
+then be reused in the children tests. For example, if a module has a token
+called ``feature``, then all tests in that module will inherit it by default.
+But the individual tests can choose to override this value by defining their
+own.  The token lookup will happen in the following order and it will stop on
+the very first match::
 
-A sample docstring would be like the following::
+ 1. function level
+ 2. class level
+ 3. module level
 
-    """My test description.
+A sample docstring will look like the following::
+
+    """Test to check log in as a valid user
 
     More description for the test.
-
-    @test: check if login works
 
     @feature: Login
 
@@ -102,9 +92,8 @@ A sample docstring would be like the following::
     @automated: false
     """
 
-Considering that the above docstring was defined inside a module which path is
-``tests/test_login.py`` a print report will output something like the
-following::
+Considering that the above docstring was defined on a test in a module
+``tests/test_login.py``, a print report will output something like::
 
     tests/test_login.py
     ===================
@@ -119,10 +108,17 @@ following::
     2. Log in with valid user credentials
     Test: check if login works
 
+Installation
+------------
+
+You can install Testimony from PyPI using pip::
+
+    pip install testimony
+
 Usage
 -----
 
-Make sure you have Testimony installed and run::
+The help command can be used to learn about different available options::
 
     testimony --help
 
@@ -134,7 +130,11 @@ Some basic usage::
 
     testimony validate tests/
 
-For further information about the options check Testimony's help.
+Misc:
+
+1. a json output is provided when ``--json`` option is specified.
+2. a colored output is provided when ``termcolor`` package is installed. This
+   can be disabled by specifying ``--no-color`` option.
 
 Contribute
 ----------
