@@ -1,4 +1,4 @@
-from distutils.core import setup
+from setuptools import find_packages, setup  # prefer setuptools over distutils
 
 with open('LICENSE') as file:
     license = file.read()
@@ -6,13 +6,16 @@ with open('LICENSE') as file:
 with open('README.rst') as file:
     long_description = file.read()
 
+with open('VERSION') as file:
+    version = file.read()
+
 setup(
     name='testimony',
-    version='1.0.6',
+    version=version,
     url='https://github.com/SatelliteQE/testimony/',
     author='Suresh Thirugn',
     author_email='sthirugn@redhat.com',
-    packages=['testimony'],
+    packages=find_packages(),
     install_requires=['Click'],
     entry_points='''
         [console_scripts]

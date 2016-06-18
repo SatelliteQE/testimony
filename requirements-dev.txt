@@ -1,0 +1,10 @@
+# For `make lint`
+flake8
+flake8-docstrings
+flake8-quotes
+
+# For `make package`
+wheel
+
+# For `make publish`
+twine
