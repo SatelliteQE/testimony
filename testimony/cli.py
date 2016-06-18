@@ -15,7 +15,7 @@ from testimony import SETTINGS, constants, main
 @click.argument('report', type=click.Choice(constants.REPORT_TAGS))
 @click.argument('path', nargs=-1, type=click.Path(exists=True))
 def testimony(json, nocolor, tokens, minimum_tokens, report, path):
-    """Inspects and report on the Python test cases."""
+    """Inspect and report on the Python test cases."""
     if tokens:
         SETTINGS['tokens'] = [token.strip() for token in tokens.split(',')]
     if minimum_tokens:

@@ -1,5 +1,5 @@
-# -*- encoding: utf-8 -*-
-"""DocString manipulation methods to create test reports"""
+# coding=utf-8
+"""Docstring manipulation methods to create test reports."""
 from __future__ import print_function, unicode_literals
 
 import ast
@@ -36,7 +36,7 @@ SETTINGS = {
 
 
 def indent(text, prefix, predicate=None):
-    """Adds 'prefix' to the beginning of selected lines in 'text'.
+    """Add 'prefix' to the beginning of selected lines in 'text'.
 
     If 'predicate' is provided, 'prefix' will only be added to the lines
     where 'predicate(line)' is True. If 'predicate' is not provided,
@@ -68,7 +68,7 @@ class TestFunction(object):
     """
 
     def __init__(self, function_def, parent_class=None, testmodule=None):
-        #: A ``ast.FunctionDef`` instance used to extract information
+        """A ``ast.FunctionDef`` instance used to extract information."""
         self.docstring = ast.get_docstring(function_def)
         self.function_def = function_def
         self.name = function_def.name
@@ -128,6 +128,7 @@ class TestFunction(object):
         }
 
     def __str__(self):
+        """String representation for a test and its tokens."""
         output = []
         for token, value in sorted(self.tokens.items()):
             output.append('{0}:\n{1}\n'.format(
@@ -148,7 +149,7 @@ class TestFunction(object):
 
 
 def main(report, paths, json_output, nocolor):
-    """Main function for testimony project
+    """Main function for testimony project.
 
     Expects a valid report type and valid directory paths, hopefully argparse
     is taking care of validation
@@ -200,7 +201,7 @@ def summary_report(testcases):
             tokens_count[token] += 1
 
     def percentage(value):
-        """Calculates the percentage of the value on the total."""
+        """Calculate the percentage of the value on the total."""
         return value / float(count) * 100
     summary_result = {
         'count': count,
