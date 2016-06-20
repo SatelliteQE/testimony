@@ -1,8 +1,8 @@
 sudo: false
 language: python
-install: "pip install flake8 ."
+install: pip install -r requirements-dev.txt .
 script:
-    - flake8 testimony
+    - make lint
     - make test
 notifications:
     irc: "chat.freenode.net#robottelo"

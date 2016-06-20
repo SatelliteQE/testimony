@@ -11,6 +11,7 @@ class DocstringParser(object):
     """Parse docstring extracting tokens."""
 
     def __init__(self, tokens=None, minimum_tokens=None):
+        """Initialize the parser with expected tokens and the minimum set."""
         if tokens is None:
             self.tokens = DEFAULT_TOKENS
         else:
@@ -25,7 +26,7 @@ class DocstringParser(object):
             raise ValueError('tokens should contain minimum_tokens')
 
     def parse(self, docstring=None):
-        """Parses the docstring and returns the valid and invalid tokens.
+        """Parse the docstring and return the valid and invalid tokens.
 
         For example in the following docstring (using single quote to demo)::
 
@@ -60,4 +61,5 @@ class DocstringParser(object):
         return valid_tokens, invalid_tokens
 
     def validate_tokens(self, tokens):
+        """Check if the ``tokens`` is a superset of ``minimum_tokens``."""
         return self.minimum_tokens.issubset(tokens)

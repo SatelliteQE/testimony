@@ -1,5 +1,5 @@
-# -*- encoding: utf-8 -*-
-"""Defines various constants"""
+# coding=utf-8
+"""Defines various constants."""
 
 # Per termcolor webpage, these are the available colors: grey, red, green,
 # yellow, blue, magenta, cyan, white
