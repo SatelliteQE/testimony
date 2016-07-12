@@ -33,9 +33,9 @@ for python in python{2,3}; do
     set +u
     source "${venv}/bin/activate"
     set -u
+    pip install --upgrade --quiet pip
     for dist in dist/*; do
         ls "${dist}"
-        pip install --quiet -U pip
         pip install --quiet "${dist}"
         python -c "import testimony" 1>/dev/null
         make test
