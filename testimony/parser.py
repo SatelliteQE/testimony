@@ -4,13 +4,11 @@ import re
 
 from testimony.constants import DEFAULT_MINIMUM_TOKENS, DEFAULT_TOKENS
 
-TOKEN_RE = re.compile(r'^@(\w+):\s+([^@]+)(\n|$)', flags=re.MULTILINE)
-
 
 class DocstringParser(object):
     """Parse docstring extracting tokens."""
 
-    def __init__(self, tokens=None, minimum_tokens=None):
+    def __init__(self, tokens=None, minimum_tokens=None, prefix=':'):
         """Initialize the parser with expected tokens and the minimum set."""
         if tokens is None:
             self.tokens = DEFAULT_TOKENS
@@ -22,6 +20,10 @@ class DocstringParser(object):
             self.minimum_tokens = minimum_tokens
         self.minimum_tokens = set(self.minimum_tokens)
         self.tokens = set(self.tokens)
+        self.token_regex = re.compile(
+            r'^{0}(\w+):\s+([^{0}]+)(\n|$)'.format(prefix),
+            flags=re.MULTILINE
+        )
         if not self.minimum_tokens.issubset(self.tokens):
             raise ValueError('tokens should contain minimum_tokens')
 
@@ -51,7 +53,7 @@ class DocstringParser(object):
             return {}, {}
         valid_tokens = {}
         invalid_tokens = {}
-        for match in TOKEN_RE.finditer(docstring):
+        for match in self.token_regex.finditer(docstring):
             token = match.group(1).strip().lower()
             value = match.group(2).strip()
             if token in self.tokens:

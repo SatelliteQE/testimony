@@ -81,7 +81,10 @@ class TestFunction(object):
         self.tokens = {}
         self.invalid_tokens = {}
         self.parser = DocstringParser(
-            SETTINGS.get('tokens'), SETTINGS.get('minimum_tokens'))
+            SETTINGS.get('tokens'),
+            SETTINGS.get('minimum_tokens'),
+            SETTINGS.get('token_prefix', ':'),
+        )
         self._parse_docstring()
 
     def _parse_docstring(self):

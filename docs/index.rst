@@ -49,9 +49,14 @@ minimum-tokens
 
 .. note::
 
-  To help test case parsing, make sure that each test case docstring has the
-  tokens prefixed with ``@`` and suffixed with ``:``.  Otherwise, you may see
-  incorrect results.
+    To help test case parsing, make sure that each test case docstring has the
+    tokens in the following format ``{token_prefix}token{token_suffix}``,
+    where:
+
+    token_prefix
+        This is configurable and by default, it is ``:``.
+    token_suffix
+        This is not configurable and should always be ``:``.
 
 Sample Test Case
 ++++++++++++++++
@@ -65,14 +70,14 @@ A sample python test case with test case tokens is shown below:
 
         More description for the test.
 
-        @feature: Login
-        @setup: Navigate to abc.com
-        @steps:
+        :feature: Login
+        :setup: Navigate to abc.com
+        :steps:
             1. Launch the url
             2. Log in with valid user credentials
-        @assert: Log in successful
-        @bz: 1234567
-        @automated: false
+        :assert: Log in successful
+        :bz: 1234567
+        :automated: false
         """
 
 In the above example, as you may guess - ``feature``, ``setup``, ``steps``,
