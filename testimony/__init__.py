@@ -277,7 +277,8 @@ def validate_docstring_report(testcases):
                 ))
                 invalid_tags_docstring_count += 1
             if issues:
-                result.setdefault(path, {})[testcase.name] = issues
+                result.setdefault(
+                    path, collections.OrderedDict())[testcase.name] = issues
                 invalid_docstring_count += 1
 
     if SETTINGS['json']:
