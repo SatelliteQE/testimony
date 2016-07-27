@@ -1,14 +1,14 @@
 # -*- encoding: utf-8 -*-
 """Test class for Sample Test
 
-@Setup: Global setup
+:Setup: Global setup
 """
 
 
 class Testsample1():
     """This is a dummy test file used for testing testimony
 
-    @Setup: Setup Testsample1
+    :Setup: Setup Testsample1
     """
 
     # Test with incorrect doctrings:
@@ -18,21 +18,21 @@ class Testsample1():
     def test_positive_login_1(self):
         """Login with right credentials
 
-        @Feture: Login - Positive
+        :Feture: Login - Positive
 
-        @Steps:
+        :Steps:
 
         1. Login to the application with valid credentials
 
-        @Assert: Login is successful
+        :Assert: Login is successful
 
-        @Bug: 123456
+        :Bug: 123456
 
-        @Statues: Manual
+        :Statues: Manual
 
-        @Tags: t1, t2, t3
+        :Tags: t1, t2, t3
 
-        @Types: Functional
+        :Types: Functional
         """
         # Code to perform the test
         pass
@@ -46,17 +46,17 @@ class Testsample1():
     def test_positive_login_3(self):
         """Login with Latin credentials
 
-        @Setup: Setup test_positive_login_3
+        :Setup: Setup test_positive_login_3
 
-        @Feature: Login - Positive
+        :Feature: Login - Positive
 
-        @Steps:
+        :Steps:
 
         1. Login to the application with valid Latin credentials
 
-        @Assert: Login is successful
+        :Assert: Login is successful
 
-        @Tags: t1
+        :Tags: t1
 
         """
         # Code to perform the test
@@ -66,16 +66,16 @@ class Testsample1():
     def test_positive_login_4(self):
         """Login with Credentials having special characters
 
-        @Feature: Login - Positive
+        :Feature: Login - Positive
 
-        @Steps:
+        :Steps:
 
         1. Login to the application with valid credentials having
         special characters
 
-        @Assert: Activation key is created
+        :Assert: Activation key is created
 
-        @Status: Manual
+        :Status: Manual
 
         """
         # Code to perform the test
@@ -85,15 +85,15 @@ class Testsample1():
     def test_negative_login_5(self):
         """Test missing required docstrings
 
-        @Steps:
+        :Steps:
 
         1. Login to the application with invalid credentials
 
-        @BZ: 123456
+        :BZ: 123456
 
-        @Status: Manual
+        :Status: Manual
 
-        @Tags: t2
+        :Tags: t2
 
         """
         # Login to the application
@@ -107,21 +107,21 @@ class Testsample2():
     def test_negative_login_6(self):
         """Login with invalid credentials
 
-        @Feature: Login - Negative
+        :Feature: Login - Negative
 
-        @Steps:
+        :Steps:
 
         1. Login to the application with invalid credentials
 
-        @Assert: Login failed
+        :Assert: Login failed
 
-        @BZ: 123456
+        :BZ: 123456
 
-        @Status: Manual
+        :Status: Manual
 
-        @Tags: t3
+        :Tags: t3
 
-        @Type: Functional
+        :Type: Functional
         """
         # Code to perform the test
         pass
@@ -135,13 +135,13 @@ class Testsample3():
     def test_negative_login_7(self):
         """Login with invalid credentials
 
-        @Feature: Login - Negative
+        :Feature: Login - Negative
 
-        @Steps:
+        :Steps:
 
         1. Login to the application with valid username and no password
 
-        @Assert: Login failed
+        :Assert: Login failed
 
         """
         # Code to perform the test
