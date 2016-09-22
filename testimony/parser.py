@@ -1,7 +1,6 @@
 # coding=utf-8
 """Docstring parser utilities for Testimony."""
 import re
-import docutils
 from docutils.core import publish_string
 from xml.etree import ElementTree
 
