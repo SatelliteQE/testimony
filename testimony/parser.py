@@ -1,6 +1,8 @@
 # coding=utf-8
 """Docstring parser utilities for Testimony."""
 import re
+from docutils.core import publish_string
+from xml.etree import ElementTree
 
 from testimony.constants import DEFAULT_MINIMUM_TOKENS, DEFAULT_TOKENS
 
@@ -18,10 +20,11 @@ class DocstringParser(object):
             self.minimum_tokens = DEFAULT_MINIMUM_TOKENS
         else:
             self.minimum_tokens = minimum_tokens
+        self.token_prefix = prefix
         self.minimum_tokens = set(self.minimum_tokens)
         self.tokens = set(self.tokens)
         self.token_regex = re.compile(
-            r'^{0}(\w+):\s+([^{0}]+)(\n|$)'.format(prefix),
+            r'^{0}(\w+):\s+([^{0}]+)(\n|$)'.format(self.token_prefix),
             flags=re.MULTILINE
         )
         if not self.minimum_tokens.issubset(self.tokens):
@@ -51,15 +54,42 @@ class DocstringParser(object):
         """
         if docstring is None:
             return {}, {}
+        tokens_dict = {}
         valid_tokens = {}
         invalid_tokens = {}
-        for match in self.token_regex.finditer(docstring):
-            token = match.group(1).strip().lower()
-            value = match.group(2).strip()
+
+        if self.token_prefix == ':':
+            docstring_xml = publish_string(docstring, writer_name='xml')
+            root = ElementTree.fromstring(docstring_xml)
+            tokens = root.findall('./field_list/field')
+            for token in tokens:
+                token_name = token.find('./field_name').text.lower()
+                value_el = token.find('./field_body/')
+                if value_el is None:
+                    invalid_tokens[token_name] = ''
+                    continue
+                if value_el.tag == 'paragraph':
+                    value = value_el.text
+                if value_el.tag == 'enumerated_list':
+                    value_lst = map(lambda elem: elem.text,
+                                    value_el.findall('./list_item/paragraph'))
+                    list_enum = list(enumerate(value_lst, start=1))
+                    steps = map(lambda val: '{}. {}'.format(val[0], val[1]),
+                                list_enum)
+                    value = '\n'.join(steps)
+                tokens_dict[token_name] = value
+        else:
+            for match in self.token_regex.finditer(docstring):
+                token = match.group(1).strip().lower()
+                value = match.group(2).strip()
+                tokens_dict[token] = value
+
+        for token, value in tokens_dict.items():
             if token in self.tokens:
                 valid_tokens[token] = value
             else:
                 invalid_tokens[token] = value
+
         return valid_tokens, invalid_tokens
 
     def validate_tokens(self, tokens):

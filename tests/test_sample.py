@@ -20,9 +20,8 @@ class Testsample1():
 
         :Feture: Login - Positive
 
-        :Steps:
-
-        1. Login to the application with valid credentials
+        :Steps: 1. Login to the application with valid credentials
+                2. Add a colon to the steps token: it should appear.
 
         :Assert: Login is successful
 
@@ -50,14 +49,11 @@ class Testsample1():
 
         :Feature: Login - Positive
 
-        :Steps:
-
-        1. Login to the application with valid Latin credentials
+        :Steps: 1. Login to the application with valid Latin credentials
 
         :Assert: Login is successful
 
         :Tags: t1
-
         """
         # Code to perform the test
         pass
@@ -68,15 +64,12 @@ class Testsample1():
 
         :Feature: Login - Positive
 
-        :Steps:
-
-        1. Login to the application with valid credentials having
-        special characters
+        :Steps: 1. Login to the application with valid credentials having
+                   special characters
 
         :Assert: Activation key is created
 
         :Status: Manual
-
         """
         # Code to perform the test
         pass
@@ -85,9 +78,7 @@ class Testsample1():
     def test_negative_login_5(self):
         """Test missing required docstrings
 
-        :Steps:
-
-        1. Login to the application with invalid credentials
+        :Steps: 1. Login to the application with invalid credentials
 
         :BZ: 123456
 
@@ -109,9 +100,7 @@ class Testsample2():
 
         :Feature: Login - Negative
 
-        :Steps:
-
-        1. Login to the application with invalid credentials
+        :Steps: 1. Login to the application with invalid credentials
 
         :Assert: Login failed
 
@@ -137,12 +126,10 @@ class Testsample3():
 
         :Feature: Login - Negative
 
-        :Steps:
-
-        1. Login to the application with valid username and no password
+        :Steps: 1. Login to the application with valid username
+                   and no password
 
         :Assert: Login failed
-
         """
         # Code to perform the test
         pass
