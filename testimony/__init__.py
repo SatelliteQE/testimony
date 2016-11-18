@@ -83,7 +83,6 @@ class TestFunction(object):
         self.parser = DocstringParser(
             SETTINGS.get('tokens'),
             SETTINGS.get('minimum_tokens'),
-            SETTINGS.get('token_prefix', ':'),
         )
         self._parse_docstring()
 
