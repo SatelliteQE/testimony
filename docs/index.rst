@@ -50,13 +50,7 @@ minimum-tokens
 .. note::
 
     To help test case parsing, make sure that each test case docstring has the
-    tokens in the following format ``{token_prefix}token{token_suffix}``,
-    where:
-
-    token_prefix
-        This is configurable and by default, it is ``:``.
-    token_suffix
-        This is not configurable and should always be ``:``.
+    tokens in the following format ``:token:``.
 
 Sample Test Case
 ++++++++++++++++

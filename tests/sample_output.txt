@@ -16,6 +16,7 @@ Setup:
 
 Steps:
  1. Login to the application with valid credentials
+ 2. Add a colon to the steps token: it should appear.
 
 Tags:
  t1, t2, t3
@@ -145,7 +146,8 @@ Setup:
  Global setup
 
 Steps:
- 1. Login to the application with valid username and no password
+ 1. Login to the application with valid username
+ and no password
 
 Test:
  Login with invalid credentials
