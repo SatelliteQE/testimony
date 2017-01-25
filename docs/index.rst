@@ -50,7 +50,8 @@ minimum-tokens
 .. note::
 
     To help test case parsing, make sure that each test case docstring has the
-    tokens in the following format ``:token:``.
+    tokens in the following format ``:token:``. Also token matching is case
+    insensitive.
 
 Sample Test Case
 ++++++++++++++++
