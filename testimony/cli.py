@@ -18,8 +18,9 @@ def testimony(
         json, nocolor, tokens, minimum_tokens, report, path):
     """Inspect and report on the Python test cases."""
     if tokens:
-        SETTINGS['tokens'] = [token.strip() for token in tokens.split(',')]
+        SETTINGS['tokens'] = [
+            token.strip().lower() for token in tokens.split(',')]
     if minimum_tokens:
         SETTINGS['minimum_tokens'] = [
-            token.strip() for token in minimum_tokens.split(',')]
+            token.strip().lower() for token in minimum_tokens.split(',')]
     main(report, path, json, nocolor)
