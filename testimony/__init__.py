@@ -78,6 +78,14 @@ class TestFunction(object):
         self.testmodule = testmodule.path
         self.module_def = testmodule
         self.module_docstring = ast.get_docstring(self.module_def)
+        self.pkgdir = os.path.dirname(self.testmodule)
+        self.pkginit = os.path.join(self.pkgdir, '__init__.py')
+        if os.path.exists(self.pkginit):
+            self.pkginit_def = ast.parse(''.join(open(self.pkginit)))
+            self.pkginit_docstring = ast.get_docstring(self.pkginit_def)
+        else:
+            self.pkginit_def = None
+            self.pkginit_docstring = None
         self.tokens = {}
         self.invalid_tokens = {}
         self.parser = DocstringParser(
@@ -100,6 +108,7 @@ class TestFunction(object):
         # ensures that function docstring has more priority over class and
         # module docstrings respectively.
         docstrings = [
+            self.pkginit_docstring,
             self.module_docstring,
             self.class_docstring,
             self.docstring,
