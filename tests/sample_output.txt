@@ -153,22 +153,47 @@ Test:
  Login with invalid credentials
 
 
+tests/sample_pkg/test_sample2.py
+================================
+
+test_positive_login_3
+---------------------
+
+Assert:
+ Login is successful
+
+Feature:
+ Package Feature
+
+Setup:
+ Method setup
+
+Steps:
+ 1. Login to the application with valid Latin credentials
+
+Tags:
+ t1
+
+Test:
+ Login with Latin credentials
+
+
 
 ==================
 = summary report =
 ==================
 
-Total number of tests:          7
-Test cases with no docstrings:  1 (14.29%)
-Assert:                         5 (71.43%)
-Bz:                             2 (28.57%)
-Feature:                        4 (57.14%)
-Setup:                          6 (85.71%)
-Status:                         3 (42.86%)
-Steps:                          6 (85.71%)
-Tags:                           4 (57.14%)
-Test:                           6 (85.71%)
-Type:                           1 (14.29%)
+Total number of tests:          8
+Test cases with no docstrings:  1 (12.50%)
+Assert:                         6 (75.00%)
+Bz:                             2 (25.00%)
+Feature:                        5 (62.50%)
+Setup:                          7 (87.50%)
+Status:                         3 (37.50%)
+Steps:                          7 (87.50%)
+Tags:                           5 (62.50%)
+Test:                           7 (87.50%)
+Type:                           1 (12.50%)
 
 =============================
 = validate_docstring report =
@@ -198,8 +223,8 @@ test_negative_login_5
 
 * Docstring should have at least assert, feature, test token(s)
 
-Total number of tests: 7
-Total number of invalid docstrings: 3 (42.86%)
-Test cases with no docstrings: 1 (14.29%)
-Test cases missing minimal docstrings: 3 (42.86%)
-Test cases with invalid tags: 1 (14.29%)
+Total number of tests: 8
+Total number of invalid docstrings: 3 (37.50%)
+Test cases with no docstrings: 1 (12.50%)
+Test cases missing minimal docstrings: 3 (37.50%)
+Test cases with invalid tags: 1 (12.50%)
