@@ -70,7 +70,7 @@ class DocstringParser(object):
                 value_lst = map(lambda elem: elem.text,
                                 value_el.findall('./list_item/paragraph'))
                 list_enum = list(enumerate(value_lst, start=1))
-                steps = map(lambda val: '{}. {}'.format(val[0], val[1]),
+                steps = map(lambda val: u'{}. {}'.format(val[0], val[1]),
                             list_enum)
                 value = '\n'.join(steps)
             tokens_dict[token_name] = value
