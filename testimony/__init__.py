@@ -72,9 +72,14 @@ class TestFunction(object):
         self.docstring = ast.get_docstring(function_def)
         self.function_def = function_def
         self.name = function_def.name
-        self.parent_class = parent_class.name
-        self.parent_class_def = parent_class
-        self.class_docstring = ast.get_docstring(self.parent_class_def)
+        if parent_class:
+            self.parent_class = parent_class.name
+            self.parent_class_def = parent_class
+            self.class_docstring = ast.get_docstring(self.parent_class_def)
+        else:
+            self.parent_class = None
+            self.parent_class_def = None
+            self.class_docstring = None
         self.testmodule = testmodule.path
         self.module_def = testmodule
         self.module_docstring = ast.get_docstring(self.module_def)

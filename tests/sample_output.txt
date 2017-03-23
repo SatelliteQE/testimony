@@ -5,6 +5,22 @@
 tests/test_sample.py
 ====================
 
+test_outside_class
+------------------
+
+Assert:
+ Testimony works with test functions
+
+Feature:
+ Test functions
+
+Setup:
+ Global setup
+
+Test:
+ Test testimony works with test functions.
+
+
 test_positive_login_1
 ---------------------
 
@@ -183,17 +199,17 @@ Test:
 = summary report =
 ==================
 
-Total number of tests:          8
-Test cases with no docstrings:  1 (12.50%)
-Assert:                         6 (75.00%)
-Bz:                             2 (25.00%)
-Feature:                        5 (62.50%)
-Setup:                          7 (87.50%)
-Status:                         3 (37.50%)
-Steps:                          7 (87.50%)
-Tags:                           5 (62.50%)
-Test:                           7 (87.50%)
-Type:                           1 (12.50%)
+Total number of tests:          9
+Test cases with no docstrings:  1 (11.11%)
+Assert:                         7 (77.78%)
+Bz:                             2 (22.22%)
+Feature:                        6 (66.67%)
+Setup:                          8 (88.89%)
+Status:                         3 (33.33%)
+Steps:                          7 (77.78%)
+Tags:                           5 (55.56%)
+Test:                           8 (88.89%)
+Type:                           1 (11.11%)
 
 =============================
 = validate_docstring report =
@@ -223,8 +239,8 @@ test_negative_login_5
 
 * Docstring should have at least assert, feature, test token(s)
 
-Total number of tests: 8
-Total number of invalid docstrings: 3 (37.50%)
-Test cases with no docstrings: 1 (12.50%)
-Test cases missing minimal docstrings: 3 (37.50%)
-Test cases with invalid tags: 1 (12.50%)
+Total number of tests: 9
+Total number of invalid docstrings: 3 (33.33%)
+Test cases with no docstrings: 1 (11.11%)
+Test cases missing minimal docstrings: 3 (33.33%)
+Test cases with invalid tags: 1 (11.11%)

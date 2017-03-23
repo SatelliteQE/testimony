@@ -5,6 +5,15 @@
 """
 
 
+def test_outside_class():
+    """Test testimony works with test functions.
+
+    :Feature: Test functions
+
+    :Assert: Testimony works with test functions
+    """
+
+
 class Testsample1():
     """This is a dummy test file used for testing testimony
 
