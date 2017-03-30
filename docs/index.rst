@@ -308,7 +308,7 @@ Python Test Modules
 
 All files which match the following criteria:
 
-- file names start with ``test_``
+- file names start with ``test_`` or end with ``_test``
 - file extension matches ``.py``
 
 Python Test case functions
