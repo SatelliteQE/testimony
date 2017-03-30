@@ -57,7 +57,7 @@ def indent(text, prefix, predicate=None):
 
 def is_test_module(filename):
     """Indicate if ``filename`` match a test module file name."""
-    return filename.startswith('test_') and filename.endswith('.py')
+    return (filename.startswith('test_') and filename.endswith('.py')) or filename.endswith('_test.py')
 
 
 class TestFunction(object):
