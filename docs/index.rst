@@ -306,10 +306,8 @@ Appendix
 Python Test Modules
 +++++++++++++++++++
 
-All files which match the following criteria:
-
-- file names start with ``test_``
-- file extension matches ``.py``
+All files which match the patterns ``test_*.py`` and ``*_test.py`` are
+considered Python test modules.
 
 Python Test case functions
 ++++++++++++++++++++++++++

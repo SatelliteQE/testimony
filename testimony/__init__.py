@@ -4,6 +4,7 @@ from __future__ import print_function, unicode_literals
 
 import ast
 import collections
+import fnmatch
 import itertools
 import json
 import os
@@ -57,7 +58,10 @@ def indent(text, prefix, predicate=None):
 
 def is_test_module(filename):
     """Indicate if ``filename`` match a test module file name."""
-    return filename.startswith('test_') and filename.endswith('.py')
+    for pat in ('test_*.py', '*_test.py'):
+        if fnmatch.fnmatch(filename, pat):
+            return True
+    return False
 
 
 class TestFunction(object):
