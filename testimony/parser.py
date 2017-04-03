@@ -1,9 +1,26 @@
 # coding=utf-8
 """Docstring parser utilities for Testimony."""
 from docutils.core import publish_string
+from docutils.readers import standalone
+from docutils.transforms import frontmatter
 from xml.etree import ElementTree
 
 from testimony.constants import DEFAULT_MINIMUM_TOKENS, DEFAULT_TOKENS
+
+
+class _NoDocInfoReader(standalone.Reader):
+    """Reader that does not do the DocInfo transformation.
+
+    Extend standalone reader and drop the DocInfo transformation. Without that
+    transformation, the first field list element will remain a field list and
+    won't be converted to a docinfo element.
+    """
+
+    def get_transforms(self):
+        """Get default transforms without DocInfo."""
+        transforms = standalone.Reader.get_transforms(self)
+        transforms.remove(frontmatter.DocInfo)
+        return transforms
 
 
 class DocstringParser(object):
@@ -55,7 +72,8 @@ class DocstringParser(object):
         # Parse the docstring with the docutils RST parser and output the
         # result as XML, this ease the process of getting the tokens
         # information.
-        docstring_xml = publish_string(docstring, writer_name='xml')
+        docstring_xml = publish_string(
+            docstring, reader=_NoDocInfoReader(), writer_name='xml')
         root = ElementTree.fromstring(docstring_xml)
         tokens = root.findall('./field_list/field')
         for token in tokens:
