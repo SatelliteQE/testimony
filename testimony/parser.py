@@ -1,6 +1,7 @@
 # coding=utf-8
 """Docstring parser utilities for Testimony."""
 from docutils.core import publish_string
+from docutils.parsers.rst import nodes, roles
 from docutils.readers import standalone
 from docutils.transforms import frontmatter
 from xml.etree import ElementTree
@@ -40,6 +41,13 @@ class DocstringParser(object):
         self.tokens = set(self.tokens)
         if not self.minimum_tokens.issubset(self.tokens):
             raise ValueError('tokens should contain minimum_tokens')
+
+        for role in (
+                'data', 'exc', 'func', 'class', 'const', 'attr', 'meth', 'mod',
+                'obj'
+        ):
+            roles.register_generic_role(role, nodes.raw)
+            roles.register_generic_role('py:' + role, nodes.raw)
 
     def parse(self, docstring=None):
         """Parse the docstring and return the valid and invalid tokens.
