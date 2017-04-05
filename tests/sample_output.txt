@@ -169,6 +169,20 @@ Test:
  Login with invalid credentials
 
 
+test_invalid_list_style
+-----------------------
+
+RST parser messages:
+
+  * Enumerated list ends without a blank line; unexpected unindent.
+
+      :Steps:
+          1. Have a RST list on any of the tokens, like steps.
+    >     2. Make sure one of the items on the list goes across multiple
+          lines and the lines are not properly indented.
+
+
+
 tests/sample_pkg/test_sample2.py
 ================================
 
@@ -199,17 +213,17 @@ Test:
 = summary report =
 ==================
 
-Total number of tests:          9
-Test cases with no docstrings:  1 (11.11%)
-Assert:                         7 (77.78%)
-Bz:                             2 (22.22%)
-Feature:                        6 (66.67%)
-Setup:                          8 (88.89%)
-Status:                         3 (33.33%)
-Steps:                          7 (77.78%)
-Tags:                           5 (55.56%)
-Test:                           8 (88.89%)
-Type:                           1 (11.11%)
+Total number of tests:          10
+Test cases with no docstrings:   1 (10.00%)
+Assert:                          8 (80.00%)
+Bz:                              2 (20.00%)
+Feature:                         7 (70.00%)
+Setup:                           9 (90.00%)
+Status:                          3 (30.00%)
+Steps:                           8 (80.00%)
+Tags:                            5 (50.00%)
+Test:                            9 (90.00%)
+Type:                            1 (10.00%)
 
 =============================
 = validate_docstring report =
@@ -239,8 +253,23 @@ test_negative_login_5
 
 * Docstring should have at least assert, feature, test token(s)
 
-Total number of tests: 9
-Total number of invalid docstrings: 3 (33.33%)
-Test cases with no docstrings: 1 (11.11%)
-Test cases missing minimal docstrings: 3 (33.33%)
-Test cases with invalid tags: 1 (11.11%)
+test_invalid_list_style
+-----------------------
+
+* Docstring has RST parsing issues. RST parser messages:
+
+  * Enumerated list ends without a blank line; unexpected unindent.
+
+      :Steps:
+          1. Have a RST list on any of the tokens, like steps.
+    >     2. Make sure one of the items on the list goes across multiple
+          lines and the lines are not properly indented.
+
+
+
+Total number of tests: 10
+Total number of invalid docstrings: 4 (40.00%)
+Test cases with no docstrings: 1 (10.00%)
+Test cases missing minimal docstrings: 3 (30.00%)
+Test cases with invalid tags: 1 (10.00%)
+Total number of tests with parsing issues: 1 (10.00%)

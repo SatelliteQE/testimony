@@ -142,3 +142,24 @@ class Testsample3():
         """
         # Code to perform the test
         pass
+
+
+class RSTFormattingTestCase():
+    """Class to test Testimony RST parsing issues features."""
+
+    def test_invalid_list_style(self):
+        """Check invalid list style parsing issue.
+
+        :Feature: RST Parsing Issues
+
+        :Steps:
+            1. Have a RST list on any of the tokens, like steps.
+            2. Make sure one of the items on the list goes across multiple
+            lines and the lines are not properly indented.
+
+        :Assert:
+            1. Testimony reports RST parsing issue for the list with the
+               indentation issue
+            2. Testimony does not report RST parsing issue on list properly
+               formatted.
+    """

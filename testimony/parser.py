@@ -1,12 +1,20 @@
 # coding=utf-8
 """Docstring parser utilities for Testimony."""
+from collections import namedtuple
+from xml.etree import ElementTree
+try:
+    from io import StringIO
+except:
+    from StringIO import StringIO
+
 from docutils.core import publish_string
 from docutils.parsers.rst import nodes, roles
 from docutils.readers import standalone
 from docutils.transforms import frontmatter
-from xml.etree import ElementTree
 
 from testimony.constants import DEFAULT_MINIMUM_TOKENS, DEFAULT_TOKENS
+
+RSTParseMessage = namedtuple('RSTParseMessage', 'line level message')
 
 
 class _NoDocInfoReader(standalone.Reader):
@@ -50,7 +58,7 @@ class DocstringParser(object):
             roles.register_generic_role('py:' + role, nodes.raw)
 
     def parse(self, docstring=None):
-        """Parse the docstring and return the valid and invalid tokens.
+        """Parse docstring and report parsing issues, valid and invalid tokens.
 
         For example in the following docstring (using single quote to demo)::
 
@@ -58,10 +66,10 @@ class DocstringParser(object):
 
             More docstring content.
 
-            @valid_tag1: value1
-            @valid_tag2: value2
-            @invalid_tag1: value1
-            @invalid_tag2: value2
+            :valid_tag1: value1
+            :valid_tag2: value2
+            :invalid_tag1: value1
+            :invalid_tag2: value2
             '''
 
         Will return a tuple with the following content::
@@ -69,10 +77,11 @@ class DocstringParser(object):
             (
                 {'valid_tag1': 'value1', 'valid_tag2': 'value2'},
                 {'invalid_tag1': 'value1', 'invalid_tag2': 'value2'},
+                [],  # List of RSTParseMessage with any formatting issue found
             )
         """
         if docstring is None:
-            return {}, {}
+            return {}, {}, []
         tokens_dict = {}
         valid_tokens = {}
         invalid_tokens = {}
@@ -80,8 +89,29 @@ class DocstringParser(object):
         # Parse the docstring with the docutils RST parser and output the
         # result as XML, this ease the process of getting the tokens
         # information.
+        warning_stream = StringIO()
         docstring_xml = publish_string(
-            docstring, reader=_NoDocInfoReader(), writer_name='xml')
+            docstring,
+            reader=_NoDocInfoReader(),
+            settings_overrides={
+                'embed_stylesheet': False,
+                'input_encoding': 'utf-8',
+                'syntax_highlight': 'short',
+                'warning_stream': warning_stream,
+            },
+            writer_name='xml',
+        )
+
+        rst_parse_messages = []
+        for warning in warning_stream.getvalue().splitlines():
+            warning = warning.split(' ', 2)
+            rst_parse_messages.append(RSTParseMessage(
+                line=int(warning[0].split(':')[1]),
+                level=warning[1].split('/')[0][1:].lower(),
+                message=warning[2],
+            ))
+        warning_stream.close()
+
         root = ElementTree.fromstring(docstring_xml)
         tokens = root.findall('./field_list/field')
         for token in tokens:
@@ -107,7 +137,7 @@ class DocstringParser(object):
             else:
                 invalid_tokens[token] = value
 
-        return valid_tokens, invalid_tokens
+        return valid_tokens, invalid_tokens, rst_parse_messages
 
     def validate_tokens(self, tokens):
         """Check if the ``tokens`` is a superset of ``minimum_tokens``."""

@@ -4,6 +4,7 @@ from __future__ import print_function, unicode_literals
 
 import ast
 import collections
+import copy
 import fnmatch
 import itertools
 import json
@@ -18,6 +19,7 @@ from testimony.constants import (
     PRINT_NO_DOC,
     PRINT_NO_MINIMUM_DOC_TC,
     PRINT_REPORT,
+    PRINT_RST_PARSING_ISSUE,
     PRINT_TOTAL_TC,
     SUMMARY_REPORT,
     VALIDATE_DOCSTRING_REPORT,
@@ -97,6 +99,7 @@ class TestFunction(object):
             self.pkginit_docstring = None
         self.tokens = {}
         self.invalid_tokens = {}
+        self._rst_parser_messages = []
         self.parser = DocstringParser(
             SETTINGS.get('tokens'),
             SETTINGS.get('minimum_tokens'),
@@ -125,9 +128,11 @@ class TestFunction(object):
         for docstring in docstrings:
             if docstring and not isinstance(docstring, type(u'')):
                 docstring = docstring.decode('utf-8')
-            tokens, invalid_tokens = self.parser.parse(docstring)
+            tokens, invalid_tokens, rst_messages = self.parser.parse(docstring)
             self.tokens.update(tokens)
             self.invalid_tokens.update(invalid_tokens)
+            if docstring == docstrings[-1]:
+                self._rst_parser_messages = rst_messages
 
         # Always use the first line of docstring as test case name
         if self.tokens.get('test') is None:
@@ -138,17 +143,65 @@ class TestFunction(object):
     @property
     def has_valid_docstring(self):
         """Indicate if the docstring has the minimum tokens."""
+        return self.has_minimum_tokens and not self.has_parsing_issues
+
+    @property
+    def has_minimum_tokens(self):
+        """Indicate if the docstring has the minimum tokens."""
         return self.parser.validate_tokens(self.tokens)
+
+    @property
+    def has_parsing_issues(self):
+        """Indicate if the docstring has parsing issues."""
+        return len(self._rst_parser_messages) > 0
 
     def to_dict(self):
         """Return tokens invalid-tokens as a dict."""
         return {
             'tokens': self.tokens.copy(),
             'invalid-tokens': self.invalid_tokens.copy(),
+            'rst-parse-messages': copy.copy(self._rst_parser_messages)
         }
+
+    @property
+    def rst_parser_messages(self):
+        """Return a formatted string with the RST parser messages."""
+        if not self.has_parsing_issues:
+            return ''
+
+        output = []
+        output.append('RST parser messages:\n')
+        for message in self._rst_parser_messages:
+            lines = self.docstring.splitlines()
+            line_index = message.line - 1
+            for index in range(len(lines)):
+                if index == line_index:
+                    lines[index] = '> ' + lines[index]
+                else:
+                    lines[index] = '  ' + lines[index]
+
+            output.append(indent(
+                '* ' + message.message + '\n',
+                ' ' * 2
+            ))
+            docstring_slice = slice(
+                0 if line_index - 2 < 0 else line_index - 2,
+                line_index + 2
+            )
+            output.append(
+                indent(
+                    '\n'.join(lines[docstring_slice]),
+                    ' ' * 4
+                )
+            )
+            output.append('\n')
+            return '\n'.join(output)
 
     def __str__(self):
         """String representation for a test and its tokens."""
+        if self.has_parsing_issues:
+            return self.rst_parser_messages
+
         output = []
         for token, value in sorted(self.tokens.items()):
             output.append('{0}:\n{1}\n'.format(
@@ -269,6 +322,7 @@ def validate_docstring_report(testcases):
     invalid_tags_docstring_count = 0
     minimum_docstring_count = 0
     missing_docstring_count = 0
+    rst_parsing_issue_count = 0
     testcase_count = 0
     for path, tests in testcases.items():
         testcase_count += len(tests)
@@ -277,13 +331,19 @@ def validate_docstring_report(testcases):
             if not testcase.docstring:
                 issues.append('Missing docstring.')
                 missing_docstring_count += 1
-            if not testcase.has_valid_docstring:
+            if not testcase.has_minimum_tokens:
                 issues.append(
                     'Docstring should have at least {} token(s)'.format(
                         ', '.join(sorted(testcase.parser.minimum_tokens))
                     )
                 )
                 minimum_docstring_count += 1
+            if testcase.has_parsing_issues:
+                issues.append(
+                    'Docstring has RST parsing issues. {0}'
+                    .format(testcase.rst_parser_messages)
+                )
+                rst_parsing_issue_count += 1
             if testcase.invalid_tokens:
                 issues.append('Unexpected tokens:\n{0}'.format(
                     indent(
@@ -351,6 +411,15 @@ def validate_docstring_report(testcases):
         'Test cases with invalid tags',
         colored(invalid_tags_docstring_count, color, attrs=['bold']),
         float(invalid_tags_docstring_count)/testcase_count * 100
+    ))
+    if rst_parsing_issue_count == 0:
+        color = CLR_GOOD
+    else:
+        color = CLR_ERR
+    print('{}: {} ({:.02f}%)'.format(
+        PRINT_RST_PARSING_ISSUE.strip(),
+        colored(rst_parsing_issue_count, color, attrs=['bold']),
+        float(rst_parsing_issue_count)/testcase_count * 100
     ))
 
     if len(result) > 0:
