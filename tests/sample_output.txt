@@ -5,8 +5,8 @@
 tests/test_sample.py
 ====================
 
-test_outside_class
-------------------
+test_outside_class:8
+--------------------
 
 Assert:
  Testimony works with test functions
@@ -21,8 +21,8 @@ Test:
  Test testimony works with test functions.
 
 
-test_positive_login_1
----------------------
+Testsample1::test_positive_login_1:27
+-------------------------------------
 
 Assert:
  Login is successful
@@ -46,13 +46,13 @@ Unexpected tokens:
   Statues: Manual
   Types: Functional
 
-test_positive_login_2
----------------------
+Testsample1::test_positive_login_2:49
+-------------------------------------
 
 
 
-test_positive_login_3
----------------------
+Testsample1::test_positive_login_3:54
+-------------------------------------
 
 Assert:
  Login is successful
@@ -73,8 +73,8 @@ Test:
  Login with Latin credentials
 
 
-test_positive_login_4
----------------------
+Testsample1::test_positive_login_4:71
+-------------------------------------
 
 Assert:
  Activation key is created
@@ -96,8 +96,8 @@ Test:
  Login with Credentials having special characters
 
 
-test_negative_login_5
----------------------
+Testsample1::test_negative_login_5:87
+-------------------------------------
 
 Bz:
  123456
@@ -118,8 +118,8 @@ Test:
  Test missing required docstrings
 
 
-test_negative_login_6
----------------------
+Testsample2::test_negative_login_6:107
+--------------------------------------
 
 Assert:
  Login failed
@@ -149,8 +149,8 @@ Type:
  Functional
 
 
-test_negative_login_7
----------------------
+Testsample3::test_negative_login_7:133
+--------------------------------------
 
 Assert:
  Login failed
@@ -169,8 +169,8 @@ Test:
  Login with invalid credentials
 
 
-test_invalid_list_style
------------------------
+RSTFormattingTestCase::test_invalid_list_style:150
+--------------------------------------------------
 
 RST parser messages:
 
@@ -186,8 +186,8 @@ RST parser messages:
 tests/sample_pkg/test_sample2.py
 ================================
 
-test_positive_login_3
----------------------
+TestPackage1::test_positive_login_3:15
+--------------------------------------
 
 Assert:
  Login is successful
@@ -232,8 +232,8 @@ Type:                            1 (10.00%)
 tests/test_sample.py
 ====================
 
-test_positive_login_1
----------------------
+Testsample1::test_positive_login_1:27
+-------------------------------------
 
 * Docstring should have at least assert, feature, test token(s)
 * Unexpected tokens:
@@ -242,19 +242,19 @@ test_positive_login_1
   Statues: Manual
   Types: Functional
 
-test_positive_login_2
----------------------
+Testsample1::test_positive_login_2:49
+-------------------------------------
 
 * Missing docstring.
 * Docstring should have at least assert, feature, test token(s)
 
-test_negative_login_5
----------------------
+Testsample1::test_negative_login_5:87
+-------------------------------------
 
 * Docstring should have at least assert, feature, test token(s)
 
-test_invalid_list_style
------------------------
+RSTFormattingTestCase::test_invalid_list_style:150
+--------------------------------------------------
 
 * Docstring has RST parsing issues. RST parser messages:
 

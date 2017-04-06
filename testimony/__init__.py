@@ -66,6 +66,22 @@ def is_test_module(filename):
     return False
 
 
+def testcase_title(testcase):
+    """Generate a title using testcase information.
+
+    The generated title will be in the format:
+
+        [ParentClass::]test_name:line_number
+
+    The ParentClass will be present only if the test is withing a class.
+    """
+    return '{0}{1}:{2}'.format(
+        testcase.parent_class + '::' if testcase.parent_class else '',
+        testcase.name,
+        testcase.function_def.lineno,
+    )
+
+
 class TestFunction(object):
     """Wrapper for ``ast.FunctionDef`` which parse docstring information.
 
@@ -254,8 +270,9 @@ def print_report(testcases):
             if len(tests) == 0:
                 print('No test cases found.\n')
             for test in tests:
+                title = testcase_title(test)
                 print('{0}\n{1}\n\n{2}\n'.format(
-                    test.name, '-' * len(test.name), test))
+                    title, '-' * len(title), test))
 
     if SETTINGS['json']:
         print(json.dumps(result))
@@ -357,8 +374,9 @@ def validate_docstring_report(testcases):
                 ))
                 invalid_tags_docstring_count += 1
             if issues:
+                title = testcase_title(testcase)
                 result.setdefault(
-                    path, collections.OrderedDict())[testcase.name] = issues
+                    path, collections.OrderedDict())[title] = issues
                 invalid_docstring_count += 1
 
     if SETTINGS['json']:

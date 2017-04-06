@@ -158,29 +158,30 @@ test.  Also it prints non-recognized tokens.
     tests/test_sample.py
     ====================
 
-    test_positive_login_1
-    ---------------------
+    test_outside_class:8
+    --------------------
+
+    Assert:
+     Testimony works with test functions
+
+    Feature:
+     Test functions
+
+    Setup:
+     Global setup
+
+    Test:
+     Test testimony works with test functions.
+
+
+    Testsample1::test_positive_login_1:27
+    -------------------------------------
 
     Assert:
      Login is successful
 
     Setup:
      Setup Testsample1
-
-    Steps:
-     1. Login to the application with valid credentials
-
-    Tags:
-     t1, t2, t3
-
-    Test:
-     Login with right credentials
-
-    Unexpected tokens:
-      Bug: 123456
-      Feture: Login - Positive
-      Statues: Manual
-      Types: Functional
 
 .. note::
     The print command above uses the ``head`` command to show just one test
@@ -235,37 +236,52 @@ For example:
 
 .. code-block:: console
 
-   $ testimony validate tests/
+    $ testimony validate tests/
 
-   tests/test_sample.py
-   ====================
+    tests/test_sample.py
+    ====================
 
-   test_positive_login_1
-   ---------------------
+    Testsample1::test_positive_login_1:27
+    -------------------------------------
 
-   * Docstring should have at least assert, feature, test token(s)
-   * Unexpected tokens:
-     Bug: 123456
-     Feture: Login - Positive
-     Statues: Manual
-     Types: Functional
+    * Docstring should have at least assert, feature, test token(s)
+    * Unexpected tokens:
+      Bug: 123456
+      Feture: Login - Positive
+      Statues: Manual
+      Types: Functional
 
-   test_positive_login_2
-   ---------------------
+    Testsample1::test_positive_login_2:49
+    -------------------------------------
 
-   * Missing docstring.
-   * Docstring should have at least assert, feature, test token(s)
+    * Missing docstring.
+    * Docstring should have at least assert, feature, test token(s)
 
-   test_negative_login_5
-   ---------------------
+    Testsample1::test_negative_login_5:87
+    -------------------------------------
 
-   * Docstring should have at least assert, feature, test token(s)
+    * Docstring should have at least assert, feature, test token(s)
 
-   Total number of tests: 7
-   Total number of invalid docstrings: 3 (42.86%)
-   Test cases with no docstrings: 1 (14.29%)
-   Test cases missing minimal docstrings: 3 (42.86%)
-   Test cases with invalid tags: 1 (14.29%)
+    RSTFormattingTestCase::test_invalid_list_style:150
+    --------------------------------------------------
+
+    * Docstring has RST parsing issues. RST parser messages:
+
+      * Enumerated list ends without a blank line; unexpected unindent.
+
+          :Steps:
+              1. Have a RST list on any of the tokens, like steps.
+        >     2. Make sure one of the items on the list goes across multiple
+              lines and the lines are not properly indented.
+
+
+
+    Total number of tests: 10
+    Total number of invalid docstrings: 4 (40.00%)
+    Test cases with no docstrings: 1 (10.00%)
+    Test cases missing minimal docstrings: 3 (30.00%)
+    Test cases with invalid tags: 1 (10.00%)
+    Total number of tests with parsing issues: 1 (10.00%)
 
 Misc Options
 ++++++++++++
