@@ -104,6 +104,8 @@ class DocstringParser(object):
 
         rst_parse_messages = []
         for warning in warning_stream.getvalue().splitlines():
+            if not warning or ':' not in warning:
+                continue
             warning = warning.split(' ', 2)
             rst_parse_messages.append(RSTParseMessage(
                 line=int(warning[0].split(':')[1]),
