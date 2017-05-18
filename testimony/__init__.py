@@ -90,7 +90,7 @@ class TestFunction(object):
     """
 
     def __init__(self, function_def, parent_class=None, testmodule=None):
-        """A ``ast.FunctionDef`` instance used to extract information."""
+        """Wrap a ``ast.FunctionDef`` instance used to extract information."""
         self.docstring = ast.get_docstring(function_def)
         self.function_def = function_def
         self.name = function_def.name
@@ -214,7 +214,7 @@ class TestFunction(object):
             return '\n'.join(output)
 
     def __str__(self):
-        """String representation for a test and its tokens."""
+        """Create a string representation for a test and its tokens."""
         if self.has_parsing_issues:
             return self.rst_parser_messages
 
@@ -238,7 +238,7 @@ class TestFunction(object):
 
 
 def main(report, paths, json_output, nocolor):
-    """Main function for testimony project.
+    """Entry point for the testimony project.
 
     Expects a valid report type and valid directory paths, hopefully argparse
     is taking care of validation
