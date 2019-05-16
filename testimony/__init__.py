@@ -335,6 +335,7 @@ def summary_report(testcases):
             percentage(value)
         ))
 
+
 def validate_docstring_report(testcases):
     """Check for presence of invalid docstrings report."""
     result = {}
@@ -461,7 +462,8 @@ def validate_values_report(testcases):
             issues = []
             for token in SETTINGS['tokens']:
                 token.lower()
-                token_values = [i.lower() for i in SETTINGS['token_values'][token]]
+                token_values = [i.lower() for i in
+                                SETTINGS['token_values'][token]]
                 if not testcase.docstring:
                     issues.append('Missing docstring.')
                     missing_docstring_count += 1
@@ -470,9 +472,11 @@ def validate_values_report(testcases):
                         'Docstring is missing {} token(s)'.format(token)
                     )
                     missing_token_count += 1
-                if token in testcase.tokens and testcase.tokens[token].lower() not in token_values:
+                if token in testcase.tokens \
+                   and testcase.tokens[token].lower() not in token_values:
                     issues.append(
-                        'Token {} have unexpected value of {}'.format(token, testcase.tokens[token])
+                        'Token {} have unexpected value of {}'.format(
+                            token, testcase.tokens[token])
                     )
                     invalid_token_value_count += 1
                 if issues:

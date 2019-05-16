@@ -29,5 +29,5 @@ def testimony(
     if token_values:
         with open(token_values, 'r') as fp:
             data = yaml.load(fp, Loader=yaml.SafeLoader)
-            SETTINGS['token_values'] = {k.lower():v for k,v in data.items()}
+            SETTINGS['token_values'] = {k.lower(): v for k, v in data.items()}
     main(report, path, json, nocolor)
