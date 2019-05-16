@@ -273,3 +273,62 @@ Test cases with no docstrings: 1 (10.00%)
 Test cases missing minimal docstrings: 3 (30.00%)
 Test cases with invalid tags: 1 (10.00%)
 Total number of tests with parsing issues: 1 (10.00%)
+
+==========================
+= validate_values report =
+==========================
+
+tests/test_sample.py
+====================
+
+test_outside_class:8
+--------------------
+
+* Token feature have unexpected value of Test functions
+* Docstring is missing 1 token(s)
+
+Testsample1::test_positive_login_1:27
+-------------------------------------
+
+* Docstring is missing 2 token(s)
+
+Testsample1::test_positive_login_2:49
+-------------------------------------
+
+* Missing docstring.
+* Docstring is missing 2 token(s)
+
+Testsample1::test_positive_login_3:54
+-------------------------------------
+
+* Docstring is missing 1 token(s)
+
+Testsample1::test_negative_login_5:87
+-------------------------------------
+
+* Docstring is missing 1 token(s)
+
+Testsample3::test_negative_login_7:133
+--------------------------------------
+
+* Docstring is missing 1 token(s)
+
+RSTFormattingTestCase::test_invalid_list_style:150
+--------------------------------------------------
+
+* Token feature have unexpected value of RST Parsing Issues
+* Docstring is missing 1 token(s)
+
+tests/sample_pkg/test_sample2.py
+================================
+
+TestPackage1::test_positive_login_3:15
+--------------------------------------
+
+* Token feature have unexpected value of Package Feature
+* Docstring is missing 1 token(s)
+
+Total number of tests: 10
+Total number of invalid docstrings: 8 (80.00%)
+Total number of docstrings with unexpected token values: 3 (30.00%)
+Test cases with no docstrings: 1 (10.00%)

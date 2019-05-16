@@ -16,6 +16,7 @@ from testimony.constants import (
     CLR_ERR,
     CLR_GOOD,
     PRINT_INVALID_DOC,
+    PRINT_INVALID_VALUE,
     PRINT_NO_DOC,
     PRINT_NO_MINIMUM_DOC_TC,
     PRINT_REPORT,
@@ -23,6 +24,7 @@ from testimony.constants import (
     PRINT_TOTAL_TC,
     SUMMARY_REPORT,
     VALIDATE_DOCSTRING_REPORT,
+    VALIDATE_VALUES_REPORT,
 )
 from testimony.parser import DocstringParser
 
@@ -252,6 +254,8 @@ def main(report, paths, json_output, nocolor):
         report_function = print_report
     elif report == VALIDATE_DOCSTRING_REPORT:
         report_function = validate_docstring_report
+    elif report == VALIDATE_VALUES_REPORT:
+        report_function = validate_values_report
     sys.exit(report_function(get_testcases(paths)))
 
 
@@ -438,6 +442,93 @@ def validate_docstring_report(testcases):
         PRINT_RST_PARSING_ISSUE.strip(),
         colored(rst_parsing_issue_count, color, attrs=['bold']),
         float(rst_parsing_issue_count)/testcase_count * 100
+    ))
+
+    if len(result) > 0:
+        return -1
+
+
+def validate_values_report(testcases):
+    """Check that given token contains one of allowed values."""
+    result = {}
+    invalid_docstring_count = 0
+    invalid_token_value_count = 0
+    missing_docstring_count = 0
+    missing_token_count = 0
+    testcase_count = 0
+    for path, tests in testcases.items():
+        testcase_count += len(tests)
+        for testcase in tests:
+            issues = []
+            missing_token_count_local = 0
+            if not testcase.docstring:
+                issues.append('Missing docstring.')
+                missing_docstring_count += 1
+            for token in SETTINGS['tokens']:
+                token = token.lower()
+                token_config = SETTINGS['token_configs'][token]
+                if token not in testcase.tokens:
+                    missing_token_count_local += 1
+                    missing_token_count += 1
+                if token in testcase.tokens \
+                   and not token_config.validate(testcase.tokens[token]):
+                    issues.append(
+                        'Token {} have unexpected value of {}'.format(
+                            token, testcase.tokens[token])
+                    )
+                    invalid_token_value_count += 1
+            if missing_token_count_local > 0:
+                issues.append(
+                    'Docstring is missing {} token(s)'.format(
+                        missing_token_count_local)
+                )
+            if issues:
+                title = testcase_title(testcase)
+                result.setdefault(
+                    path, collections.OrderedDict())[title] = issues
+                invalid_docstring_count += 1
+
+    if SETTINGS['json']:
+        print(json.dumps(result))
+        return
+
+    for path, testcases in result.items():
+        print('{0}\n{1}\n'.format(path, '=' * len(path)))
+        for testcase, issues in testcases.items():
+            print('{0}\n{1}\n'.format(testcase, '-' * len(testcase)))
+            print(
+                '\n'.join(['* {0}'.format(issue) for issue in issues]) + '\n')
+
+    if invalid_docstring_count == 0:
+        color = CLR_GOOD
+    else:
+        color = CLR_ERR
+    print('{}: {}'.format(
+        PRINT_TOTAL_TC,
+        testcase_count,
+    ))
+    print('{}: {} ({:05.02f}%)'.format(
+        PRINT_INVALID_DOC,
+        colored(invalid_docstring_count, color, attrs=['bold']),
+        float(invalid_docstring_count)/testcase_count * 100
+    ))
+    if invalid_token_value_count == 0:
+        color = CLR_GOOD
+    else:
+        color = CLR_ERR
+    print('{}: {} ({:05.02f}%)'.format(
+        PRINT_INVALID_VALUE,
+        colored(invalid_token_value_count, color, attrs=['bold']),
+        float(invalid_token_value_count)/testcase_count * 100
+    ))
+    if missing_docstring_count == 0:
+        color = CLR_GOOD
+    else:
+        color = CLR_ERR
+    print('{}: {} ({:.02f}%)'.format(
+        PRINT_NO_DOC.strip(),
+        colored(missing_docstring_count, color, attrs=['bold']),
+        float(missing_docstring_count)/testcase_count * 100
     ))
 
     if len(result) > 0:

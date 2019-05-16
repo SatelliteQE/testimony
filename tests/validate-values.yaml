@@ -1,0 +1,12 @@
+---
+Status:
+    type: choice
+    choices:
+        - Manual
+        - Automated
+Feature:
+    type: choice
+    choices:
+        - Login - Positive
+        - Login - Negative
+...

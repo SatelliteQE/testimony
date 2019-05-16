@@ -9,11 +9,13 @@ CLR_GOOD = 'green'
 PRINT_REPORT = 'print'
 SUMMARY_REPORT = 'summary'
 VALIDATE_DOCSTRING_REPORT = 'validate'
+VALIDATE_VALUES_REPORT = 'validate-values'
 
 REPORT_TAGS = (
     PRINT_REPORT,
     SUMMARY_REPORT,
     VALIDATE_DOCSTRING_REPORT,
+    VALIDATE_VALUES_REPORT,
 )
 
 DEFAULT_TOKENS = (
@@ -35,6 +37,8 @@ DEFAULT_MINIMUM_TOKENS = (
 )
 
 PRINT_INVALID_DOC = 'Total number of invalid docstrings'
+PRINT_INVALID_VALUE = \
+    'Total number of docstrings with unexpected token values'
 PRINT_NO_DOC = 'Test cases with no docstrings'
 PRINT_NO_MINIMUM_DOC_TC = 'Test cases missing minimal docstrings'
 PRINT_TOTAL_TC = 'Total number of tests'
