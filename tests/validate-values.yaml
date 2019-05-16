@@ -1,0 +1,8 @@
+---
+Status:
+    - Manual
+    - Automated
+Feature:
+    - Login - Positive
+    - Login - Negative
+...

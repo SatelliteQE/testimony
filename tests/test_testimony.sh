@@ -17,3 +17,10 @@ echo "= validate_docstring report ="
 echo "============================="
 echo
 testimony -n validate tests
+
+echo
+echo "=========================="
+echo "= validate_values report ="
+echo "=========================="
+echo
+testimony -n --tokens="Status,Feature" --minimum-tokens="Status,Feature" --token-values=tests/validate-values.yaml validate-values tests
