@@ -278,7 +278,6 @@ Total number of tests with parsing issues: 1 (10.00%)
 = validate_values report =
 ==========================
 
-WARNING: 'validate-values' is supposed to be called with only one value in --tokens
 tests/test_sample.py
 ====================
 

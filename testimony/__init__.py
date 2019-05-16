@@ -449,11 +449,6 @@ def validate_docstring_report(testcases):
 
 def validate_values_report(testcases):
     """Check that given token contains one of allowed values."""
-    if len(SETTINGS['tokens']) > 1:
-        print(
-            "WARNING: '{}' is supposed to be called with only one value" \
-            " in --tokens".format(VALIDATE_VALUES_REPORT)
-        )
     result = {}
     invalid_docstring_count = 0
     invalid_token_value_count = 0
