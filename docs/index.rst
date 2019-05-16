@@ -283,6 +283,34 @@ For example:
     Test cases with invalid tags: 1 (10.00%)
     Total number of tests with parsing issues: 1 (10.00%)
 
+validate-values command
++++++++++++++++++++++++
+
+Checks that tokens of tests in given path have only allowed possible values.
+E.g. you can specify that ``Tier`` token can only be ``tier1``, ``tier2`` or
+``tier3``. Any other value or missing token will be reported at all.
+
+Allowed values are specified in a yaml file you configure with
+``--token-values`` option and which have structure like this:
+
+.. code-block:: console
+
+    ---
+    Tier:
+        - tier1
+        - tier2
+        - tier3
+
+To run the command, you need to specify tokens to check:
+
+.. code-block:: console
+
+   $ testimony --tokens="Tier" --minimum-tokens="Tier" --token-values=tests/validate-values.yaml validate-values tests/
+   [...]
+   * Token tier have unexpected value of tier0
+   [...]
+
+
 Misc Options
 ++++++++++++
 
