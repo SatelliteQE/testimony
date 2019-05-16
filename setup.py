@@ -16,7 +16,7 @@ setup(
     author='Suresh Thirugn',
     author_email='sthirugn@redhat.com',
     packages=find_packages(),
-    install_requires=['Click', 'termcolor', 'docutils'],
+    install_requires=['Click', 'termcolor', 'docutils', 'pyyaml'],
     entry_points='''
         [console_scripts]
         testimony=testimony.cli:testimony

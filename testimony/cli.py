@@ -1,6 +1,7 @@
 # coding=utf-8
 """Testimony CLI utilities."""
 import click
+import yaml
 
 from testimony import SETTINGS, constants, main
 
@@ -13,8 +14,7 @@ from testimony import SETTINGS, constants, main
 @click.option(
     '--minimum-tokens', help='Comma separated list of minimum expected tokens')
 @click.option(
-    '--token-values', help='Comma separated list of allowed values for first' \
-    ' token entered in tokens')
+    '--token-values', help='Yaml file with allowed values per token')
 @click.argument('report', type=click.Choice(constants.REPORT_TAGS))
 @click.argument('path', nargs=-1, type=click.Path(exists=True))
 def testimony(
@@ -27,6 +27,6 @@ def testimony(
         SETTINGS['minimum_tokens'] = [
             token.strip().lower() for token in minimum_tokens.split(',')]
     if token_values:
-        SETTINGS['token_values'] = [
-            token.strip().lower() for token in token_values.split(',')]
+        with open(token_values, 'r') as fp:
+            SETTINGS['token_values'] = yaml.load(fp)
     main(report, path, json, nocolor)

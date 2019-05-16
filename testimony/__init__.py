@@ -454,8 +454,6 @@ def validate_values_report(testcases):
             "WARNING: '{}' is supposed to be called with only one value" \
             " in --tokens".format(VALIDATE_VALUES_REPORT)
         )
-    token = SETTINGS['tokens'][0]
-    token_values = SETTINGS['token_values']
     result = {}
     invalid_docstring_count = 0
     invalid_token_value_count = 0
@@ -466,24 +464,26 @@ def validate_values_report(testcases):
         testcase_count += len(tests)
         for testcase in tests:
             issues = []
-            if not testcase.docstring:
-                issues.append('Missing docstring.')
-                missing_docstring_count += 1
-            if token not in testcase.tokens:
-                issues.append(
-                    'Docstring is missing {} token(s)'.format(token)
-                )
-                missing_token_count += 1
-            if testcase.tokens[token].lower() not in token_values:
-                issues.append(
-                    'Token {} have unexpected value of {}'.format(token, testcase.tokens[token])
-                )
-                invalid_token_value_count += 1
-            if issues:
-                title = testcase_title(testcase)
-                result.setdefault(
-                    path, collections.OrderedDict())[title] = issues
-                invalid_docstring_count += 1
+            for token in SETTINGS['tokens']:
+                token_values = [i.lower() for i in SETTINGS['token_values'][token]]
+                if not testcase.docstring:
+                    issues.append('Missing docstring.')
+                    missing_docstring_count += 1
+                if token not in testcase.tokens:
+                    issues.append(
+                        'Docstring is missing {} token(s)'.format(token)
+                    )
+                    missing_token_count += 1
+                if testcase.tokens[token].lower() not in token_values:
+                    issues.append(
+                        'Token {} have unexpected value of {}'.format(token, testcase.tokens[token])
+                    )
+                    invalid_token_value_count += 1
+                if issues:
+                    title = testcase_title(testcase)
+                    result.setdefault(
+                        path, collections.OrderedDict())[title] = issues
+                    invalid_docstring_count += 1
 
     if SETTINGS['json']:
         print(json.dumps(result))
