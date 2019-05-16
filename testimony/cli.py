@@ -28,5 +28,5 @@ def testimony(
             token.strip().lower() for token in minimum_tokens.split(',')]
     if token_values:
         with open(token_values, 'r') as fp:
-            SETTINGS['token_values'] = yaml.load(fp)
+            SETTINGS['token_values'] = {k.lower():v for k,v in yaml.load(fp).items()}
     main(report, path, json, nocolor)

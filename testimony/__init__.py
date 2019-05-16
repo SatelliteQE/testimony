@@ -465,6 +465,7 @@ def validate_values_report(testcases):
         for testcase in tests:
             issues = []
             for token in SETTINGS['tokens']:
+                token.lower()
                 token_values = [i.lower() for i in SETTINGS['token_values'][token]]
                 if not testcase.docstring:
                     issues.append('Missing docstring.')
@@ -474,7 +475,7 @@ def validate_values_report(testcases):
                         'Docstring is missing {} token(s)'.format(token)
                     )
                     missing_token_count += 1
-                if testcase.tokens[token].lower() not in token_values:
+                if token in testcase.tokens and testcase.tokens[token].lower() not in token_values:
                     issues.append(
                         'Token {} have unexpected value of {}'.format(token, testcase.tokens[token])
                     )
