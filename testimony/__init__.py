@@ -466,13 +466,12 @@ def validate_values_report(testcases):
                 missing_docstring_count += 1
             for token in SETTINGS['tokens']:
                 token = token.lower()
-                token_values = [i.lower() for i in
-                                SETTINGS['token_values'][token]]
+                token_config = SETTINGS['token_configs'][token]
                 if token not in testcase.tokens:
                     missing_token_count_local += 1
                     missing_token_count += 1
                 if token in testcase.tokens \
-                   and testcase.tokens[token].lower() not in token_values:
+                   and not token_config.validate(testcase.tokens[token]):
                     issues.append(
                         'Token {} have unexpected value of {}'.format(
                             token, testcase.tokens[token])

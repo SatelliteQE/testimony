@@ -1,8 +1,12 @@
 ---
 Status:
-    - Manual
-    - Automated
+    type: choice
+    choices:
+        - Manual
+        - Automated
 Feature:
-    - Login - Positive
-    - Login - Negative
+    type: choice
+    choices:
+        - Login - Positive
+        - Login - Negative
 ...
