@@ -332,5 +332,5 @@ TestPackage1::test_positive_login_3:15
 
 Total number of tests: 10
 Total number of invalid docstrings: 8 (80.00%)
-Total number of docstrings with tokens with unexpected value: 3 (30.00%)
+Total number of docstrings with unexpected token values: 3 (30.00%)
 Test cases with no docstrings: 1 (10.00%)

@@ -38,7 +38,7 @@ DEFAULT_MINIMUM_TOKENS = (
 
 PRINT_INVALID_DOC = 'Total number of invalid docstrings'
 PRINT_INVALID_VALUE = \
-    'Total number of docstrings with tokens with unexpected value'
+    'Total number of docstrings with unexpected token values'
 PRINT_NO_DOC = 'Test cases with no docstrings'
 PRINT_NO_MINIMUM_DOC_TC = 'Test cases missing minimal docstrings'
 PRINT_TOTAL_TC = 'Total number of tests'
