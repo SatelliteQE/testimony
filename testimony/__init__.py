@@ -460,13 +460,13 @@ def validate_values_report(testcases):
         testcase_count += len(tests)
         for testcase in tests:
             issues = []
+            if not testcase.docstring:
+                issues.append('Missing docstring.')
+                missing_docstring_count += 1
             for token in SETTINGS['tokens']:
                 token = token.lower()
                 token_values = [i.lower() for i in
                                 SETTINGS['token_values'][token]]
-                if not testcase.docstring:
-                    issues.append('Missing docstring.')
-                    missing_docstring_count += 1
                 if token not in testcase.tokens:
                     issues.append(
                         'Docstring is missing {} token(s)'.format(token)
@@ -479,11 +479,11 @@ def validate_values_report(testcases):
                             token, testcase.tokens[token])
                     )
                     invalid_token_value_count += 1
-                if issues:
-                    title = testcase_title(testcase)
-                    result.setdefault(
-                        path, collections.OrderedDict())[title] = issues
-                    invalid_docstring_count += 1
+            if issues:
+                title = testcase_title(testcase)
+                result.setdefault(
+                    path, collections.OrderedDict())[title] = issues
+                invalid_docstring_count += 1
 
     if SETTINGS['json']:
         print(json.dumps(result))

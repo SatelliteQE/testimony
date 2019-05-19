@@ -298,7 +298,6 @@ Testsample1::test_positive_login_2:49
 
 * Missing docstring.
 * Docstring is missing status token(s)
-* Missing docstring.
 * Docstring is missing feature token(s)
 
 Testsample1::test_positive_login_3:54
@@ -332,6 +331,6 @@ TestPackage1::test_positive_login_3:15
 * Token feature have unexpected value of Package Feature
 
 Total number of tests: 10
-Total number of invalid docstrings: 15 (150.00%)
+Total number of invalid docstrings: 8 (80.00%)
 Total number of docstrings with tokens with unexpected value: 3 (30.00%)
-Test cases with no docstrings: 2 (20.00%)
+Test cases with no docstrings: 1 (10.00%)
