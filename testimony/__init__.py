@@ -461,7 +461,7 @@ def validate_values_report(testcases):
         for testcase in tests:
             issues = []
             for token in SETTINGS['tokens']:
-                token.lower()
+                token = token.lower()
                 token_values = [i.lower() for i in
                                 SETTINGS['token_values'][token]]
                 if not testcase.docstring:
