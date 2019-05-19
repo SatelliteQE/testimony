@@ -460,6 +460,7 @@ def validate_values_report(testcases):
         testcase_count += len(tests)
         for testcase in tests:
             issues = []
+            missing_token_count_local = 0
             if not testcase.docstring:
                 issues.append('Missing docstring.')
                 missing_docstring_count += 1
@@ -468,9 +469,7 @@ def validate_values_report(testcases):
                 token_values = [i.lower() for i in
                                 SETTINGS['token_values'][token]]
                 if token not in testcase.tokens:
-                    issues.append(
-                        'Docstring is missing {} token(s)'.format(token)
-                    )
+                    missing_token_count_local += 1
                     missing_token_count += 1
                 if token in testcase.tokens \
                    and testcase.tokens[token].lower() not in token_values:
@@ -479,6 +478,11 @@ def validate_values_report(testcases):
                             token, testcase.tokens[token])
                     )
                     invalid_token_value_count += 1
+            if missing_token_count_local > 0:
+                issues.append(
+                    'Docstring is missing {} token(s)'.format(
+                        missing_token_count_local)
+                )
             if issues:
                 title = testcase_title(testcase)
                 result.setdefault(

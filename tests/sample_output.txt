@@ -284,42 +284,40 @@ tests/test_sample.py
 test_outside_class:8
 --------------------
 
-* Docstring is missing status token(s)
 * Token feature have unexpected value of Test functions
+* Docstring is missing 1 token(s)
 
 Testsample1::test_positive_login_1:27
 -------------------------------------
 
-* Docstring is missing status token(s)
-* Docstring is missing feature token(s)
+* Docstring is missing 2 token(s)
 
 Testsample1::test_positive_login_2:49
 -------------------------------------
 
 * Missing docstring.
-* Docstring is missing status token(s)
-* Docstring is missing feature token(s)
+* Docstring is missing 2 token(s)
 
 Testsample1::test_positive_login_3:54
 -------------------------------------
 
-* Docstring is missing status token(s)
+* Docstring is missing 1 token(s)
 
 Testsample1::test_negative_login_5:87
 -------------------------------------
 
-* Docstring is missing feature token(s)
+* Docstring is missing 1 token(s)
 
 Testsample3::test_negative_login_7:133
 --------------------------------------
 
-* Docstring is missing status token(s)
+* Docstring is missing 1 token(s)
 
 RSTFormattingTestCase::test_invalid_list_style:150
 --------------------------------------------------
 
-* Docstring is missing status token(s)
 * Token feature have unexpected value of RST Parsing Issues
+* Docstring is missing 1 token(s)
 
 tests/sample_pkg/test_sample2.py
 ================================
@@ -327,8 +325,8 @@ tests/sample_pkg/test_sample2.py
 TestPackage1::test_positive_login_3:15
 --------------------------------------
 
-* Docstring is missing status token(s)
 * Token feature have unexpected value of Package Feature
+* Docstring is missing 1 token(s)
 
 Total number of tests: 10
 Total number of invalid docstrings: 8 (80.00%)
