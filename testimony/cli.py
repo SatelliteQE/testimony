@@ -1,5 +1,6 @@
 # coding=utf-8
 """Testimony CLI utilities."""
+import sys
 import click
 import yaml
 
@@ -27,7 +28,11 @@ def testimony(
         SETTINGS['minimum_tokens'] = [
             token.strip().lower() for token in minimum_tokens.split(',')]
     if token_values:
-        with open(token_values, 'r') as fp:
-            data = yaml.load(fp, Loader=yaml.SafeLoader)
-            SETTINGS['token_values'] = {k.lower(): v for k, v in data.items()}
+        try:
+            with open(token_values, 'r') as fp:
+                data = yaml.load(fp, Loader=yaml.SafeLoader)
+                SETTINGS['token_values'] = {k.lower(): v for k, v in data.items()}
+        except FileNotFoundError:
+            print("ERROR: File {} not found".format(token_values))
+            sys.exit(1)
     main(report, path, json, nocolor)
