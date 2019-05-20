@@ -95,6 +95,7 @@ To understand how Testimony works, let's look at the ``help`` command:
       -n, --nocolor          Color output
       --tokens TEXT          Comma separated list of expected tokens
       --minimum-tokens TEXT  Comma separated list of minimum expected tokens
+      -c, --config FILENAME  Configuration file (YAML)
       --help                 Show this message and exit.
 
 Testimony does the following to parse the test case docstrings:
@@ -218,19 +219,20 @@ For example:
 validate command
 ++++++++++++++++
 
-Validates all the test cases in the given path.  This helps ensure that all your
-tests have the minimal set of tokens defined.  This command gives the required
-information which will help you identify the issues pertaining to each
-identified tests.
+Validates all the test cases in the given path.  This command gives the
+required information which will help you identify the issues pertaining
+to each identified tests.  Checks performed for each test are:
+
+- docstring exists
+- docstring can be parsed
+- all required tokens are defined
+- there are no tokens outside of expected tokens range
+- all tokens have valid values (see `Tokens configuration`_)
 
 .. note::
 
     To make easier integration with CI tools like ``travis``, this command
-    gives a non-zero return code when:
-
-    - a test case is missing the docstring.
-    - a test case is missing minimal set of tokens.
-    - a test case has an unexpected token.
+    gives a non-zero return code if any of the checks above fails.
 
 For example:
 
@@ -275,40 +277,19 @@ For example:
               lines and the lines are not properly indented.
 
 
+    ConfigurationFileTestCase::test_multiple_invalid_keys:202
+    ---------------------------------------------------------
 
-    Total number of tests: 10
-    Total number of invalid docstrings: 4 (40.00%)
-    Test cases with no docstrings: 1 (10.00%)
-    Test cases missing minimal docstrings: 3 (30.00%)
-    Test cases with invalid tags: 1 (10.00%)
-    Total number of tests with parsing issues: 1 (10.00%)
+    * Unexpected tokens:
+    Caseimportance: Lowest
 
-validate-values command
-+++++++++++++++++++++++
-
-Checks that tokens of tests in given path have only allowed possible values.
-E.g. you can specify that ``Tier`` token can only be ``tier1``, ``tier2`` or
-``tier3``. Any other value or missing token will be reported at all.
-
-Allowed values are specified in a yaml file you configure with
-``--token-values`` option and which have structure like this:
-
-.. code-block:: console
-
-    ---
-    Tier:
-        - tier1
-        - tier2
-        - tier3
-
-To run the command, you need to specify tokens to check:
-
-.. code-block:: console
-
-   $ testimony --tokens="Tier" --minimum-tokens="Tier" --token-values=tests/validate-values.yaml validate-values tests/
-   [...]
-   * Token tier have unexpected value of tier0
-   [...]
+    Total number of tests: 14
+    Total number of invalid docstrings: 5 (35.71%)
+    Test cases with no docstrings: 1 (7.14%)
+    Test cases missing minimal docstrings: 3 (21.43%)
+    Test cases with unexpected tags: 2 (14.29%)
+    Test cases with unexpected token values in docstrings: 0 (0.00%)
+    Test cases with unparseable docstrings: 1 (7.14%)
 
 
 Misc Options
@@ -319,6 +300,58 @@ Misc Options
 ``--no-color``
     a colored output is provided by default when the ``termcolor`` package is
     installed.  This can be disabled by specifying this option.
+
+Tokens configuration
+````````````````````
+
+Tokens supported by Testimony can be configured with ``--tokens``,
+``--minimum-tokens`` and ``--config`` options.
+
+``--tokens`` takes comma-separated list of supported tokens. When testimony
+encounters token outside of this range, it will report it as error.
+
+``--minimum-token`` takes comma-separated list of required tokens. When
+testimony encounters test without all of tokens in this group, it will
+report it as error. Tokens specified here are automatically added to
+list of supported tokens (there is no need to specify single token
+in both ``--minimum-tokens`` and ``--tokens``).
+
+``--config`` is path to YAML configuration file. YAML file should contain
+single map (equivalent of Python dict), where keys are names of tokens
+and values are maps consisting of ``required``, ``type`` and other,
+type-dependant keys. Sample config files are provided in ``tests``
+directory, as well as printed below:
+
+.. code-block:: console
+
+    ---
+    Assert:
+        required: True  # 'Assert' is required in each test
+    Feature:
+        required: True
+    Test:
+        required: True
+    # You can specify that token is not required explicitly, or leave it
+    # out - testimony will assume default value of 'False'
+    # Both tokens below are allowe, but not required
+    BZ:
+        required: False
+    Setup: {}
+
+    # If 'type' is 'choice', 'choices' must be provided and must contain
+    # list of allowed values. 'casesensitive' declares if choices match
+    # should be done in case-sensitive way (default) or not
+    Status:
+        required: False
+        type: choice
+        casesensitive: False
+        choices:
+            - manual
+            - automated
+    Steps: {}
+    Tags: {}
+    Type:
+        required: False
 
 Project Contribution
 ````````````````````

@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding=utf-8
 #
 # testimony documentation build configuration file, created by
 # sphinx-quickstart on Mon Nov 23 10:11:31 2015.

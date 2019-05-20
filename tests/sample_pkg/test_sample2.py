@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# coding=utf-8
 """Test Module for Package Sample Test
 
 :Setup: Global setup
