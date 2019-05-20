@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# coding=utf-8
 """Test class for Sample Test
 
 :Setup: Global setup
@@ -163,3 +163,75 @@ class RSTFormattingTestCase():
             2. Testimony does not report RST parsing issue on list properly
                formatted.
     """
+
+
+class ConfigurationFileTestCase():
+    """Class to test Testimony config file support."""
+
+    def test_lowercase_key(self):
+        """Check that key can be provided in all lowercase.
+
+        :Feature: Config file support
+
+        :Assert: Metadata key can be all-lowercase
+
+        :status: Manual
+        """
+        pass
+
+    def test_mixedcase_key(self):
+        """Check that key can be provided in mixed case.
+
+        :Feature: Config file support
+
+        :AsSeRt: Metadata key can be mixed case
+        """
+        pass
+
+    def test_overwrite_key_with_variable_case(self):
+        """Check overwriting keys that use different casing on various levels.
+
+        :Feature: Config file support
+
+        :Assert: Test-level key overwrites module-level key
+
+        :setup: test-level setup
+        """
+        pass
+
+    def test_multiple_invalid_keys(self):
+        """Check that multiple invalid keys are properly displayed.
+
+        :Feature: Config file support
+
+        :Status: Invalid
+
+        :CaseImportance: Lowest
+
+        :Assert: Multiple metadata keys with invalid values
+        """
+        pass
+
+    def test_case_mismatch_case_insensitive_values(self):
+        """Check 'Status' value is case insensitive.
+
+        :Feature: Config file support
+
+        :Assert: Value doesn't have to match case
+
+        :Status: MANUAL
+        """
+        pass
+
+    def test_case_mismatch_case_sensitive_values(self):
+        """Check 'CaseAutomation' value is case sensitive.
+
+        :Feature: Config file support
+
+        :Assert: Value has to match case
+
+        :Status: manual
+
+        :CaseAutomation: AUTOMATED
+        """
+        pass

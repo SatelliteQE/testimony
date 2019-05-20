@@ -1,0 +1,33 @@
+---
+assert:
+    required: True
+feature:
+    required: True
+test:
+    required: True
+bz:
+    required: False
+setup: {}
+status:
+    required: False
+    type: choice
+    casesensitive: False
+    choices:
+        - manual
+        - automated
+steps: {}
+tags: {}
+type: {}
+caseautomation:
+    type: choice
+    choices:
+        - Automated
+        - NotAutomated
+        - ManualOnly
+caseimportance:
+    type: choice
+    choices:
+        - Critical
+        - High
+        - Medium
+        - Low

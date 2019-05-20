@@ -1,0 +1,7 @@
+---
+assert:
+    required: True
+feature:
+    required: True
+test:
+    required: True

@@ -13,18 +13,18 @@ from testimony import SETTINGS, config, constants, main
 @click.option(
     '--minimum-tokens', help='Comma separated list of minimum expected tokens')
 @click.option(
-    '--token-configs', help='Yaml file with allowed values per token')
+    '-c', '--config', 'config_file', type=click.File(),
+    help='Configuration file (YAML)')
 @click.argument('report', type=click.Choice(constants.REPORT_TAGS))
 @click.argument('path', nargs=-1, type=click.Path(exists=True))
 def testimony(
-        json, nocolor, tokens, minimum_tokens, token_configs, report, path):
+        json, nocolor, tokens, minimum_tokens, config_file, report, path):
     """Inspect and report on the Python test cases."""
+    if config_file:
+        SETTINGS['tokens'] = config.parse_config(config_file)
     if tokens:
-        SETTINGS['tokens'] = [
-            token.strip().lower() for token in tokens.split(',')]
+        config.update_tokens_dict(SETTINGS['tokens'], tokens)
     if minimum_tokens:
-        SETTINGS['minimum_tokens'] = [
-            token.strip().lower() for token in minimum_tokens.split(',')]
-    if token_configs:
-        SETTINGS['token_configs'] = config.parse_config(token_configs)
+        config.update_tokens_dict(
+            SETTINGS['tokens'], minimum_tokens, {'required': True})
     main(report, path, json, nocolor)
