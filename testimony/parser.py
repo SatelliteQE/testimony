@@ -1,11 +1,8 @@
 # coding=utf-8
 """Docstring parser utilities for Testimony."""
 from collections import namedtuple
+from io import StringIO
 from xml.etree import ElementTree
-try:
-    from io import StringIO
-except:
-    from StringIO import StringIO
 
 from docutils.core import publish_string
 from docutils.parsers.rst import nodes, roles

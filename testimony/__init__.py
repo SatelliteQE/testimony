@@ -31,7 +31,7 @@ from testimony.parser import DocstringParser
 try:
     import termcolor
     HAS_TERMCOLOR = True
-except ImportError as exception:
+except ImportError:
     HAS_TERMCOLOR = False
 
 SETTINGS = {
