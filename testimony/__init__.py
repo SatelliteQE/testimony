@@ -190,6 +190,7 @@ class TestFunction(object):
     def to_dict(self):
         """Return tokens invalid-tokens as a dict."""
         return {
+            'title': self.name,
             'tokens': self.tokens.copy(),
             'invalid-tokens': self.invalid_tokens.copy(),
             'rst-parse-messages': copy.copy(self._rst_parser_messages)
@@ -237,7 +238,7 @@ class TestFunction(object):
         output = []
         for token, value in sorted(self.tokens.items()):
             output.append('{0}:\n{1}\n'.format(
-                token.capitalize(), indent(value, ' ')))
+                token.capitalize(), indent(value or '', ' ')))
         if self.invalid_tokens:
             output.append(
                 'Unexpected tokens:\n' +
