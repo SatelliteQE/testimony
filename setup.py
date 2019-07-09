@@ -1,8 +1,5 @@
 from setuptools import find_packages, setup  # prefer setuptools over distutils
 
-with open('LICENSE') as file:
-    license = file.read()
-
 with open('README.rst') as file:
     long_description = file.read()
 
@@ -33,5 +30,4 @@ setup(
     """,
     description='Testimony inspects and reports on the python test cases.',
     long_description=long_description,
-    license=license,
 )
