@@ -35,26 +35,24 @@ echo "${NEW_VERSION}" > VERSION
 # Generate the package
 make package-clean package
 
-# Sanity check Testimony packages on both Python 2 and Python 3
-for python in python{2,3}; do
-    venv="$(mktemp --directory)"
-    virtualenv -p "${python}" "${venv}"
-    set +u
-    source "${venv}/bin/activate"
-    set -u
-    pip install --upgrade --quiet pip
-    for dist in dist/*; do
-        ls "${dist}"
-        pip install --quiet "${dist}"
-        python -c "import testimony" 1>/dev/null
-        make test
-        pip uninstall --quiet --yes testimony
-    done
-    set +u
-    deactivate
-    set -u
-    rm -rf "${venv}"
+# Sanity check Testimony packages on Python 3
+venv="$(mktemp --directory)"
+python3 -m venv "${venv}"
+set +u
+source "${venv}/bin/activate"
+set -u
+pip install --upgrade --quiet pip
+for dist in dist/*; do
+    ls "${dist}"
+    pip install --quiet "${dist}"
+    python3 -c "import testimony" 1>/dev/null
+    make test
+    pip uninstall --quiet --yes testimony
 done
+set +u
+deactivate
+set -u
+rm -rf "${venv}"
 
 # Get the changes from last release and commit
 git add VERSION
