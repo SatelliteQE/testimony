@@ -2,6 +2,7 @@
 flake8
 flake8-docstrings
 flake8-quotes
+pydocstyle<4  # See https://gitlab.com/pycqa/flake8-docstrings/issues/36
 
 # For `make package`
 wheel
