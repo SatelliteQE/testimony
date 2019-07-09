@@ -12,6 +12,7 @@ lint:
 
 package:
 	python setup.py sdist bdist_wheel
+	twine check dist/*
 
 package-clean:
 	rm -rf build dist testimony.egg-info

@@ -30,4 +30,5 @@ setup(
     """,
     description='Testimony inspects and reports on the python test cases.',
     long_description=long_description,
+    long_description_content_type='text/x-rst',
 )
