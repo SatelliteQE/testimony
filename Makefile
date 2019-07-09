@@ -11,7 +11,7 @@ lint:
 	flake8 testimony
 
 package:
-	python setup.py sdist bdist_wheel --universal
+	python setup.py sdist bdist_wheel
 
 package-clean:
 	rm -rf build dist testimony.egg-info
