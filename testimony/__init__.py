@@ -25,6 +25,7 @@ from testimony.constants import (
     PRINT_UNEXPECTED_DOC_TC,
     SUMMARY_REPORT,
     VALIDATE_DOCSTRING_REPORT,
+    VALIDATE_TIERS,
 )
 from testimony.parser import DocstringParser
 
@@ -125,6 +126,7 @@ class TestFunction(object):
                           if value.required] or None
         self.parser = DocstringParser(tokens, minimum_tokens)
         self._parse_docstring()
+        self._get_tier()
 
     def _parse_docstring(self):
         """Parse module, class and function docstrings.
@@ -160,6 +162,16 @@ class TestFunction(object):
                 docstring = self.docstring.decode('utf-8')
             self.tokens['test'] = docstring.strip().split('\n')[0]
 
+    def _get_tier(self):
+        try:
+            decorators = getattr(self.function_def, 'decorator_list')
+        except AttributeError:
+            return
+
+        self.tokens.update({'tier': decorator.id for decorator
+                           in decorators
+                           if getattr(decorator, 'id', '').startswith('tier')})
+
     @property
     def has_valid_docstring(self):
         """Indicate if the docstring has the minimum tokens."""
@@ -178,6 +190,7 @@ class TestFunction(object):
     def to_dict(self):
         """Return tokens invalid-tokens as a dict."""
         return {
+            'title': self.name,
             'tokens': self.tokens.copy(),
             'invalid-tokens': self.invalid_tokens.copy(),
             'rst-parse-messages': copy.copy(self._rst_parser_messages)
@@ -225,7 +238,7 @@ class TestFunction(object):
         output = []
         for token, value in sorted(self.tokens.items()):
             output.append('{0}:\n{1}\n'.format(
-                token.capitalize(), indent(value, ' ')))
+                token.capitalize(), indent(value or '', ' ')))
         if self.invalid_tokens:
             output.append(
                 'Unexpected tokens:\n' +
@@ -256,6 +269,8 @@ def main(report, paths, json_output, nocolor):
         report_function = print_report
     elif report == VALIDATE_DOCSTRING_REPORT:
         report_function = validate_docstring_report
+    elif report == VALIDATE_TIERS:
+        report_function = validate_tiers
     sys.exit(report_function(get_testcases(paths)))
 
 
@@ -479,6 +494,56 @@ def validate_docstring_report(testcases):
 
     if len(result) > 0:
         return -1
+
+
+def validate_tiers(testcases):
+    """Validate correct Tier assignment."""
+    result = {}
+    for path, tests in testcases.items():
+        for testcase in tests:
+            issues = []
+            importance = testcase.tokens['caseimportance'].lower()
+            level = testcase.tokens['caselevel'].lower()
+            ttype = testcase.tokens['testtype'].lower()
+            tier = testcase.tokens.get('tier', 'undefined').lower()
+
+            expected_tier = 'tier3'
+
+            if (importance == 'critical' and
+                    level == 'component' and
+                    ttype == 'functional'):
+                expected_tier = 'tier1'
+
+            if (importance != 'critical' and
+                    level == 'component' and
+                    ttype == 'functional'):
+                expected_tier = 'tier2'
+
+            if (importance in ('critical', 'high') and
+                    level == 'integration' and
+                    ttype == 'functional'):
+                expected_tier = 'tier2'
+
+            if (importance in ('critical', 'high') and
+                    ttype in ('usability')):
+                expected_tier = 'tier2'
+
+            if tier != expected_tier:
+                issues.append(('Tier is "{0}", I think it should be "{1}"'
+                               ).format(
+                                   tier, expected_tier
+                               ))
+            if issues:
+                title = testcase_title(testcase)
+                result.setdefault(
+                    path, collections.OrderedDict())[title] = issues
+
+    for path, testcases in result.items():
+        print('{0}\n{1}\n'.format(path, '=' * len(path)))
+        for testcase, issues in testcases.items():
+            print('{0}\n{1}\n'.format(testcase, '-' * len(testcase)))
+            print(
+                '\n'.join(['* {0}'.format(issue) for issue in issues]) + '\n')
 
 
 def get_testcases(paths):
