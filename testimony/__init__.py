@@ -292,22 +292,35 @@ def print_report(testcases):
     :param testcases: A dict where the key is a path and value is a list of
         found testcases on that path.
     """
+    if SETTINGS['json']:
+        result = []
+        for path, tests in testcases.items():
+            for test in tests:
+                test_dict = test.to_dict()
+                test_data = test_dict['tokens']
+                test_data['test-path'] = path
+                test_data['test-class'] = test.parent_class
+                test_data['test-name'] = test.name
+                test_data['testimony-invalid-tokens'] = test_dict[
+                    'invalid-tokens']
+                test_data['testimony-rst-parse-messages'] = test_dict[
+                    'rst-parse-messages']
+                result.append(test_data)
+
+        print(json.dumps(result))
+        return 0
+
     result = {}
     for path, tests in testcases.items():
         result[path] = [test.to_dict() for test in tests]
-        if not SETTINGS['json']:
-            print('{0}\n{1}\n'.format(
-                colored(path, attrs=['bold']), '=' * len(path)))
-            if len(tests) == 0:
-                print('No test cases found.\n')
-            for test in tests:
-                title = testcase_title(test)
-                print('{0}\n{1}\n\n{2}\n'.format(
-                    title, '-' * len(title), test))
-
-    if SETTINGS['json']:
-        print(json.dumps(result))
-        return 0
+        print('{0}\n{1}\n'.format(
+            colored(path, attrs=['bold']), '=' * len(path)))
+        if len(tests) == 0:
+            print('No test cases found.\n')
+        for test in tests:
+            title = testcase_title(test)
+            print('{0}\n{1}\n\n{2}\n'.format(
+                title, '-' * len(title), test))
 
 
 def summary_report(testcases):
