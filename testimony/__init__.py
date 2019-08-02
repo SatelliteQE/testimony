@@ -125,6 +125,7 @@ class TestFunction(object):
                           if value.required] or None
         self.parser = DocstringParser(tokens, minimum_tokens)
         self._parse_docstring()
+        self._parse_decorators()
 
     def _parse_docstring(self):
         """Parse module, class and function docstrings.
@@ -159,6 +160,30 @@ class TestFunction(object):
             if docstring and not isinstance(docstring, type(u'')):
                 docstring = self.docstring.decode('utf-8')
             self.tokens['test'] = docstring.strip().split('\n')[0]
+
+    def _parse_decorators(self):
+        """Get decorators from class and function definition.
+
+        Modules and packages can't be decorated, so they are skipped.
+        Decorator can be pytest marker or function call.
+        ``tokens`` attribute will be updated with new value ``decorators``.
+        """
+        token_decorators = []
+        for level in (self.parent_class_def, self.function_def):
+            decorators = getattr(level, 'decorator_list', None)
+            if not decorators:
+                continue
+
+            for decorator in decorators:
+                try:
+                    token_decorators.append(
+                        getattr(decorator, 'func', decorator).id
+                    )
+                except AttributeError:
+                    continue
+
+        if token_decorators:
+            self.tokens['decorators'] = token_decorators
 
     @property
     def has_valid_docstring(self):
@@ -224,6 +249,8 @@ class TestFunction(object):
 
         output = []
         for token, value in sorted(self.tokens.items()):
+            if isinstance(value, list):
+                value = ','.join(value)
             output.append('{0}:\n{1}\n'.format(
                 token.capitalize(), indent(value, ' ')))
         if self.invalid_tokens:
