@@ -235,3 +235,44 @@ class ConfigurationFileTestCase():
         :CaseAutomation: AUTOMATED
         """
         pass
+
+class DecoratorsTestCase():
+    """Class to test Testimony support for decorators
+
+    :Feature: Decorators
+
+    :Assert: Decorators are properly read
+    """
+
+    def test_no_decorator(self):
+        """Test without decorator."""
+        pass
+
+    @tier1
+    def test_one_decorator(self):
+        """Test with one decorator."""
+        pass
+
+    @tier1
+    @tier2
+    def test_multiple_decorators(self):
+        """Test with multiple decorators."""
+        pass
+
+@tier1
+class MergeDecoratorsTestCase():
+    """Class to test Testimony support for decorated classes
+
+    :Feature: Decorators
+
+    :Assert: Decorators are properly read
+    """
+
+    def test_no_decorator(self):
+        """Test without decorator."""
+        pass
+
+    @tier2
+    def test_decorator(self):
+        """Test with one decorator."""
+        pass

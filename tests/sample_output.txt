@@ -295,6 +295,98 @@ Test:
 Unexpected tokens:
   Caseautomation: AUTOMATED
 
+DecoratorsTestCase::test_no_decorator:247
+-----------------------------------------
+
+Assert:
+ Decorators are properly read
+
+Feature:
+ Decorators
+
+Setup:
+ Global setup
+
+Test:
+ Test without decorator.
+
+
+DecoratorsTestCase::test_one_decorator:251
+------------------------------------------
+
+Assert:
+ Decorators are properly read
+
+Decorators:
+ tier1
+
+Feature:
+ Decorators
+
+Setup:
+ Global setup
+
+Test:
+ Test with one decorator.
+
+
+DecoratorsTestCase::test_multiple_decorators:256
+------------------------------------------------
+
+Assert:
+ Decorators are properly read
+
+Decorators:
+ tier1,tier2
+
+Feature:
+ Decorators
+
+Setup:
+ Global setup
+
+Test:
+ Test with multiple decorators.
+
+
+MergeDecoratorsTestCase::test_no_decorator:271
+----------------------------------------------
+
+Assert:
+ Decorators are properly read
+
+Decorators:
+ tier1
+
+Feature:
+ Decorators
+
+Setup:
+ Global setup
+
+Test:
+ Test without decorator.
+
+
+MergeDecoratorsTestCase::test_decorator:275
+-------------------------------------------
+
+Assert:
+ Decorators are properly read
+
+Decorators:
+ tier1,tier2
+
+Feature:
+ Decorators
+
+Setup:
+ Global setup
+
+Test:
+ Test with one decorator.
+
+
 tests/sample_pkg/test_sample2.py
 ================================
 
@@ -325,17 +417,18 @@ Test:
 = summary report =
 ==================
 
-Total number of tests:          16
-Test cases with no docstrings:   1 (06.25%)
-Assert:                         14 (87.50%)
-Bz:                              2 (12.50%)
-Feature:                        13 (81.25%)
-Setup:                          15 (93.75%)
-Status:                          7 (43.75%)
-Steps:                           8 (50.00%)
-Tags:                            5 (31.25%)
-Test:                           15 (93.75%)
-Type:                            1 (06.25%)
+Total number of tests:          21
+Test cases with no docstrings:   1 (04.76%)
+Assert:                         19 (90.48%)
+Bz:                              2 (09.52%)
+Decorators:                      4 (19.05%)
+Feature:                        18 (85.71%)
+Setup:                          20 (95.24%)
+Status:                          7 (33.33%)
+Steps:                           8 (38.10%)
+Tags:                            5 (23.81%)
+Test:                           20 (95.24%)
+Type:                            1 (04.76%)
 
 =============================
 = validate_docstring report =
@@ -391,13 +484,13 @@ ConfigurationFileTestCase::test_case_mismatch_case_sensitive_values:226
 * Unexpected tokens:
   Caseautomation: AUTOMATED
 
-Total number of tests: 16
-Total number of invalid docstrings: 6 (37.50%)
-Test cases with no docstrings: 1 (6.25%)
-Test cases missing minimal docstrings: 3 (18.75%)
-Test cases with unexpected tags: 3 (18.75%)
+Total number of tests: 21
+Total number of invalid docstrings: 6 (28.57%)
+Test cases with no docstrings: 1 (4.76%)
+Test cases missing minimal docstrings: 3 (14.29%)
+Test cases with unexpected tags: 3 (14.29%)
 Test cases with unexpected token values in docstrings: 0 (0.00%)
-Test cases with unparseable docstrings: 1 (6.25%)
+Test cases with unparseable docstrings: 1 (4.76%)
 
 =========================================
 = validate_docstring with config report =
@@ -454,38 +547,38 @@ ConfigurationFileTestCase::test_case_mismatch_case_sensitive_values:226
 * Tokens with invalid values:
   Caseautomation: AUTOMATED (type: 'choice')
 
-Total number of tests: 16
-Total number of invalid docstrings: 6 (37.50%)
-Test cases with no docstrings: 1 (6.25%)
-Test cases missing minimal docstrings: 3 (18.75%)
-Test cases with unexpected tags: 1 (6.25%)
-Test cases with unexpected token values in docstrings: 2 (12.50%)
-Test cases with unparseable docstrings: 1 (6.25%)
+Total number of tests: 21
+Total number of invalid docstrings: 6 (28.57%)
+Test cases with no docstrings: 1 (4.76%)
+Test cases missing minimal docstrings: 3 (14.29%)
+Test cases with unexpected tags: 1 (4.76%)
+Test cases with unexpected token values in docstrings: 2 (9.52%)
+Test cases with unparseable docstrings: 1 (4.76%)
 
 ====================================
 = config should overwrite defaults =
 ====================================
 
-default summary report length: 11
---config summary report length: 5
+default summary report length: 12
+--config summary report length: 6
 
 ====================================
 = tokens should overwrite defaults =
 ====================================
 
-default summary report length: 11
---tokens summary report length: 6
+default summary report length: 12
+--tokens summary report length: 7
 
 ============================================
 = minimum-tokens should overwrite defaults =
 ============================================
 
-default summary report length: 11
---minimum-tokens summary report length: 3
+default summary report length: 12
+--minimum-tokens summary report length: 4
 
 ==========================================================
 = tokens and minimum-tokens should be merged with config =
 ==========================================================
 
-default summary report length: 11
---tokens --minimum-tokens --config summary report length: 7
+default summary report length: 12
+--tokens --minimum-tokens --config summary report length: 8
