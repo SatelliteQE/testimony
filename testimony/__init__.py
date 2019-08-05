@@ -298,13 +298,15 @@ def print_report(testcases):
             for test in tests:
                 test_dict = test.to_dict()
                 test_data = test_dict['tokens']
-                test_data['test-path'] = path
-                test_data['test-class'] = test.parent_class
-                test_data['test-name'] = test.name
-                test_data['testimony-invalid-tokens'] = test_dict[
+                testimony_metadata = {}
+                testimony_metadata['file-path'] = path
+                testimony_metadata['test-class'] = test.parent_class
+                testimony_metadata['test-name'] = test.name
+                testimony_metadata['invalid-tokens'] = test_dict[
                     'invalid-tokens']
-                test_data['testimony-rst-parse-messages'] = test_dict[
+                testimony_metadata['rst-parse-messages'] = test_dict[
                     'rst-parse-messages']
+                test_data['_testimony'] = testimony_metadata
                 result.append(test_data)
 
         print(json.dumps(result))
