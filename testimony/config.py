@@ -18,7 +18,7 @@ Currently only supported type is 'choice', but in the future more can be added.
 
 import yaml
 
-TOKEN_TYPES = ['choice']
+from testimony.constants import TOKEN_TYPES
 
 
 def parse_config(filehandle):

@@ -16,6 +16,10 @@ REPORT_TAGS = (
     VALIDATE_DOCSTRING_REPORT,
 )
 
+TOKEN_TYPES = [
+    'choice',
+]
+
 DEFAULT_TOKENS = (
     'assert',
     'bz',
