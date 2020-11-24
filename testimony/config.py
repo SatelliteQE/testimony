@@ -75,8 +75,8 @@ class TokenConfig(object):
         if self.token_type == 'choice':
             assert 'choices' in config
             assert isinstance(config['choices'], list)
-            casesensitive = config.get('casesensitive', True)
-            self.choices = [i if casesensitive else i.lower()
+            self.casesensitive = config.get('casesensitive', True)
+            self.choices = [i if self.casesensitive else i.lower()
                             for i in config['choices']]
 
     def update(self, new_values):
@@ -87,5 +87,7 @@ class TokenConfig(object):
     def validate(self, what):
         """Ensure that 'what' meets value validation criteria."""
         if self.token_type == 'choice':
-            return what.lower() in self.choices
+            if not self.casesensitive:
+                what = what.lower()
+            return what in self.choices
         return True  # assume valid for unknown types
