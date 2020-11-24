@@ -550,15 +550,27 @@ ConfigurationFileTestCase::test_multiple_invalid_keys:208
 ---------------------------------------------------------
 
 * Tokens with invalid values:
-  Caseimportance: Lowest (type: 'choice')
-  Status: Invalid (type: 'choice')
+  Caseimportance: Lowest
+      type: choice
+      case sensitive: True
+      choices: ['Critical', 'High', 'Medium', 'Low']
+  Status: Invalid
+      type: choice
+      case sensitive: False
+      choices: ['manual', 'automated']
 
 ConfigurationFileTestCase::test_case_mismatch_case_sensitive_values:236
 -----------------------------------------------------------------------
 
 * Tokens with invalid values:
-  Caseautomation: AUTOMATED (type: 'choice')
-  Caseimportance: critical (type: 'choice')
+  Caseautomation: AUTOMATED
+      type: choice
+      case sensitive: True
+      choices: ['Automated', 'NotAutomated', 'ManualOnly']
+  Caseimportance: critical
+      type: choice
+      case sensitive: True
+      choices: ['Critical', 'High', 'Medium', 'Low']
 
 Total number of tests: 21
 Total number of invalid docstrings: 6 (28.57%)

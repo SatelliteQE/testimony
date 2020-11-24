@@ -428,17 +428,33 @@ def validate_docstring_report(testcases):
                 if not SETTINGS['tokens'][token].validate(value):
                     invalid_token_values.setdefault(token, value)
             if invalid_token_values:
+                invalid_token_strings = []
+                for key, value in sorted(invalid_token_values.items()):
+                    settings_token = SETTINGS['tokens'][key]
+                    # TODO: Rework constants to not compare bare string
+                    if settings_token.token_type == 'choice':
+                        valid_choices_string = '\n    choices: {}'.format(
+                            settings_token.choices
+                        )
+                    else:
+                        valid_choices_string = ''
+                    invalid_token_strings.append(
+                        '{token}: {value}'
+                        '\n    type: {type}'
+                        '\n    case sensitive: {sensitive}'
+                        '{choices}'.format(
+                            token=key.capitalize(),
+                            value=value,
+                            type=settings_token.token_type,
+                            sensitive=settings_token.casesensitive,
+                            choices=valid_choices_string,
+                        )
+                    )
+
                 issues.append('Tokens with invalid values:\n{0}'.format(
                     indent(
-                        '\n'.join([
-                            "{0}: {1} (type: '{2}')".format(
-                                key.capitalize(), value,
-                                SETTINGS['tokens'][key].token_type
-                            )
-                            for key, value in
-                            sorted(invalid_token_values.items())
-                        ]),
-                        '  '
+                        '\n'.join(invalid_token_strings),
+                        '  ',
                     )
                 ))
                 invalid_token_value_count += 1
