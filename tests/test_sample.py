@@ -166,7 +166,13 @@ class RSTFormattingTestCase():
 
 
 class ConfigurationFileTestCase():
-    """Class to test Testimony config file support."""
+    """Class to test Testimony config file support.
+
+    Behavior was observed in GitHub issue #148 where case sensitivity was not applied correctly
+    The failure was missed by the original unit test test_case_mismatch_case_sensitive_values
+    Because it was the only test using the case sensitive token.
+    CaseImportance and CaseAutomation tokens are now included in cases not directly testing them
+    """
 
     def test_lowercase_key(self):
         """Check that key can be provided in all lowercase.
@@ -220,11 +226,15 @@ class ConfigurationFileTestCase():
         :Assert: Value doesn't have to match case
 
         :Status: MANUAL
+
+        :CaseImportance: Critical
+
+        :CaseAutomation: Automated
         """
         pass
 
     def test_case_mismatch_case_sensitive_values(self):
-        """Check 'CaseAutomation' value is case sensitive.
+        """Check 'CaseAutomation' and 'CaseImportance' validation is case sensitive.
 
         :Feature: Config file support
 
@@ -232,9 +242,12 @@ class ConfigurationFileTestCase():
 
         :Status: manual
 
+        :CaseImportance: critical
+
         :CaseAutomation: AUTOMATED
         """
         pass
+
 
 class DecoratorsTestCase():
     """Class to test Testimony support for decorators
@@ -258,6 +271,7 @@ class DecoratorsTestCase():
     def test_multiple_decorators(self):
         """Test with multiple decorators."""
         pass
+
 
 @tier1
 class MergeDecoratorsTestCase():

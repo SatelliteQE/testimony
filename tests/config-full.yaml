@@ -19,12 +19,15 @@ steps: {}
 tags: {}
 type: {}
 caseautomation:
+    # case sensitive by default
     type: choice
     choices:
         - Automated
         - NotAutomated
         - ManualOnly
 caseimportance:
+    # case sensitive explicitly
+    casesensitive: True
     type: choice
     choices:
         - Critical
