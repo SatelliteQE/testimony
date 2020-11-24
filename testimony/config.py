@@ -51,7 +51,7 @@ class TokenConfig(object):
     """
     Represent config for one token.
 
-    Curently only checks for value.
+    Currently only checks for value.
     """
 
     def __init__(self, name, config):

@@ -183,7 +183,7 @@ RST parser messages:
 
 
 
-ConfigurationFileTestCase::test_lowercase_key:171
+ConfigurationFileTestCase::test_lowercase_key:177
 -------------------------------------------------
 
 Assert:
@@ -202,7 +202,7 @@ Test:
  Check that key can be provided in all lowercase.
 
 
-ConfigurationFileTestCase::test_mixedcase_key:182
+ConfigurationFileTestCase::test_mixedcase_key:188
 -------------------------------------------------
 
 Assert:
@@ -218,7 +218,7 @@ Test:
  Check that key can be provided in mixed case.
 
 
-ConfigurationFileTestCase::test_overwrite_key_with_variable_case:191
+ConfigurationFileTestCase::test_overwrite_key_with_variable_case:197
 --------------------------------------------------------------------
 
 Assert:
@@ -234,7 +234,7 @@ Test:
  Check overwriting keys that use different casing on various levels.
 
 
-ConfigurationFileTestCase::test_multiple_invalid_keys:202
+ConfigurationFileTestCase::test_multiple_invalid_keys:208
 ---------------------------------------------------------
 
 Assert:
@@ -255,7 +255,7 @@ Test:
 Unexpected tokens:
   Caseimportance: Lowest
 
-ConfigurationFileTestCase::test_case_mismatch_case_insensitive_values:215
+ConfigurationFileTestCase::test_case_mismatch_case_insensitive_values:221
 -------------------------------------------------------------------------
 
 Assert:
@@ -273,8 +273,11 @@ Status:
 Test:
  Check 'Status' value is case insensitive.
 
+Unexpected tokens:
+  Caseautomation: Automated
+  Caseimportance: Critical
 
-ConfigurationFileTestCase::test_case_mismatch_case_sensitive_values:226
+ConfigurationFileTestCase::test_case_mismatch_case_sensitive_values:236
 -----------------------------------------------------------------------
 
 Assert:
@@ -290,12 +293,13 @@ Status:
  manual
 
 Test:
- Check 'CaseAutomation' value is case sensitive.
+ Check 'CaseAutomation' and 'CaseImportance' validation is case sensitive.
 
 Unexpected tokens:
   Caseautomation: AUTOMATED
+  Caseimportance: critical
 
-DecoratorsTestCase::test_no_decorator:247
+DecoratorsTestCase::test_no_decorator:260
 -----------------------------------------
 
 Assert:
@@ -311,7 +315,7 @@ Test:
  Test without decorator.
 
 
-DecoratorsTestCase::test_one_decorator:251
+DecoratorsTestCase::test_one_decorator:264
 ------------------------------------------
 
 Assert:
@@ -330,7 +334,7 @@ Test:
  Test with one decorator.
 
 
-DecoratorsTestCase::test_multiple_decorators:256
+DecoratorsTestCase::test_multiple_decorators:269
 ------------------------------------------------
 
 Assert:
@@ -349,7 +353,7 @@ Test:
  Test with multiple decorators.
 
 
-MergeDecoratorsTestCase::test_no_decorator:271
+MergeDecoratorsTestCase::test_no_decorator:285
 ----------------------------------------------
 
 Assert:
@@ -368,7 +372,7 @@ Test:
  Test without decorator.
 
 
-MergeDecoratorsTestCase::test_decorator:275
+MergeDecoratorsTestCase::test_decorator:289
 -------------------------------------------
 
 Assert:
@@ -472,23 +476,31 @@ RSTFormattingTestCase::test_invalid_list_style:150
 
 
 
-ConfigurationFileTestCase::test_multiple_invalid_keys:202
+ConfigurationFileTestCase::test_multiple_invalid_keys:208
 ---------------------------------------------------------
 
 * Unexpected tokens:
   Caseimportance: Lowest
 
-ConfigurationFileTestCase::test_case_mismatch_case_sensitive_values:226
+ConfigurationFileTestCase::test_case_mismatch_case_insensitive_values:221
+-------------------------------------------------------------------------
+
+* Unexpected tokens:
+  Caseautomation: Automated
+  Caseimportance: Critical
+
+ConfigurationFileTestCase::test_case_mismatch_case_sensitive_values:236
 -----------------------------------------------------------------------
 
 * Unexpected tokens:
   Caseautomation: AUTOMATED
+  Caseimportance: critical
 
 Total number of tests: 21
-Total number of invalid docstrings: 6 (28.57%)
+Total number of invalid docstrings: 7 (33.33%)
 Test cases with no docstrings: 1 (4.76%)
 Test cases missing minimal docstrings: 3 (14.29%)
-Test cases with unexpected tags: 3 (14.29%)
+Test cases with unexpected tags: 4 (19.05%)
 Test cases with unexpected token values in docstrings: 0 (0.00%)
 Test cases with unparseable docstrings: 1 (4.76%)
 
@@ -534,18 +546,19 @@ RSTFormattingTestCase::test_invalid_list_style:150
 
 
 
-ConfigurationFileTestCase::test_multiple_invalid_keys:202
+ConfigurationFileTestCase::test_multiple_invalid_keys:208
 ---------------------------------------------------------
 
 * Tokens with invalid values:
   Caseimportance: Lowest (type: 'choice')
   Status: Invalid (type: 'choice')
 
-ConfigurationFileTestCase::test_case_mismatch_case_sensitive_values:226
+ConfigurationFileTestCase::test_case_mismatch_case_sensitive_values:236
 -----------------------------------------------------------------------
 
 * Tokens with invalid values:
   Caseautomation: AUTOMATED (type: 'choice')
+  Caseimportance: critical (type: 'choice')
 
 Total number of tests: 21
 Total number of invalid docstrings: 6 (28.57%)
