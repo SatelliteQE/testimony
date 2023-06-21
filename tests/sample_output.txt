@@ -315,7 +315,7 @@ Test:
  Test without decorator.
 
 
-DecoratorsTestCase::test_one_decorator:264
+DecoratorsTestCase::test_one_decorator:265
 ------------------------------------------
 
 Assert:
@@ -334,7 +334,7 @@ Test:
  Test with one decorator.
 
 
-DecoratorsTestCase::test_multiple_decorators:269
+DecoratorsTestCase::test_multiple_decorators:271
 ------------------------------------------------
 
 Assert:
@@ -372,7 +372,7 @@ Test:
  Test without decorator.
 
 
-MergeDecoratorsTestCase::test_decorator:289
+MergeDecoratorsTestCase::test_decorator:290
 -------------------------------------------
 
 Assert:
