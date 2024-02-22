@@ -36,6 +36,7 @@ except ImportError:
 
 SETTINGS = {
     'json': False,
+    'markdown': False,
     'nocolor': False,
     'tokens': {},
 }
@@ -268,13 +269,14 @@ class TestFunction(object):
         return '\n'.join(output)
 
 
-def main(report, paths, json_output, nocolor):
+def main(report, paths, json_output, markdown_output, nocolor):
     """Entry point for the testimony project.
 
     Expects a valid report type and valid directory paths, hopefully argparse
     is taking care of validation
     """
     SETTINGS['json'] = json_output
+    SETTINGS['markdown'] = markdown_output
     SETTINGS['nocolor'] = nocolor
 
     if report == SUMMARY_REPORT:
@@ -284,6 +286,44 @@ def main(report, paths, json_output, nocolor):
     elif report == VALIDATE_DOCSTRING_REPORT:
         report_function = validate_docstring_report
     sys.exit(report_function(get_testcases(paths)))
+
+
+def print_markdown(testcases):
+    """Print markdown formatted list of test cases.
+
+    :param testcases: A dict where the key is a path and value is a list of
+        found testcases on that path.
+    """
+    result = {}
+    for path, tests in testcases.items():
+        result[path] = [test.to_dict() for test in tests]
+        print('# {0}\n\n'.format(
+            colored(path, attrs=['bold'])))
+        if len(tests) == 0:
+            print('No test cases found.\n')
+        for test in tests:
+            title = testcase_title(test)
+            print('## {0}\n\n'.format(
+                title))
+            for token, data in test.to_dict().items():
+                if token == 'tokens':
+                    for key, value in data.items():
+                        print(f'### {key}\n')
+                        print(value)
+                        print('\n')
+                elif token == 'invalid-tokens':
+                    print('### invalid tokens')
+                    for key, value in data.items():
+                        print(f'* {key}: {value}')
+                    print('\n')
+                elif token == 'rst-parse-messages':
+                    for val in data:
+                        print(val)
+                else:
+                    raise ValueError(f'Invalid token: {token}')
+            print('\n')
+
+    return 0
 
 
 def print_report(testcases):
@@ -311,6 +351,9 @@ def print_report(testcases):
 
         print(json.dumps(result))
         return 0
+
+    if SETTINGS['markdown']:
+        return print_markdown(testcases)
 
     result = {}
     for path, tests in testcases.items():
