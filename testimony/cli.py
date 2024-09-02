@@ -7,7 +7,7 @@ from testimony import SETTINGS, config, constants, main
 
 @click.command()
 @click.option('-j', '--json', help='JSON output', is_flag=True)
-@click.option('-m', '--markdown', help='mardown output', is_flag=True)
+@click.option('-m', '--markdown', help='markdown output', is_flag=True)
 @click.option('-n', '--nocolor', default=False, help='Color output',
               is_flag=True)
 @click.option('--tokens', help='Comma separated list of expected tokens')
