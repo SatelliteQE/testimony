@@ -18,6 +18,7 @@ REPORT_TAGS = (
 
 TOKEN_TYPES = [
     'choice',
+    'string'
 ]
 
 DEFAULT_TOKENS = (

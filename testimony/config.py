@@ -13,7 +13,8 @@ Example:
             - Automated
     ...
 
-Currently only supported type is 'choice', but in the future more can be added.
+Currently only supported types are 'choice' and 'string'
+but in the future more can be added.
 """
 
 import yaml
@@ -79,6 +80,9 @@ class TokenConfig(object):
             self.choices = [i if self.casesensitive else i.lower()
                             for i in config['choices']]
 
+        elif self.token_type == 'string':
+            pass
+
     def update(self, new_values):
         """Update token configuration with dictionary of new values."""
         for key, value in new_values.items():
@@ -90,4 +94,6 @@ class TokenConfig(object):
             if not self.casesensitive:
                 what = what.lower()
             return what in self.choices
+        elif self.token_type == 'string':
+            return isinstance(what, str)  # validate it's a string
         return True  # assume valid for unknown types
