@@ -4,6 +4,9 @@ from collections import namedtuple
 from io import StringIO
 from xml.etree import ElementTree
 
+import importlib
+import traceback
+
 from docutils.core import publish_string
 from docutils.parsers.rst import nodes, roles
 from docutils.readers import standalone
@@ -53,6 +56,32 @@ class DocstringParser(object):
         ):
             roles.register_generic_role(role, nodes.raw)
             roles.register_generic_role('py:' + role, nodes.raw)
+
+    def load_and_parse(self, module_name):
+        """Dynamically import a module, run decorators, and parse docstrings"""
+        try:
+            # dynamically import the module by name
+            module = importlib.import_module(module_name)
+        except ImportError as e:
+            print(f"Error importing module {module_name}: {e}")
+            return {}, {}, [f"ImportError: {str(e)}"]
+
+        valid_tokens, invalid_tokens, parse_message = {}, {}, []
+
+        # go through each member in the module to extract docstrings
+        for attr_name in dir(module):
+            attr = getattr(module, attr_name)
+            if callable(attr) and attr.__doc__:
+                try:
+                    # parse the docstrings after decorators have been applied
+                    v_tokens, iv_tokens, message = self.parse(attr.__doc__)
+                    valid_tokens.update(v_tokens)
+                    invalid_tokens.update(iv_tokens)
+                    parse_message.extend(message)
+                except Exception as e:
+                    parse_message.append(f"Parsing error for {attr_name}: {e}")
+                    traceback.print_exc()
+        return valid_tokens, invalid_tokens, parse_message
 
     def parse(self, docstring=None):
         """Parse docstring and report parsing issues, valid and invalid tokens.

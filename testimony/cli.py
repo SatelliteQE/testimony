@@ -4,6 +4,7 @@ import click
 
 from testimony import SETTINGS, config, constants, main
 
+from testimony.parser import DocstringParser  # Import the parser with dynamic loading
 
 @click.command()
 @click.option('-j', '--json', help='JSON output', is_flag=True)
@@ -21,12 +22,51 @@ from testimony import SETTINGS, config, constants, main
 def testimony(
         json, markdown, nocolor, tokens, minimum_tokens, config_file,
         report, path):
-    """Inspect and report on the Python test cases."""
+    # load config if possible
     if config_file:
         SETTINGS['tokens'] = config.parse_config(config_file)
     if tokens:
         config.update_tokens_dict(SETTINGS['tokens'], tokens)
     if minimum_tokens:
-        config.update_tokens_dict(
-            SETTINGS['tokens'], minimum_tokens, {'required': True})
-    main(report, path, json, markdown, nocolor)
+        config.update_tokens_dict(SETTINGS['tokens'], minimum_tokens, {'required': True})
+
+    # initialize the parser
+    parser = DocstringParser(tokens=SETTINGS['tokens'], minimum_tokens=SETTINGS['tokens'].get('required', []))
+
+    # loop through each provided path and parse
+    results = []
+    for module_path in path:
+        try:
+            # load and parse module dynamically
+            valid_tokens, invalid_tokens, parse_messages = parser.load_and_parse(module_path)
+            results.append({
+                'module': module_path,
+                'valid_tokens': valid_tokens,
+                'invalid_tokens': invalid_tokens,
+                'parse_messages': parse_messages
+            })
+        except Exception as e:
+            print(f"Error processing module {module_path}: {e}")
+
+    # Generate report
+    if json:
+        import json as json_lib
+        print(json_lib.dumps(results, indent=2))
+    elif markdown:
+        for result in results:
+            print(f"## Report for {result['module']}")
+            print("### Valid Tokens")
+            for token, value in result['valid_tokens'].items():
+                print(f"- **{token}**: {value}")
+            print("### Invalid Tokens")
+            for token, value in result['invalid_tokens'].items():
+                print(f"- **{token}**: {value}")
+            print("### Parse Messages")
+            for message in result['parse_messages']:
+                print(f"- {message}")
+    else:
+        for result in results:
+            print(f"Report for {result['module']}")
+            print("Valid Tokens:", result['valid_tokens'])
+            print("Invalid Tokens:", result['invalid_tokens'])
+            print("Parse Messages:", result['parse_messages'])

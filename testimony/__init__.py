@@ -94,37 +94,24 @@ class TestFunction(object):
     """
 
     def __init__(self, function_def, parent_class=None, testmodule=None):
-        """Wrap a ``ast.FunctionDef`` instance used to extract information."""
         self.docstring = ast.get_docstring(function_def)
         self.function_def = function_def
         self.name = function_def.name
-        if parent_class:
-            self.parent_class = parent_class.name
-            self.parent_class_def = parent_class
-            self.class_docstring = ast.get_docstring(self.parent_class_def)
-        else:
-            self.parent_class = None
-            self.parent_class_def = None
-            self.class_docstring = None
-        self.testmodule = testmodule.path
+        self.parent_class = parent_class.name if parent_class else None
+        self.parent_class_def = parent_class
+        self.class_docstring = ast.get_docstring(parent_class) if parent_class else None
+        self.testmodule = testmodule.path if testmodule else None
         self.module_def = testmodule
-        self.module_docstring = ast.get_docstring(self.module_def)
+        self.module_docstring = ast.get_docstring(self.module_def) if self.module_def else None
         self.pkginit = os.path.join(
-            os.path.dirname(self.testmodule), '__init__.py')
-        if os.path.exists(self.pkginit):
-            self.pkginit_def = ast.parse(''.join(open(self.pkginit)))
-            self.pkginit_docstring = ast.get_docstring(self.pkginit_def)
-        else:
-            self.pkginit_def = None
-            self.pkginit_docstring = None
-        self.tokens = {}
-        self.invalid_tokens = {}
+            os.path.dirname(self.testmodule), '__init__.py') if self.testmodule else None
+        self.tokens, self.invalid_tokens = {}, {}
         self._rst_parser_messages = []
+
         tokens = SETTINGS.get('tokens').keys() or None
-        minimum_tokens = [key for key, value
-                          in SETTINGS.get('tokens').items()
-                          if value.required] or None
+        minimum_tokens = [key for key, value in SETTINGS.get('tokens').items() if value.required] or None
         self.parser = DocstringParser(tokens, minimum_tokens)
+
         self._parse_docstring()
         self._parse_decorators()
 
@@ -163,26 +150,15 @@ class TestFunction(object):
             self.tokens['test'] = docstring.strip().split('\n')[0]
 
     def _parse_decorators(self):
-        """Get decorators from class and function definition.
-
-        Modules and packages can't be decorated, so they are skipped.
-        Decorator can be pytest marker or function call.
-        ``tokens`` attribute will be updated with new value ``decorators``.
-        """
+        """Extract decorators from class and function definitions."""
         token_decorators = []
         for level in (self.parent_class_def, self.function_def):
             decorators = getattr(level, 'decorator_list', None)
-            if not decorators:
-                continue
-
-            for decorator in decorators:
-                try:
+            if decorators:
+                for decorator in decorators:
                     token_decorators.append(
                         getattr(decorator, 'func', decorator).id
                     )
-                except AttributeError:
-                    continue
-
         if token_decorators:
             self.tokens['decorators'] = token_decorators
 
@@ -270,14 +246,12 @@ class TestFunction(object):
 
 
 def main(report, paths, json_output, markdown_output, nocolor):
-    """Entry point for the testimony project.
-
-    Expects a valid report type and valid directory paths, hopefully argparse
-    is taking care of validation
-    """
-    SETTINGS['json'] = json_output
-    SETTINGS['markdown'] = markdown_output
-    SETTINGS['nocolor'] = nocolor
+    """Entry point for testimony report generation."""
+    SETTINGS.update({
+        'json': json_output,
+        'markdown': markdown_output,
+        'nocolor': nocolor
+    })
 
     if report == SUMMARY_REPORT:
         report_function = summary_report

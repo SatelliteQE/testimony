@@ -18,7 +18,8 @@ REPORT_TAGS = (
 
 TOKEN_TYPES = [
     'choice',
-    'string'
+    'string',
+    'decorator' # new token type for dynamic decorator values
 ]
 
 DEFAULT_TOKENS = (

@@ -52,7 +52,7 @@ class TokenConfig(object):
     """
     Represent config for one token.
 
-    Currently only checks for value.
+    Includes dynamic decorator handling.
     """
 
     def __init__(self, name, config):
@@ -70,15 +70,22 @@ class TokenConfig(object):
         self.required = config.get('required', False)
         self.token_type = None
 
+        # set token type if available in TOKENS_TYPES
         if config.get('type') in TOKEN_TYPES:
             self.token_type = config['type']
 
+        # additional handling for choice, string, and decorator types
         if self.token_type == 'choice':
             assert 'choices' in config
             assert isinstance(config['choices'], list)
             self.casesensitive = config.get('casesensitive', True)
             self.choices = [i if self.casesensitive else i.lower()
                             for i in config['choices']]
+
+        elif self.token_type == 'decorator':
+            # set specific defaults or validation parameters if needed
+            self.decorator_name = config.get('decorator_name')
+            self.default_value = config.get('default_value', None)
 
         elif self.token_type == 'string':
             pass
@@ -96,4 +103,7 @@ class TokenConfig(object):
             return what in self.choices
         elif self.token_type == 'string':
             return isinstance(what, str)  # validate it's a string
+        elif self.token_type == 'decorator':
+            # Additional decorator-related validation if needed
+            return what == self.default_value or what is not None
         return True  # assume valid for unknown types
